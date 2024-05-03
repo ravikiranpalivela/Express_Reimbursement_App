@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewElement"
+            type="com.tekskills.er_tekskills.utils.TextViewHtmlString" />
+
+        <variable
+            name="taskCategoryInfo"
+            type="com.tekskills.er_tekskills.data.model.ClientEscalationGraphByIDResponseItem" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".presentation.fragments.BaseFragment">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/relativeLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/isCompleted"
+                        android:layout_width="2dp"
+                        android:layout_height="2dp"
+                        android:visibility="invisible"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_escalation_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/_4dp"
+                        android:visibility="gone"
+                        android:background="@drawable/background_title"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/tv_escalation"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="@dimen/_4dp"
+                            android:layout_weight="2"
+                            android:padding="@dimen/_4dp"
+                            android:text="@string/escalation_item"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/iv_edit_escalation"
+                            android:layout_width="@dimen/_50dp"
+                            android:layout_height="@dimen/_50dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/_4dp"
+                            android:background="@drawable/ic_edit_item"
+                            android:visibility="gone" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_escalation_client"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_escalation_details">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_escalation_client"
+                            style="@style/stlTxtKey"
+                            android:text="Client Name:" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/escalation_client"
+                            style="@style/stlTxtValue"
+                            android:text="@{taskCategoryInfo.clientName}"
+                            tools:text="Testing" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_escalation_project"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_escalation_client"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_escalation_client">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_escalation__tekskills"
+                            style="@style/stlTxtKey"
+                            android:text="Project Name:" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/escalation__tekskills"
+                            style="@style/stlTxtValue"
+                            android:text="@{taskCategoryInfo.projectName}"
+                            tools:text="Testing" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_escalation_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_escalation_project"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_escalation_project">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_escalation_desc"
+                            style="@style/stlTxtKey"
+                            android:text="Escalation Description:" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/escalation_desc"
+                            style="@style/stlTxtValue"
+                            android:text="@{taskCategoryInfo.escDesc}"
+                            tools:text="Testing" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_escalation_raised_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_escalation_desc"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_escalation_desc">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_escalation_raised_date"
+                            style="@style/stlTxtKey"
+                            android:layout_width="0dp"
+                            android:text="Escalation Raised Date"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/escalation_raised_date"
+                            style="@style/stlTxtValue"
+                            tools:text="Testing" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_escalation_resolved_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_escalation_desc"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_escalation_raised_date">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_escalation_resolved_date"
+                            style="@style/stlTxtKey"
+                            android:text="Escalation Resolved Date" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/escalation_resolved_date"
+                            style="@style/stlTxtValue"
+                            tools:text="Testing" />
+                    </LinearLayout>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/priority"
+                        style="@style/stlTxtValue"
+                        android:text="@string/active"
+                        android:visibility="visible"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_escalation_resolved_date" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    style="?android:attr/progressBarStyleSmallTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <!--            <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+            <!--                android:id="@+id/fab"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_gravity="bottom|end"-->
+            <!--                android:layout_marginEnd="@dimen/fab_margin"-->
+            <!--                android:layout_marginBottom="16dp"-->
+            <!--                android:backgroundTint="@color/light_blue"-->
+            <!--                app:srcCompat="@drawable/ic_baseline_add_24" />-->
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

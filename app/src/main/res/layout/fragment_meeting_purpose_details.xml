@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewElement"
+            type="com.tekskills.er_tekskills.utils.TextViewHtmlString" />
+
+        <variable
+            name="taskCategoryInfo"
+            type="com.tekskills.er_tekskills.data.model.MeetingPurposeResponseData" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".presentation.fragments.BaseFragment">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/relativeLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/isCompleted"
+                        android:layout_width="2dp"
+                        android:layout_height="2dp"
+                        android:visibility="invisible"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_oppor_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/_4dp"
+                        android:background="@drawable/background_title"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/tv_purpose_visit_details"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="@dimen/_4dp"
+                            android:layout_weight="2"
+                            android:padding="@dimen/_4dp"
+                            android:text="@string/purpose_visit_details"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/iv_edit_purpose_visit"
+                            android:layout_width="@dimen/_50dp"
+                            android:layout_height="@dimen/_50dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/_4dp"
+                            android:background="@drawable/ic_edit_item"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_visit_purpose"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_oppor_details">
+
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_visit_purpose"
+                            style="@style/stlTxtKey"
+                            android:text="@string/edt_visit_purpose" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/projectName"
+                            style="@style/stlTxtValue"
+                            android:text="@{taskCategoryInfo.visitPurpose}"
+                            tools:text="Testing" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_visit_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_visit_purpose"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_visit_purpose">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_visit_date"
+                            style="@style/stlTxtKey"
+                            android:text="@string/visit_date" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/clientName"
+                            style="@style/stlTxtValue"
+                            android:text="@{taskCategoryInfo.visitDate}"
+                            tools:text="Testing" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_src_loc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_visit_date"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_visit_date">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_src_loc"
+                            style="@style/stlTxtKey"
+                            android:text="@string/src_loc" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/oppor_type"
+                            style="@style/stlTxtValue"
+                            android:text="@{taskCategoryInfo.userCordinates.sourceLatitude}"
+                            tools:text="Testing" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_des_loc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_src_loc"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_src_loc">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_des_loc"
+                            style="@style/stlTxtKey"
+                            android:singleLine="true"
+                            android:text="@string/des_loc" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/opportunity_desc"
+                            style="@style/stlTxtValue"
+                            android:singleLine="true"
+                            android:text="@{taskCategoryInfo.userCordinates.destinantionLatitude}"
+                            tools:text="Testing" />
+                    </LinearLayout>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/priority"
+                        style="@style/stlTxtValue"
+                        android:visibility="visible"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_des_loc" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
+
+                    <LinearLayout
+                        android:id="@+id/ll_advance_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/_4dp"
+                        android:background="@drawable/background_title"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_advance_amount"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="@dimen/_4dp"
+                            android:layout_weight="2"
+                            android:padding="@dimen/_4dp"
+                            android:text="@string/advance_amount"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/iv_add_advance_amount"
+                            android:layout_width="@dimen/_50dp"
+                            android:layout_height="@dimen/_50dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/_4dp"
+                            android:visibility="visible"
+                            android:src="@drawable/ic_baseline_add_24" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_add_advance_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/_4dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        android:weightSum="3">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/edtl_advance_amount"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="2"
+                            android:hint="@string/advance_amount"
+                            app:boxStrokeWidth="2dp"
+                            app:counterEnabled="true"
+                            app:counterMaxLength="20"
+                            app:errorEnabled="true"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/edtl_client_contact_name">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/edt_advance_amount"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/white"
+                                android:gravity="start"
+                                android:inputType="numberDecimal" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <Button
+                            android:id="@+id/btn_add_advance_amount"
+                            style="@style/stlTxtSubmit"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/btn_background"
+                            android:text="@string/submit"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_advance_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_4dp"
+                        android:padding="@dimen/_4dp" />
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/av_advance_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true"
+                        app:lottie_rawRes="@raw/noresultanim" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_expenses"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/_4dp"
+                        android:background="@drawable/background_title"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_expenses"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="@dimen/_4dp"
+                            android:layout_weight="2"
+                            android:padding="@dimen/_4dp"
+                            android:text="@string/expenses"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/iv_expenses"
+                            android:layout_width="@dimen/_50dp"
+                            android:layout_height="@dimen/_50dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/_4dp"
+                            android:visibility="gone"
+                            android:src="@drawable/ic_baseline_add_24" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_travel_expenses"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/_4dp"
+                        android:background="@drawable/background_title"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_travel_expenses"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="@dimen/_4dp"
+                            android:layout_weight="2"
+                            android:padding="@dimen/_4dp"
+                            android:text="@string/travel_expenses"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/iv_add_travel_expenses"
+                            android:layout_width="@dimen/_50dp"
+                            android:layout_height="@dimen/_50dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/_4dp"
+                            android:visibility="visible"
+                            android:src="@drawable/ic_baseline_add_24" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_travel_expenses"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_4dp"
+                        android:padding="@dimen/_4dp" />
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/av_travel_expenses"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true"
+                        app:lottie_rawRes="@raw/noresultanim" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_hotel_expenses"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/_4dp"
+                        android:background="@drawable/background_title"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_hotel_expenses"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="@dimen/_4dp"
+                            android:layout_weight="2"
+                            android:padding="@dimen/_4dp"
+                            android:text="@string/hotel_expenses"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/iv_add_hotel_expenses"
+                            android:layout_width="@dimen/_50dp"
+                            android:layout_height="@dimen/_50dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/_4dp"
+                            android:src="@drawable/ic_baseline_add_24" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_hotel_expenses"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_4dp"
+                        android:padding="@dimen/_4dp" />
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/av_hotel_expenses"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true"
+                        app:lottie_rawRes="@raw/noresultanim" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_food_expenses"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/_4dp"
+                        android:background="@drawable/background_title"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_food_expenses"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="@dimen/_4dp"
+                            android:layout_weight="2"
+                            android:padding="@dimen/_4dp"
+                            android:text="@string/food_expenses"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/iv_add_food_expenses"
+                            android:layout_width="@dimen/_50dp"
+                            android:layout_height="@dimen/_50dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/_4dp"
+                            android:src="@drawable/ic_baseline_add_24" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_food_expenses"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_4dp"
+                        android:padding="@dimen/_4dp" />
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/av_food_expenses"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true"
+                        app:lottie_rawRes="@raw/noresultanim" />
+
+
+                    <!--                <LinearLayout-->
+                    <!--                    android:layout_width="match_parent"-->
+                    <!--                    android:layout_height="match_parent"-->
+                    <!--                    android:background="@drawable/background_title"-->
+                    <!--                    android:orientation="horizontal">-->
+
+                    <!--                    <TextView-->
+                    <!--                        android:id="@+id/tv_projects"-->
+                    <!--                        android:layout_width="0dp"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_gravity="center_vertical"-->
+                    <!--                        android:layout_margin="10dp"-->
+                    <!--                        android:layout_weight="2"-->
+                    <!--                        android:text="@string/projects"-->
+                    <!--                        android:textAllCaps="true"-->
+                    <!--                        android:textColor="@color/white"-->
+                    <!--                        android:textSize="20sp"-->
+                    <!--                        android:textStyle="bold" />-->
+
+                    <!--                    <ImageButton-->
+                    <!--                        android:id="@+id/iv_projects"-->
+                    <!--                        android:layout_width="@dimen/_50dp"-->
+                    <!--                        android:layout_height="@dimen/_50dp"-->
+                    <!--                        android:layout_gravity="center"-->
+                    <!--                        android:layout_margin="@dimen/_4dp"-->
+                    <!--                        android:src="@drawable/ic_baseline_add_24" />-->
+
+                    <!--                </LinearLayout>-->
+
+                    <!--                <androidx.recyclerview.widget.RecyclerView-->
+                    <!--                    android:id="@+id/rv_projects"-->
+                    <!--                    android:layout_width="match_parent"-->
+                    <!--                    android:layout_height="wrap_content"-->
+                    <!--                    android:layout_marginStart="5dp"-->
+                    <!--                    android:layout_marginTop="10dp"-->
+                    <!--                    android:layout_marginEnd="5dp"-->
+                    <!--                    android:layout_marginBottom="10dp"-->
+                    <!--                    android:clipToPadding="false"-->
+                    <!--                    android:paddingBottom="15dp" />-->
+
+                    <!--                <com.airbnb.lottie.LottieAnimationView-->
+                    <!--                    android:id="@+id/av_projects"-->
+                    <!--                    android:layout_width="match_parent"-->
+                    <!--                    android:layout_height="100dp"-->
+                    <!--                    app:lottie_autoPlay="true"-->
+                    <!--                    app:lottie_loop="true"-->
+                    <!--                    app:lottie_rawRes="@raw/noresultanim" />-->
+
+                    <!--                <LinearLayout-->
+                    <!--                    android:layout_width="match_parent"-->
+                    <!--                    android:layout_height="match_parent"-->
+                    <!--                    android:background="@drawable/background_title"-->
+                    <!--                    android:orientation="horizontal">-->
+
+                    <!--                    <TextView-->
+                    <!--                        android:id="@+id/tv_assign_projects"-->
+                    <!--                        android:layout_width="0dp"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_gravity="center_vertical"-->
+                    <!--                        android:layout_margin="10dp"-->
+                    <!--                        android:layout_weight="2"-->
+                    <!--                        android:text="@string/assign_projects"-->
+                    <!--                        android:textAllCaps="true"-->
+                    <!--                        android:textColor="@color/white"-->
+                    <!--                        android:textSize="20sp"-->
+                    <!--                        android:textStyle="bold" />-->
+
+                    <!--                    <ImageButton-->
+                    <!--                        android:id="@+id/iv_assign_projects"-->
+                    <!--                        android:layout_width="@dimen/_50dp"-->
+                    <!--                        android:layout_height="@dimen/_50dp"-->
+                    <!--                        android:layout_gravity="center"-->
+                    <!--                        android:layout_margin="@dimen/_4dp"-->
+                    <!--                        android:src="@drawable/ic_baseline_add_24" />-->
+
+                    <!--                </LinearLayout>-->
+
+                    <!--                <androidx.recyclerview.widget.RecyclerView-->
+                    <!--                    android:id="@+id/rv_assign_projects"-->
+                    <!--                    android:layout_width="match_parent"-->
+                    <!--                    android:layout_height="wrap_content"-->
+                    <!--                    android:layout_marginStart="5dp"-->
+                    <!--                    android:layout_marginTop="10dp"-->
+                    <!--                    android:layout_marginEnd="5dp"-->
+                    <!--                    android:layout_marginBottom="10dp"-->
+                    <!--                    android:clipToPadding="false"-->
+                    <!--                    android:paddingBottom="15dp" />-->
+
+                    <!--                <com.airbnb.lottie.LottieAnimationView-->
+                    <!--                    android:id="@+id/av_assign_projects"-->
+                    <!--                    android:layout_width="match_parent"-->
+                    <!--                    android:layout_height="300dp"-->
+                    <!--                    app:lottie_autoPlay="true"-->
+                    <!--                    app:lottie_loop="true"-->
+                    <!--                    app:lottie_rawRes="@raw/noresultanim" />-->
+
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    style="?android:attr/progressBarStyleSmallTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <!--            <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+            <!--                android:id="@+id/fab"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_gravity="bottom|end"-->
+            <!--                android:layout_marginEnd="@dimen/fab_margin"-->
+            <!--                android:layout_marginBottom="16dp"-->
+            <!--                android:backgroundTint="@color/light_blue"-->
+            <!--                app:srcCompat="@drawable/ic_baseline_add_24" />-->
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

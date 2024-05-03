@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <data>
+
+        <variable
+            name="viewElement"
+            type="com.tekskills.er_tekskills.utils.TextViewHtmlString" />
+
+        <variable
+            name="taskCategoryInfo"
+            type="com.tekskills.er_tekskills.data.model.MomProjectResponseItem" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".presentation.fragments.BaseFragment">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/relativeLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/isCompleted"
+                        android:layout_width="2dp"
+                        android:layout_height="2dp"
+                        android:visibility="invisible"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_oppor_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/_4dp"
+                        android:background="@drawable/background_title"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/tv_mom_action_item"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="@dimen/_4dp"
+                            android:layout_weight="2"
+                            android:padding="@dimen/_4dp"
+                            android:text="@string/mom_item"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/iv_edit_mom_action_item"
+                            android:layout_width="@dimen/_50dp"
+                            android:layout_height="@dimen/_50dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/_4dp"
+                            android:background="@drawable/ic_edit_item"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_meeting_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_oppor_details">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_meeting_title"
+                            style="@style/stlTxtKey"
+                            android:text="Meeting Title:" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/meeting_title"
+                            style="@style/stlTxtValue"
+                            android:text="@{taskCategoryInfo.meetingTitle}"
+                            tools:text="Testing" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_meeting_date_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_meeting_title"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_meeting_title">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_meeting_date"
+                            style="@style/stlTxtKey"
+                            android:text="Meeting Date:" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/meeting_date"
+                            style="@style/stlTxtValue"
+                            android:text="@{taskCategoryInfo.meetingTime.toString()}"
+                            tools:text="Testing" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_meeting_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_meeting_date_name"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_meeting_date_name">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_meeting_time"
+                            style="@style/stlTxtKey"
+                            android:text="Meeting Time:" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/meeting_time"
+                            style="@style/stlTxtValue"
+                            android:text="@{taskCategoryInfo.meetingTime}"
+                            tools:text="Testing" />
+
+                        <!--                <com.google.android.material.textview.MaterialTextView-->
+                        <!--                    android:id="@+id/meeting_time"-->
+                        <!--                    style="@style/stlTxtValue"-->
+                        <!--                    android:text="@{dateConvert.Companion.getTimeAgo(taskCategoryInfo.meetingTime)}"-->
+                        <!--                    tools:text="Testing" />-->
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_meeting_notes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_meeting_time"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_meeting_time">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_meeting_notes"
+                            style="@style/stlTxtKey"
+                            android:text="Meeting Notes:" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/meeting_notes"
+                            style="@style/stlTxtValue"
+                            android:text="@{taskCategoryInfo.meetingNotes}"
+                            tools:text="Testing" />
+                    </LinearLayout>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/priority"
+                        style="@style/stlTxtValue"
+                        android:text="@{taskCategoryInfo.meetingNotes}"
+                        android:visibility="visible"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_meeting_notes" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    style="?android:attr/progressBarStyleSmallTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <!--            <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+            <!--                android:id="@+id/fab"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_gravity="bottom|end"-->
+            <!--                android:layout_marginEnd="@dimen/fab_margin"-->
+            <!--                android:layout_marginBottom="16dp"-->
+            <!--                android:backgroundTint="@color/light_blue"-->
+            <!--                app:srcCompat="@drawable/ic_baseline_add_24" />-->
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

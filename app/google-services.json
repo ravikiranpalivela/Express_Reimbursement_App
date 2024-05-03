@@ -1,0 +1,125 @@
+{
+  "project_info": {
+    "project_number": "122311709911",
+    "firebase_url": "https://field-officer-2632d-default-rtdb.firebaseio.com",
+    "project_id": "field-officer-2632d",
+    "storage_bucket": "field-officer-2632d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:122311709911:android:dc43693e895c7018574c92",
+        "android_client_info": {
+          "package_name": "com.batohi.cabbooking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdZQD8kBbWZzXn11t8LAnNxVvDlSzl7Ro"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:122311709911:android:6f7ab9c8d76a187d574c92",
+        "android_client_info": {
+          "package_name": "com.cuongnl.ridehailing"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdZQD8kBbWZzXn11t8LAnNxVvDlSzl7Ro"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:122311709911:android:298680eec94dc2c3574c92",
+        "android_client_info": {
+          "package_name": "com.istudio.distancetracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdZQD8kBbWZzXn11t8LAnNxVvDlSzl7Ro"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:122311709911:android:49440ff15c235dd0574c92",
+        "android_client_info": {
+          "package_name": "com.tekskills.er_tekskills.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdZQD8kBbWZzXn11t8LAnNxVvDlSzl7Ro"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:122311709911:android:eec938a156f6b130574c92",
+        "android_client_info": {
+          "package_name": "com.tekskills.psv_tekskills"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdZQD8kBbWZzXn11t8LAnNxVvDlSzl7Ro"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:122311709911:android:25ce1047bf900976574c92",
+        "android_client_info": {
+          "package_name": "com.tekskills.psv_tekskills.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdZQD8kBbWZzXn11t8LAnNxVvDlSzl7Ro"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

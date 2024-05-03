@@ -1,0 +1,153 @@
+<resources>
+    <string name="app_name">Expense Reimbursement</string>
+
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="add_category">Add Client</string>
+    <string name="enter_category">Enter Client</string>
+    <string name="category_color">Client Color</string>
+    <string name="add_color">Add Color</string>
+    <string name="tasks_to_do">Opportunitys To Do</string>
+    <string name="due_date">Due Date</string>
+    <string name="completed">Completed</string>
+    <string name="priority">Priority</string>
+    <string name="low">Low</string>
+    <string name="medium">Medium</string>
+    <string name="high">High</string>
+    <string name="settings">Settings</string>
+    <string name="notification">Notification</string>
+    <string name="low_priority_tasks">Low priority tasks</string>
+    <string name="medium_priority_tasks">Medium priority tasks</string>
+    <string name="high_priority_tasks">High priority tasks</string>
+    <string name="general">General</string>
+    <string name="opportunity">opportunity</string>
+    <string name="create_opportunity">Create Opportunity</string>
+    <string name="add_new_client">+ Add New Client</string>
+    <string name="edt_client_contact_name">Client Contact Name</string>
+    <string name="edt_client_contact_pos">Client Contact Position</string>
+    <string name="edt_opportunity_desc">Opportunity Description</string>
+    <string name="status">Status</string>
+    <string name="submit">Submit</string>
+
+
+    <!--Login and Registration-->
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+
+    <!--Add Lead-->
+
+    <!--Add Meeting-->
+
+    <!--ERROR SIGNUP STRINGS-->
+
+    <!--ERROR ADDLEADS STRINGS-->
+
+    <!--DRAWER MENU STRINGS-->
+
+    <!--ERROR ADD MEETING DIALOG STRINGS-->
+
+
+    <!--RK AIzaSyDFVefE8VqsJ2YfF4cfAJHI798GcTZ7GxU-->
+
+    <!--GOOGLE MAPS PERMISSIONS-->
+
+    <!-- navigation drawer item labels  -->
+
+    <string name="edt_client_name">Client Name</string>
+    <string name="edt_project_name">Project Name</string>
+    <string name="edt_opportunity_type">Opportunity Type</string>
+    <string name="assign_projects">Assign Project</string>
+    <string name="view_opportunity">View Opportunity</string>
+    <string name="edit_opportunity">Edit Opportunity</string>
+    <string name="opportunity_details">Opportunity Details</string>
+    <string name="comments_notes">Comments/Notes</string>
+    <string name="comment">Comment</string>
+    <string name="action_items">Action Items</string>
+    <string name="mom_items">MOM Action Items</string>
+    <string name="mom_item">MOM Action Item</string>
+    <string name="pending_action">Pending Action Items</string>
+    <string name="client_escalation">Client Escalation</string>
+    <string name="add_opportunity">Add Opportunity</string>
+    <string name="add_meeting">Add Meeting</string>
+    <string name="view_meeting">View Meetings</string>
+    <string name="edit_mom">Edit MOM</string>
+    <string name="edit_action_item">Edit Action Item</string>
+    <string name="escalation_items">Escalations</string>
+    <string name="escalation_item">Escalation Details</string>
+    <string name="edt_meeting_title">Meeting Title</string>
+    <string name="edt_meeting_notes">Meeting Notes</string>
+    <string name="edt_expected_info_from_clients">Exoected Info From client</string>
+    <string name="edt_expected_info_from_tekskills">Expected Info From Tekskills</string>
+    <string name="edt_tekskills_action_items">Tekskills Action Items</string>
+    <string name="action_item_date">Action Item Completion Date: </string>
+    <string name="edt_action_item_date">Action Item Completion Date</string>
+    <string name="edt_escalated_desc">Escalation Description</string>
+    <string name="escalated_raised_date">Escalation Raised Date: </string>
+    <string name="edt_escalated_raised_date">Escalation Raised Date</string>
+    <string name="escalated_resolved_date">Escalation Resolved Date: </string>
+    <string name="edt_escalated_resolved_date">Escalation Resolved Date</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="permission_description">In order to use the application, Please provide the runtime permissions</string>
+    <string name="continue_text">Continue</string>
+
+    <string name="just_now">just now</string>
+    <plurals name="seconds_ago">
+        <item quantity="one">%d second ago</item>
+        <item quantity="other">%d seconds ago</item>
+    </plurals>
+    <plurals name="minutes_ago">
+        <item quantity="one">%d minute ago</item>
+        <item quantity="other">%d minutes ago</item>
+    </plurals>
+    <plurals name="hours_ago">
+        <item quantity="one">%d hour ago</item>
+        <item quantity="other">%d hours ago</item>
+    </plurals>
+    <plurals name="days_ago">
+        <item quantity="one">%d day ago</item>
+        <item quantity="other">%d days ago</item>
+    </plurals>
+    <string name="not_found">No Data Found</string>
+    <string name="type_to_search">Search..</string>
+    <string name="action_item">Action Item</string>
+
+    <string name="client_name">Client Name: </string>
+    <string name="project_name">Project Name: </string>
+    <string name="opportunity_type">Opportunity Type: </string>
+    <string name="opportunity_desc">Opportunity Desc: </string>
+    <string name="meeting_title">Meeting Title: </string>
+    <string name="meeting_notes">Meeting Notes: </string>
+    <string name="meeting_time">Meeting Time: </string>
+    <string name="meeting_date">Meeting Date: </string>
+    <string name="edt_meeting_time">Meeting Time</string>
+    <string name="edt_meeting_date">Meeting Date</string>
+    <string name="expected_info_from_clients">Expected Info From Client: </string>
+    <string name="expected_info_from_tekskills">Expected Info From Tekskills: </string>
+    <string name="tekskills_action_items">Tekskills Action Item: </string>
+    <string name="no_internet">No internet connection</string>
+    <string name="active">Active</string>
+    <string name="edt_visit_purpose">Visit Purpose</string>
+    <string name="edt_no_of_days">No Of Day\'s</string>
+    <string name="visit_date">Visit Date</string>
+    <string name="source">Source Location</string>
+    <string name="destination">Destination Location</string>
+    <string name="view_meetings">View Meetings</string>
+    <string name="kms">Distance(Kms)</string>
+    <string name="purpose_visit_details">Purpose Of Visit</string>
+    <string name="src_loc">Source Location</string>
+    <string name="des_loc">Destination Location</string>
+    <string name="advance_amount">Advance Amount</string>
+    <string name="expenses">Expenses-></string>
+    <string name="travel_expenses">Travel Expenses</string>
+    <string name="hotel_expenses">Hotel Expenses</string>
+    <string name="food_expenses">Food Expenses</string>
+    <string name="from_loc">From Location</string>
+    <string name="to_loc">To Location</string>
+    <string name="travel_date">Travel Date</string>
+    <string name="hotel_loc">Hotel Location</string>
+    <string name="hotel_amount">Hotel Amount</string>
+    <string name="book_date">Booking Date</string>
+    <string name="food_amount">Food Amount</string>
+    <string name="food_comment">Comment</string>
+    <string name="distance">Distance</string>
+</resources>

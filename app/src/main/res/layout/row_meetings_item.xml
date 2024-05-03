@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginLeft="5dp"
+    android:background="@drawable/white_border_with_radius">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#039be5"
+            android:lineSpacingExtra="4sp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="Going"
+            android:visibility="invisible"/>
+
+        <ImageView
+            android:id="@+id/iv_cale"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="11dp"
+            android:src="@drawable/timetable"
+            android:layout_marginRight="5dp"
+            android:padding="4dp"
+            android:layout_marginLeft="10dp"/>
+
+
+        <TextView
+            android:id="@+id/tv_date_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_toRightOf="@+id/iv_cale"
+            android:textColor="@color/grey"
+            android:lineSpacingExtra="4sp"
+            android:layout_marginTop="15dp"
+            android:text="22-oct-2019"/>
+
+
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:lineSpacingExtra="4sp"
+            android:layout_below="@+id/tv_status"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="15dp"
+            android:inputType="textCapSentences"
+            android:text="Meeting Name"/>
+
+        <ImageView
+            android:id="@+id/iv_status"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/checkin_success"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/tv_title"
+            android:layout_marginRight="5dp"/>
+
+        <TextView
+            android:id="@+id/tv_lead_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/grey"
+            android:lineSpacingExtra="4sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_below="@+id/tv_title"
+            android:layout_toLeftOf="@+id/iv_status"
+            android:text="Lead Name" />
+
+        <TextView
+            android:id="@+id/tv_company"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#757575"
+            android:lineSpacingExtra="4sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_below="@+id/tv_lead_name"
+            android:layout_toLeftOf="@+id/iv_status"
+            android:text="Company Name" />
+
+        <TextView
+            android:id="@+id/tv_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/dark_blue"
+            android:lineSpacingExtra="4sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_below="@+id/tv_company"
+            android:layout_toLeftOf="@+id/iv_status"
+            android:text="Email Address" />
+
+        <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#757575"
+        android:lineSpacingExtra="4sp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_below="@+id/tv_email"
+        android:layout_toLeftOf="@+id/iv_status"
+        android:text="Desc.." />
+
+        <TextView
+            android:id="@+id/tv_opportunity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#757575"
+            android:lineSpacingExtra="4sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_below="@+id/tv_desc"
+            android:layout_toLeftOf="@+id/iv_status"
+            android:text="Opportunity" />
+
+
+        <View
+            android:id="@+id/v_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/tv_opportunity"
+            android:layout_marginTop="10dp"
+            android:background="@color/light_grey"/>
+
+        <ImageView
+            android:id="@+id/iv_call"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="15dp"
+            android:padding="7dp"
+            android:layout_below="@+id/v_view"
+            android:src="@drawable/phone_grey"/>
+
+        <TextView
+            android:id="@+id/tv_mobile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/dark_blue"
+            android:lineSpacingExtra="4sp"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/iv_call"
+            android:layout_toLeftOf="@+id/iv_checkIn"
+            android:layout_below="@+id/v_view"
+            android:text="9999999999" />
+
+
+        <ImageView
+            android:id="@+id/iv_edit"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/v_view"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icon_edit"/>
+
+        <ImageView
+            android:id="@+id/iv_checkIn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="4dp"
+            android:layout_below="@+id/v_view"
+            android:layout_toLeftOf="@+id/iv_edit"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/checkin"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

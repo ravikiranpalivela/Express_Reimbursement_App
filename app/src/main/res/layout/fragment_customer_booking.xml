@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/maps"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3">
+
+                <FrameLayout
+                    android:id="@+id/booking_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </FrameLayout>
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragment_maps"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:minHeight="@dimen/widget_size_350"
+                android:layout_margin="@dimen/widget_size_4"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fragmentMapsBackBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/widget_size_10"
+            android:layout_marginTop="@dimen/widget_size_150"
+            android:backgroundTint="@color/white"
+            android:gravity="bottom|end"
+            android:visibility="gone"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_back_arrow" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fragmentMapsFindMyLocationBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="@dimen/widget_size_250"
+            android:backgroundTint="@color/white"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_find_my_location" />
+    </RelativeLayout>
+</layout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="6dp"
+    android:id="@+id/pickup"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enter Source Location"
+            android:textStyle="bold"
+            android:textSize="@dimen/font_size_18"
+            android:padding="@dimen/widget_size_1"
+            android:layout_margin="@dimen/widget_size_2"
+            app:drawableStartCompat="@drawable/ic_location_blue" />
+
+        <fragment
+            android:id="@+id/maps_place_autocomplete_fragment"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

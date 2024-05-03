@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="userExpense"
+            type="com.tekskills.er_tekskills.data.model.UserExpence" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_4dp"
+        app:cardElevation="8dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/white"
+        style="@style/Widget.App.CardView">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/travelFrom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textSize="16sp"
+                android:text="@{userExpense.travelFrom}" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/travelTo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/travelFrom"
+                android:layout_marginTop="5dp"
+                android:textSize="16sp"
+                android:text="@{userExpense.travelTo}" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/travelDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/travelTo"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="5dp"
+                android:textSize="13sp"
+                android:text="@{userExpense.travelDate}" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/modeOfTravel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/travelDate"
+                android:layout_marginTop="5dp"
+                android:textSize="13sp"
+                android:text="@{userExpense.modeOfTravel}" />
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".presentation.fragments.NewTaskFragment">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!--                <com.google.android.material.textview.MaterialTextView-->
+                <!--                    android:id="@+id/mtv_create_new_action_item"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_centerHorizontal="true"-->
+                <!--                    android:text="@string/create_action_item"-->
+                <!--                    android:textSize="24sp"-->
+                <!--                    android:textStyle="bold"-->
+                <!--                    app:layout_constraintEnd_toEndOf="parent"-->
+                <!--                    app:layout_constraintStart_toStartOf="parent"-->
+                <!--                    app:layout_constraintTop_toTopOf="parent" />-->
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edtl_expected_info_from_clients"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:hint="@string/edt_expected_info_from_clients"
+                    app:boxStrokeWidth="2dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="50"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_expected_info_from_clients"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:backgroundTint="@color/white" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edtl_expected_info_from_tekskills"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:hint="@string/edt_expected_info_from_tekskills"
+                    app:boxStrokeWidth="2dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="50"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edtl_expected_info_from_clients">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_expected_info_from_tekskills"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:backgroundTint="@color/white" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edtl_tekskills_action_items"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:hint="@string/edt_tekskills_action_items"
+                    app:boxStrokeWidth="2dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="50"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edtl_expected_info_from_tekskills">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_tekskills_action_items"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:backgroundTint="@color/white" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_action_item_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/_10dp"
+                    android:text="@string/action_item_date"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edtl_tekskills_action_items" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/date_action_item_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="@string/edt_action_item_date"
+                    app:chipIcon="@drawable/ic_baseline_date_range_24"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_action_item_date" />
+
+
+                <!--                <com.google.android.material.textfield.TextInputLayout-->
+                <!--                    android:id="@+id/edtl_opportunity_desc"-->
+                <!--                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_marginHorizontal="10dp"-->
+                <!--                    android:hint="@string/edt_opportunity_desc"-->
+                <!--                    app:boxStrokeWidth="2dp"-->
+                <!--                    app:counterEnabled="true"-->
+                <!--                    app:counterMaxLength="150"-->
+                <!--                    app:errorEnabled="true"-->
+                <!--                    app:layout_constraintEnd_toEndOf="parent"-->
+                <!--                    app:layout_constraintStart_toStartOf="parent"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@+id/edtl_tekskills_action_items">-->
+
+                <!--                    <com.google.android.material.textfield.TextInputEditText-->
+                <!--                        android:id="@+id/edt_opportunity_desc"-->
+                <!--                        android:layout_width="match_parent"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:layout_gravity="center_horizontal"-->
+                <!--                        android:backgroundTint="@color/white" />-->
+
+                <!--                </com.google.android.material.textfield.TextInputLayout>-->
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    style="?android:attr/progressBarStyleSmallTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/light_blue"
+            android:text="@string/submit"
+            app:icon="@drawable/ic_baseline_keyboard_arrow_up_24"
+            app:iconGravity="end"
+            app:iconPadding="3dp" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

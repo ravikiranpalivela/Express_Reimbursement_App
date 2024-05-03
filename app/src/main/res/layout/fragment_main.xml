@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:id="@+id/containerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swiperefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/toolbar">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/ll_leads"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/bg_blue_border"
+                        android:elevation="5dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        android:weightSum="100">
+
+                        <ImageView
+                            android:id="@+id/iv_123"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="25"
+                            android:padding="15dp"
+                            android:src="@drawable/leads_dashboard"
+                            app:tint="@color/white" />
+
+                        <TextView
+                            android:id="@+id/tv_leads_count"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="60"
+                            android:text="Leads"
+                            android:textColor="@color/white"
+                            android:textSize="18dp"
+                            android:textStyle="bold" />
+
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="10"
+                            android:src="@drawable/ic_arrow_right" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_opportunities"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_below="@+id/ll_leads"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/bg_blue_border"
+                        android:elevation="5dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        android:weightSum="100">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="25"
+                            android:padding="15dp"
+                            android:src="@drawable/opportunity"
+                            app:tint="@color/white" />
+
+                        <TextView
+                            android:id="@+id/tv_opportunities_count"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="60"
+                            android:text="Opportunities"
+                            android:textColor="@color/white"
+                            android:textSize="18dp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="10"
+                            android:src="@drawable/ic_arrow_right" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_meetings"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_below="@+id/ll_opportunities"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/bg_blue_border"
+                        android:elevation="5dp"
+                        android:orientation="horizontal"
+                        android:weightSum="100">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="25"
+                            android:padding="15dp"
+                            android:src="@drawable/add_meeting"
+                            app:tint="@color/white" />
+
+                        <TextView
+                            android:id="@+id/tv_meetings_count"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="60"
+                            android:text="View Meetings"
+                            android:textColor="@color/white"
+                            android:textSize="18dp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="10"
+                            android:src="@drawable/ic_arrow_right" />
+
+                    </LinearLayout>
+
+
+                    <RelativeLayout
+                        android:id="@+id/ll_upcoming"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_meetings"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/bg_blue_border"
+                        android:paddingBottom="5dp">
+
+                        <TextView
+                            android:id="@+id/tv_upcoming"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="Upcoming meetings"
+                            android:textColor="@color/white"
+                            android:textSize="18dp" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv_upcoming">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rv_meetings"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/_4dp"
+                                android:padding="@dimen/_4dp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <com.airbnb.lottie.LottieAnimationView
+                                android:id="@+id/av_meetings"
+                                android:layout_width="match_parent"
+                                android:layout_height="200dp"
+                                android:layout_below="@id/rv_meetings"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/rv_meetings"
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/taskaanim" />
+
+                            <ProgressBar
+                                android:id="@+id/progress"
+                                style="?android:attr/progressBarStyleSmallTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:visibility="visible"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rl_noMeetings"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="50dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@color/white"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:id="@+id/image"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="20dp"
+                                android:src="@drawable/no_meeting" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/image"
+                                android:layout_margin="15dp"
+                                android:gravity="center"
+                                android:text="No Meetings"
+                                android:textSize="18dp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="240dp"
+                        android:layout_below="@+id/ll_upcoming"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:background="@drawable/bg_blue_border"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:text="BDM Statistics"
+                            android:textColor="@color/white"
+                            android:textSize="18dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Upcoming"
+                            android:textColor="@color/white"
+                            android:textSize="14dp" />
+
+                        <ProgressBar
+                            android:id="@+id/pb_first"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="18dp"
+                            android:layout_margin="10dp"
+                            android:background="@color/white"
+                            android:max="100"
+                            android:progressDrawable="@drawable/three_color_progressbar" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Missed"
+                            android:textColor="@color/white"
+                            android:textSize="14dp" />
+
+                        <ProgressBar
+                            android:id="@+id/pb_missed"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="18dp"
+                            android:layout_margin="10dp"
+                            android:background="@color/white"
+                            android:max="100"
+                            android:progressDrawable="@drawable/three_color_progressbar" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Completed"
+                            android:textColor="@color/white"
+                            android:textSize="14dp" />
+
+                        <ProgressBar
+                            android:id="@+id/pb_completed"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="18dp"
+                            android:layout_margin="10dp"
+                            android:background="@color/white"
+                            android:max="100"
+                            android:progressDrawable="@drawable/three_color_progressbar" />
+
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </ScrollView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </FrameLayout>
+</layout>
+

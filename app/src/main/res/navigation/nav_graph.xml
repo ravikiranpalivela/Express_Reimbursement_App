@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/home_fragment">
+
+
+
+    <fragment
+        android:id="@+id/new_purpose_meeting"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.NewMeetingPurposeFragment"
+        android:label="Add New Purpose Of Visit"
+        tools:layout="@layout/fragment_purpose_meeting">
+        <!--        <argument-->
+        <!--            android:name="opportunityArg"-->
+        <!--            app:argType="com.tekskills.psv_tekskills.data.model.OpportunityByProjectIDResponse"-->
+        <!--            app:nullable="true" />-->
+        <argument
+            android:name="employeeID"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/view_meetings"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.ViewMeetingPurposeFragment"
+        android:label="@string/view_meetings"
+        tools:layout="@layout/fragment_view_purpose_meetings">
+        <action
+            android:id="@+id/action_view_opportunityFragment_to_newAssignedProjectFragment"
+            app:destination="@id/new_assign_project" />
+        <action
+            android:id="@+id/action_view_opportunityFragment_to_editAssignedProjectFragment"
+            app:destination="@id/new_edit_assign_project" />
+        <action
+            android:id="@+id/action_view_opportunityFragment_to_viewMeetingDetailsFragment"
+            app:destination="@id/view_meeting_purpose_details_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/view_meeting_purpose_details_fragment"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.PurposeMeetingDetailsFragment"
+        android:label="Meeting Details"
+        tools:layout="@layout/fragment_meeting_purpose_details">
+        <argument
+            android:name="opportunityID"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_meetingDetailsFragment_to_newTravelExpenses"
+            app:destination="@id/new_travel_expenses" />
+        <action
+            android:id="@+id/action_meetingDetailsFragment_to_newHotelExpensesFragment"
+            app:destination="@id/new_hotel_expenses" />
+        <action
+            android:id="@+id/action_meetingDetailsFragment_to_newFoodExpensesFragment"
+            app:destination="@id/new_food_expenses" />
+        <action
+            android:id="@+id/action_meetingDetailsFragment_to_EditMomActionItem"
+            app:destination="@id/edit_mom_action_item" />
+        <action
+            android:id="@+id/action_meetingDetailsFragment_to_ActionItemDetails"
+            app:destination="@id/action_item_details" />
+        <action
+            android:id="@+id/action_meetingDetailsFragment_to_EditActionItem"
+            app:destination="@id/edit_action_item" />
+        <action
+            android:id="@+id/action_meetingDetailsFragment_to_newActionItem"
+            app:destination="@id/new_action_item" />
+        <action
+            android:id="@+id/action_meetingDetailsFragment_to_newEscalation"
+            app:destination="@id/new_escalation" />
+        <action
+            android:id="@+id/action_meetingDetailsFragment_to_EscalationDetails"
+            app:destination="@id/escalation_details" />
+        <action
+            android:id="@+id/action_meetingDetailsFragment_to_EditEscalation"
+            app:destination="@id/edit_escalation" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/new_travel_expenses"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.NewTravelExpensesFragment"
+        android:label="Add Travel Expenses"
+        tools:layout="@layout/fragment_new_travel_expenses" />
+
+    <fragment
+        android:id="@+id/new_hotel_expenses"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.NewHotelExpensesFragment"
+        android:label="Add Hotel Expenses"
+        tools:layout="@layout/fragment_new_hotel_expenses" />
+
+    <fragment
+        android:id="@+id/new_food_expenses"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.NewFoodExpensesFragment"
+        android:label="Add Food Expenses"
+        tools:layout="@layout/fragment_new_food_expenses" />
+
+    <fragment
+        android:id="@+id/settings_fragment"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.SettingsFragment"
+        android:label=""
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/completed_tasks_fragment"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.CompletedTasksFragment"
+        android:label=""
+        tools:layout="@layout/fragment_completed_tasks">
+        <action
+            android:id="@+id/action_completed_tasks_fragment_to_new_task_fragment"
+            app:destination="@id/new_task_fragment"
+            app:enterAnim="@anim/slide_up" />
+    </fragment>
+
+
+
+    <fragment
+        android:id="@+id/view_opportunity_fragment"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.ViewOpportunityFragment"
+        android:label="@string/view_opportunity"
+        tools:layout="@layout/fragment_view_opportunity">
+        <action
+            android:id="@+id/action_view_opportunityFragment_to_newAssignedProjectFragment"
+            app:destination="@id/new_assign_project" />
+        <action
+            android:id="@+id/action_view_opportunityFragment_to_editAssignedProjectFragment"
+            app:destination="@id/new_edit_assign_project" />
+        <action
+            android:id="@+id/action_view_opportunityFragment_to_opportunityDetailsFragment"
+            app:destination="@id/opportunity_details_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/task_category_fragment"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.TaskCategoryFragment"
+        android:label=""
+        tools:layout="@layout/fragment_task_category">
+        <argument
+            android:name="categoryString"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_task_category_fragment_to_new_task_fragment"
+            app:destination="@id/new_task_fragment"
+            app:enterAnim="@anim/slide_up" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/new_task_fragment"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.NewTaskFragment"
+        android:label=""
+        tools:layout="@layout/fragment_new_task">
+        <argument
+            android:name="newTaskArg"
+            app:argType="com.tekskills.er_tekskills.data.model.TaskCategoryInfo"
+            app:nullable="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/new_client"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.NewClientFragment"
+        android:label="Create Client"
+        tools:layout="@layout/fragment_new_client" />
+
+    <fragment
+        android:id="@+id/new_project"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.NewProjectFragment"
+        android:label="Create Project"
+        tools:layout="@layout/fragment_new_project" />
+
+    <fragment
+        android:id="@+id/new_assign_project"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.AssignProjectFragment"
+        android:label="Add Opportunity"
+        tools:layout="@layout/fragment_new_assign_project">
+        <action
+            android:id="@+id/action_NewAssignProjectFragment_to_ViewOpportunityFragment"
+            app:destination="@id/view_opportunity_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/new_edit_assign_project"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.AssignProjectFragment"
+        android:label="Edit Opportunity"
+        tools:layout="@layout/fragment_new_assign_project" />
+
+    <fragment
+        android:id="@+id/new_mom_action_item"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.NewMOMActionItemFragment"
+        android:label="Add MOM Action Item"
+        tools:layout="@layout/fragment_new_mom_action_item">
+        <argument
+            android:name="opportunityArg"
+            app:argType="com.tekskills.er_tekskills.data.model.OpportunityByProjectIDResponse"
+            app:nullable="true" />
+        <argument
+            android:name="opportunityID"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/edit_mom_action_item"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.EditMOMActionItemFragment"
+        android:label="Edit MOM Action Item"
+        tools:layout="@layout/fragment_new_mom_action_item">
+        <argument
+            android:name="momActionItemArg"
+            app:argType="com.tekskills.er_tekskills.data.model.MomProjectResponseItem"
+            app:nullable="true" />
+        <argument
+            android:name="momActionItemID"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mom_action_item_details"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.MomActionItemDetailsFragment"
+        android:label="MOM Action-Item Details"
+        tools:layout="@layout/fragment_mom_action_item_details">
+        <argument
+            android:name="momActionItemArg"
+            app:argType="com.tekskills.er_tekskills.data.model.MomProjectResponseItem"
+            app:nullable="true" />
+        <argument
+            android:name="momActionItemID"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_momActionItemDetailsFragment_to_editMomActionItem"
+            app:destination="@id/edit_mom_action_item" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/edit_action_item"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.EditActionItemFragment"
+        android:label="Edit Action Item"
+        tools:layout="@layout/fragment_new_action_item">
+        <argument
+            android:name="actionItemArg"
+            app:argType="com.tekskills.er_tekskills.data.model.ActionItemProjectIDResponseItem"
+            app:nullable="true" />
+        <argument
+            android:name="actionItemID"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/action_item_details"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.ActionItemDetailsFragment"
+        android:label="Action-Item Details"
+        tools:layout="@layout/fragment_action_item_details">
+        <argument
+            android:name="actionItemArg"
+            app:argType="com.tekskills.er_tekskills.data.model.ActionItemProjectIDResponseItem"
+            app:nullable="true" />
+        <argument
+            android:name="actionItemID"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_actionItemDetailsFragment_to_editActionItem"
+            app:destination="@id/edit_action_item" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/new_action_item"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.NewActionItemFragment"
+        android:label="Add Action Item"
+        tools:layout="@layout/fragment_new_action_item">
+        <argument
+            android:name="opportunityArg"
+            app:argType="com.tekskills.er_tekskills.data.model.OpportunityByProjectIDResponse"
+            app:nullable="true" />
+        <argument
+            android:name="opportunityID"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/new_escalation"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.NewEscalationFragment"
+        android:label="Add Escalation"
+        tools:layout="@layout/fragment_new_escalation">
+        <argument
+            android:name="opportunityArg"
+            app:argType="com.tekskills.er_tekskills.data.model.OpportunityByProjectIDResponse"
+            app:nullable="true" />
+        <argument
+            android:name="opportunityID"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/edit_escalation"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.EditEscalationFragment"
+        android:label="Edit Escalation"
+        tools:layout="@layout/fragment_new_escalation">
+        <argument
+            android:name="escalationArg"
+            app:argType="com.tekskills.er_tekskills.data.model.ClientsEscalationResponseItem"
+            app:nullable="true" />
+        <argument
+            android:name="escalationID"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/escalation_details"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.ClientEscalationDetailsFragment"
+        android:label="Escalation Details"
+        tools:layout="@layout/fragment_escalation_details">
+        <argument
+            android:name="escalationArg"
+            app:argType="com.tekskills.er_tekskills.data.model.ClientsEscalationResponseItem"
+            app:nullable="true" />
+
+        <argument
+            android:name="escalationID"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_escalationDetailsFragment_to_editEscalation"
+            app:destination="@id/edit_escalation" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/opportunity"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.OpportunityFragment"
+        android:label="Add Opportunity"
+        tools:layout="@layout/fragment_opportunity">
+        <action
+            android:id="@+id/action_opportunityFragment_to_newClientFragment"
+            app:destination="@id/new_client" />
+        <action
+            android:id="@+id/action_opportunityFragment_to_newProjectFragment"
+            app:destination="@id/new_project" />
+        <action
+            android:id="@+id/action_opportunityFragment_to_newAssignedProjectFragment"
+            app:destination="@id/new_assign_project" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/opportunity_details_fragment"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.OpportunityDetailsFragment"
+        android:label="Opportunity Details"
+        tools:layout="@layout/fragment_opportunity_details">
+        <argument
+            android:name="opportunityID"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_opportunityDetailsFragment_to_newAssignedProjectFragment"
+            app:destination="@id/new_edit_assign_project" />
+        <action
+            android:id="@+id/action_opportunityDetailsFragment_to_newMomActionItem"
+            app:destination="@id/new_mom_action_item" />
+        <action
+            android:id="@+id/action_opportunityDetailsFragment_to_MomActionItemDetails"
+            app:destination="@id/mom_action_item_details" />
+        <action
+            android:id="@+id/action_opportunityDetailsFragment_to_EditMomActionItem"
+            app:destination="@id/edit_mom_action_item" />
+        <action
+            android:id="@+id/action_opportunityDetailsFragment_to_ActionItemDetails"
+            app:destination="@id/action_item_details" />
+        <action
+            android:id="@+id/action_opportunityDetailsFragment_to_EditActionItem"
+            app:destination="@id/edit_action_item" />
+        <action
+            android:id="@+id/action_opportunityDetailsFragment_to_newActionItem"
+            app:destination="@id/new_action_item" />
+        <action
+            android:id="@+id/action_opportunityDetailsFragment_to_newEscalation"
+            app:destination="@id/new_escalation" />
+        <action
+            android:id="@+id/action_opportunityDetailsFragment_to_EscalationDetails"
+            app:destination="@id/escalation_details" />
+        <action
+            android:id="@+id/action_opportunityDetailsFragment_to_EditEscalation"
+            app:destination="@id/edit_escalation" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/base_fragment"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.BaseFragment"
+        android:label=""
+        tools:layout="@layout/fragment_base">
+        <action
+            android:id="@+id/action_baseFragment_to_taskCategoryFragment"
+            app:destination="@id/task_category_fragment" />
+        <action
+            android:id="@+id/action_baseFragment_to_newTaskFragment"
+            app:destination="@id/new_task_fragment"
+            app:enterAnim="@anim/slide_up" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/home_fragment"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_baseFragment"
+            app:destination="@id/base_fragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_ClientWiseEscalationDetailsFragment"
+            app:destination="@id/client_wise_escalation_details_fragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_ProjectWisePendingActionItemDetailsFragment"
+            app:destination="@id/project_wise_pending_action_item_details_fragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_taskCategoryFragment"
+            app:destination="@id/task_category_fragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_newTaskFragment"
+            app:destination="@id/new_task_fragment"
+            app:enterAnim="@anim/slide_up" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_newMeetingPurpose"
+            app:destination="@id/new_purpose_meeting"
+            app:enterAnim="@anim/slide_up" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_view_meeting_purposeFragment"
+            app:destination="@id/view_meetings" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_viewMeetingDetailsFragment"
+            app:destination="@id/view_meeting_purpose_details_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/client_wise_escalation_details_fragment"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.ClientWiseEscalationListFragment"
+        android:label="Client Escalation Details"
+        tools:layout="@layout/fragment_client_wise_escalation">
+        <argument
+            android:name="clientID"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_ClientWiseEscalationDetailsFragment_to_ClientWiseEscalationDetails"
+            app:destination="@id/client_wise_escalation_details" />
+
+        <action
+            android:id="@+id/action_ClientWiseEscalationDetailsFragment_to_opportunityDetailsFragment"
+            app:destination="@id/opportunity_details_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/project_wise_pending_action_item_details_fragment"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.ProjectWisePendingActionItemListFragment"
+        android:label="Pending Action Item Details"
+        tools:layout="@layout/fragment_project_wise_pending_action_items">
+        <argument
+            android:name="projectID"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_ProjectWiseActionItemsDetailsFragment_to_ProjectWisePendingActionItemsDetails"
+            app:destination="@id/project_wise_pending_action_item_details" />
+
+        <action
+            android:id="@+id/action_ProjectWiseActionItemsDetailsFragment_to_opportunityDetailsFragment"
+            app:destination="@id/opportunity_details_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/client_wise_escalation_details"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.ClientWiseEscalationDetailsFragment"
+        android:label="Client Escalation Details"
+        tools:layout="@layout/fragment_client_escalation_details">
+        <argument
+            android:name="escalationArg"
+            app:argType="com.tekskills.er_tekskills.data.model.ClientEscalationGraphByIDResponseItem"
+            app:nullable="true" />
+        <argument
+            android:name="escalationID"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/project_wise_pending_action_item_details"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.ProjectWisePendingActionDetailsFragment"
+        android:label="Pending Action-Item Details"
+        tools:layout="@layout/fragment_project_wise_action_item_details">
+        <argument
+            android:name="escalationArg"
+            app:argType="com.tekskills.er_tekskills.data.model.PendingActionItemGraphByIDResponseItem"
+            app:nullable="true" />
+        <argument
+            android:name="escalationID"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

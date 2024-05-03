@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!--                <com.google.android.material.textview.MaterialTextView-->
+                <!--                    android:id="@+id/mtv_create_project"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_centerHorizontal="true"-->
+                <!--                    android:text="@string/create_project"-->
+                <!--                    android:textSize="24sp"-->
+                <!--                    android:textStyle="bold"-->
+                <!--                    app:layout_constraintEnd_toEndOf="parent"-->
+                <!--                    app:layout_constraintStart_toStartOf="parent"-->
+                <!--                    app:layout_constraintTop_toTopOf="parent" />-->
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edtl_food_amt"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:hint="@string/food_amount"
+                    app:boxStrokeWidth="2dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="4"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_food_amt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:layout_gravity="center_horizontal"
+                        android:backgroundTint="@color/white" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!--                <Spinner-->
+                <!--                    android:id="@+id/s_clients"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_margin="10dp"-->
+                <!--                    android:background="@drawable/blue_outline"-->
+                <!--                    android:popupBackground="@drawable/blue_outline_white"-->
+                <!--                    android:spinnerMode="dropdown"-->
+                <!--                    app:layout_constraintEnd_toEndOf="parent"-->
+                <!--                    app:layout_constraintStart_toStartOf="parent"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@+id/edtl_food_amt"-->
+                <!--                    tools:listitem="@layout/item_spinner" />-->
+
+
+                <!--                <com.tekskills.psv_tekskills.presentation.view.spinner.MultiSelectSpinnerView-->
+                <!--                    android:id="@+id/s_journey_types"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="@dimen/spinner_item_height"-->
+                <!--                    android:layout_margin="@dimen/_10dp"-->
+                <!--                    android:background="@drawable/blue_outline"-->
+                <!--                    app:confirmTextColor="#669900"-->
+                <!--                    app:dropdown_footerConfirm_text="Ok"-->
+                <!--                    app:dropdown_headerSelectAll_text="All"-->
+                <!--                    app:layout_constraintEnd_toEndOf="parent"-->
+                <!--                    app:layout_constraintStart_toStartOf="parent"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@+id/tv_journey_type"-->
+                <!--                    app:placeholder_text="Select options"-->
+                <!--                    tools:listitem="@layout/item_spinner" />-->
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edtl_food_comment"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:hint="@string/food_comment"
+                    app:boxStrokeWidth="2dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="50"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edtl_food_amt">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_food_comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:backgroundTint="@color/white" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/tv_attach_doc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_10dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Attach Document"
+                    android:textSize="@dimen/_14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edtl_food_comment" />
+
+                <TextView
+                    android:id="@+id/tv_file_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:padding="@dimen/widget_size_4"
+                    android:text="File Name"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_size_16"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_attach_doc" />
+
+                <LinearLayout
+                    android:id="@+id/ll_upload_genres_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_file_name">
+
+                    <TextView
+                        android:id="@+id/chooseBtn"
+                        android:layout_width="@dimen/widget_size_0"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="@dimen/widget_size_4"
+                        android:layout_weight="50"
+                        android:background="@drawable/background_select"
+                        android:fontFamily="@font/poppins"
+                        android:paddingTop="@dimen/widget_size_12"
+                        android:paddingBottom="@dimen/widget_size_12"
+                        android:text="Select File"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/font_size_16"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/uploadBtn"
+                        android:layout_width="@dimen/widget_size_0"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="@dimen/widget_size_4"
+                        android:layout_weight="50"
+                        android:background="@drawable/background_select"
+                        android:fontFamily="@font/poppins"
+                        android:paddingTop="@dimen/widget_size_12"
+                        android:paddingBottom="@dimen/widget_size_12"
+                        android:text="Upload File"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/font_size_16"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    style="?android:attr/progressBarStyleSmallTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/light_blue"
+            android:text="@string/submit"
+            app:icon="@drawable/ic_baseline_keyboard_arrow_up_24"
+            app:iconGravity="end"
+            app:iconPadding="3dp" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

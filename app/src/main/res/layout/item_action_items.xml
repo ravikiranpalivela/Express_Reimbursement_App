@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewElement"
+            type="com.tekskills.er_tekskills.utils.TextViewHtmlString" />
+
+        <variable
+            name="taskCategoryInfo"
+            type="com.tekskills.er_tekskills.data.model.ActionItemProjectIDResponseItem" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardView"
+        style="@style/Widget.App.CardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_4dp"
+        app:cardElevation="8dp"
+        app:strokeColor="@color/white"
+        app:strokeWidth="1dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/_4dp">
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/isCompleted"
+                android:layout_width="2dp"
+                android:layout_height="2dp"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/ll_expected_info_from_client"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_expected_info_from_client"
+                    style="@style/stlTxtKey"
+                    android:text="@string/expected_info_from_clients"
+                     />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/expected_info_from_client"
+                    style="@style/stlTxtValue"
+                    android:text="@{taskCategoryInfo.expectedInfoFromClient}"
+                    tools:text="Testing" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_expected_info_from_tekskills"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_expected_info_from_client"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_expected_info_from_client">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_expected_info_from__tekskills"
+                    style="@style/stlTxtKey"
+                    android:text="@string/expected_info_from_tekskills"
+                    />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/expected_info_from__tekskills"
+                    style="@style/stlTxtValue"
+                    android:text="@{taskCategoryInfo.expectedInfoFromTekskills}"
+                    tools:text="Testing" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_tekskills_action_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_expected_info_from_tekskills"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_expected_info_from_tekskills">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_tekskills_action_item"
+                    style="@style/stlTxtKey"
+                    android:text="@string/tekskills_action_items"
+                     />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tekskills_action_item"
+                    style="@style/stlTxtValue"
+                    android:text="@{taskCategoryInfo.tekskillsActionItesm}"
+                    tools:text="Testing" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_action_item_completion_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_tekskills_action_item"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_tekskills_action_item">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_action_item_completion_date"
+                    style="@style/stlTxtKey"
+                    android:text="@string/action_item_date"
+                     />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/action_item_completion_date"
+                    style="@style/stlTxtValue"
+                    android:text="@{taskCategoryInfo.actionItemCompletionDate}"
+                    tools:text="Testing" />
+            </LinearLayout>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/priority"
+                style="@style/stlTxtValue"
+                android:text="@{taskCategoryInfo.actionStatus}"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_action_item_completion_date" />
+
+            <ImageButton
+                android:id="@+id/iv_edit_action_item"
+                android:layout_width="@dimen/_36dp"
+                android:layout_height="@dimen/_36dp"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_8dp"
+                android:background="@drawable/ic_edit"
+                android:contentDescription="@string/edit_action_item"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageButton
+                android:id="@+id/iv_view_action_item"
+                android:layout_width="@dimen/_36dp"
+                android:layout_height="@dimen/_36dp"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_8dp"
+                android:background="@drawable/ic_view"
+                android:contentDescription="@string/edit_action_item"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/iv_edit_action_item" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintGuide_percent="0.5" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

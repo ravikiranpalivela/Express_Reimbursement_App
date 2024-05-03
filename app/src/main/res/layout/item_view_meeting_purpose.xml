@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewElement"
+            type="com.tekskills.er_tekskills.utils.TextViewHtmlString" />
+
+        <variable
+            name="taskCategoryInfo"
+            type="com.tekskills.er_tekskills.data.model.MeetingPurposeResponseData" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardView"
+        style="@style/Widget.App.CardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_4dp"
+        app:cardElevation="8dp"
+        app:strokeColor="@color/white"
+        app:strokeWidth="1dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/_4dp">
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/isCompleted"
+                android:layout_width="2dp"
+                android:layout_height="2dp"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/ll_projectName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_projectName"
+                    style="@style/stlTxtKey"
+                    android:text="@string/edt_visit_purpose"
+                    />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/projectName"
+                    style="@style/stlTxtValue"
+                    android:text="@{taskCategoryInfo.visitPurpose}"
+                    tools:text="Testing" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_client_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_projectName"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_projectName">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_clientName"
+                    style="@style/stlTxtKey"
+                    android:text="@string/visit_date" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/clientName"
+                    style="@style/stlTxtValue"
+                    android:text="@{taskCategoryInfo.visitDate}"
+                    tools:text="Testing" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_oppor_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_client_name"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_client_name">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_oppor_type"
+                    style="@style/stlTxtKey"
+                    android:text="@string/edt_no_of_days" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/oppor_type"
+                    style="@style/stlTxtValue"
+                    android:text="@{taskCategoryInfo.noOfDays}"
+                    tools:text="Testing" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_oppor_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_oppor_type"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_oppor_type">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_oppor_desc"
+                    style="@style/stlTxtKey"
+                    android:text="@string/kms" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/opportunity_desc"
+                    style="@style/stlTxtValue"
+                    android:text="@{taskCategoryInfo.noOfDays}"
+                    tools:text="Testing" />
+            </LinearLayout>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/priority"
+                style="@style/stlTxtValue"
+                android:text="@{taskCategoryInfo.status}"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_oppor_desc" />
+
+            <ImageButton
+                android:id="@+id/iv_edit_opportunity"
+                android:layout_width="@dimen/_36dp"
+                android:layout_height="@dimen/_36dp"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_8dp"
+                android:background="@drawable/ic_edit"
+                android:contentDescription="@string/edit_opportunity"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageButton
+                android:id="@+id/iv_view_opportunity"
+                android:layout_width="@dimen/_36dp"
+                android:layout_height="@dimen/_36dp"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_8dp"
+                android:background="@drawable/ic_view"
+                android:contentDescription="@string/edit_opportunity"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/iv_edit_opportunity" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintGuide_percent="0.5" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>
