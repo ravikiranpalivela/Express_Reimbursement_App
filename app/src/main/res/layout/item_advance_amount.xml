@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="foodExpense"
+            type="com.tekskills.er_tekskills.data.model.UserExpence" /> <!-- Make sure to replace com.yourpackage with your actual package name -->
+
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardView"
+        style="@style/Widget.App.CardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_4dp"
+        app:cardElevation="8dp"
+        app:strokeColor="@color/white"
+        app:strokeWidth="1dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/_4dp">
+
+            <!-- Food Amount Field -->
+            <LinearLayout
+                android:id="@+id/ll_adv_amt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_adv_amt"
+                    style="@style/stlTxtKey"
+                    android:text="@string/advance_amount" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/food_amount"
+                    style="@style/stlTxtValue"
+                    tools:text="Testing" />
+
+            </LinearLayout>
+
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:id="@+id/priority"-->
+<!--                style="@style/stlTxtValue"-->
+<!--                android:text="@{foodExpense.meetingNotes}"-->
+<!--                android:visibility="invisible"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/ll_adv_amt" />-->
+
+            <ImageButton
+                android:id="@+id/iv_edit_mom"
+                android:layout_width="@dimen/_36dp"
+                android:layout_height="@dimen/_36dp"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_8dp"
+                android:background="@drawable/ic_edit"
+                android:contentDescription="@string/edit_mom"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_adv_amt"/>
+
+            <ImageButton
+                android:id="@+id/iv_view_mom"
+                android:layout_width="@dimen/_36dp"
+                android:layout_height="@dimen/_36dp"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_8dp"
+                android:visibility="gone"
+                android:background="@drawable/ic_view"
+                android:contentDescription="@string/edit_mom"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/iv_edit_mom" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintGuide_percent="0.5" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

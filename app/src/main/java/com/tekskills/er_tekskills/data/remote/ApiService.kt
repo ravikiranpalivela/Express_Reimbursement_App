@@ -8,8 +8,9 @@ import com.tekskills.er_tekskills.data.model.AddCommentOpportunity
 import com.tekskills.er_tekskills.data.model.AddEscalationRequest
 import com.tekskills.er_tekskills.data.model.AddMOMOpportunityRequest
 import com.tekskills.er_tekskills.data.model.AddOpportunityRequest
-import com.tekskills.er_tekskills.data.model.AddPurposeMeetingRequest
+import com.tekskills.er_tekskills.data.model.AddMeetingRequest
 import com.tekskills.er_tekskills.data.model.AddPurposeMeetingResponse
+import com.tekskills.er_tekskills.data.model.AddTravelExpenceResponse
 import com.tekskills.er_tekskills.data.model.AssignProjectListResponse
 import com.tekskills.er_tekskills.data.model.ClientEscalationGraphByIDResponse
 import com.tekskills.er_tekskills.data.model.PendingActionGraphResponse
@@ -30,6 +31,7 @@ import com.tekskills.er_tekskills.data.model.PendingEscalationGraphResponse
 import com.tekskills.er_tekskills.data.model.PracticeHeadResponse
 import com.tekskills.er_tekskills.data.model.ProjectManagerResponse
 import com.tekskills.er_tekskills.data.model.ProjectOpportunityResponse
+import com.tekskills.er_tekskills.data.model.UserAllowenceResponse
 import com.tekskills.er_tekskills.data.model.UserMeResponse
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_ACCOUNT_MANAGER
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_ACTION_ITEM_BY_ID
@@ -54,19 +56,26 @@ import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_PROJECTS
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_PROJECT_ID
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_PROJECT_MANAGER
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_SRMANAGEMENT
+import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_USER_ALLOWENCE
+import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.MULTI_PART
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.POST_ADD_OPPORTUNITY
+import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.POST_TRAVEL_EXPENSES
 import com.tekskills.er_tekskills.utils.Common.Companion.APP_JSON
 import com.tekskills.er_tekskills.utils.Common.Companion.AUTHORIZATION
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
+import retrofit2.http.PartMap
 import retrofit2.http.Path
 
 interface ApiService {
-
 
     @Headers(APP_JSON)
     @POST(APIEndPoint.POST_USER_LOGIN)
@@ -77,11 +86,15 @@ interface ApiService {
     @GET(GET_ME)
     suspend fun getEmployeeMe(@Header(AUTHORIZATION) authorization: String): Response<UserMeResponse>
 
+    @GET("${GET_USER_ALLOWENCE}/{id}")
+    suspend fun getEmployeeAllowences(@Header(AUTHORIZATION) authorization: String,@Path("id") itemID:String): Response<UserAllowenceResponse>
+
+
     @Headers(APP_JSON)
     @POST(APIEndPoint.POST_ADD_MEETING_PURPOSE)
     suspend fun addMeetingPurpose(
         @Header(AUTHORIZATION) authorization: String,
-        @Body user: AddPurposeMeetingRequest
+        @Body user: AddMeetingRequest
     ): Response<AddPurposeMeetingResponse>
 
     @GET(GET_MEETING_PURPOSE)
@@ -89,6 +102,36 @@ interface ApiService {
 
     @GET("${GET_MEETING_PURPOSE}/{id}")
     suspend fun getMeetingPurposeByID(@Header(AUTHORIZATION) authorization: String,@Path("id") itemID:String): Response<MeetingPurposeResponseData>
+
+//    @Headers(MULTI_PART)
+    @Multipart
+    @POST(POST_TRAVEL_EXPENSES)
+    suspend fun addTravelExpense(
+        @Header(AUTHORIZATION) authorization: String,
+        @Part("purposeId") purposeID: RequestBody,
+        @Part("amount") amount: Long,
+        @Part file:  MutableList<MultipartBody.Part>,
+        @PartMap user: Map<String,@JvmSuppressWildcards RequestBody>
+    ): Response<AddTravelExpenceResponse>
+
+//    @Headers(MULTI_PART)
+    @Multipart
+    @POST(POST_TRAVEL_EXPENSES)
+    suspend fun addHotelExpense(
+        @Header(AUTHORIZATION) authorization: String,
+        @Part("purposeId") purposeID: RequestBody,
+        @Part file: MultipartBody.Part,
+        @PartMap user: Map<String,@JvmSuppressWildcards RequestBody>
+    ): Response<AddTravelExpenceResponse>
+
+//    @Headers(MULTI_PART)
+    @Multipart
+    @POST(POST_TRAVEL_EXPENSES)
+    suspend fun addFoodExpense(
+        @Header(AUTHORIZATION) authorization: String,
+        @Part("purposeId") purposeID: RequestBody,
+        @PartMap user: Map<String,@JvmSuppressWildcards RequestBody>
+    ): Response<AddTravelExpenceResponse>
 
     /**
      * Dashboard Graph items

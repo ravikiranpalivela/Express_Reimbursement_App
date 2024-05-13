@@ -38,8 +38,7 @@ class NewFoodExpensesFragment : Fragment() {
         viewModel = (activity as MainActivity).viewModel
         navController = findNavController()
 
-        viewModel.getClientNameList()
-        
+//        viewModel.getClientNameList()
 
         viewModel.resNewClientResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when (it.status) {
@@ -78,7 +77,7 @@ class NewFoodExpensesFragment : Fragment() {
             }
         })
 
-        binding.fab.setOnClickListener {
+        binding.btnSave.setOnClickListener {
             if (isValidate()) {
                 viewModel.addProject(
                     binding.edtFoodAmt.text.toString(),
@@ -92,18 +91,18 @@ class NewFoodExpensesFragment : Fragment() {
     }
 
     private fun isValidate(): Boolean =
-        validateProjectName() && validateOpportunityType()
+        validateFoodAmount() && validateFoodComment()
 
     /**
      * field must not be empty
      */
-    private fun validateProjectName(): Boolean {
+    private fun validateFoodAmount(): Boolean {
         if (binding.edtFoodAmt.text.toString().trim().isEmpty()) {
-            binding.edtlFoodAmt.error = "Required Field!"
+            binding.edtFoodAmt.error = "Required Field!"
             binding.edtFoodAmt.requestFocus()
             return false
         } else {
-            binding.edtlFoodAmt.isErrorEnabled = false
+            binding.edtFoodAmt.error = null
         }
         return true
     }
@@ -111,13 +110,13 @@ class NewFoodExpensesFragment : Fragment() {
     /**
      * field must not be empty
      */
-    private fun validateOpportunityType(): Boolean {
+    private fun validateFoodComment(): Boolean {
         if (binding.edtFoodComment.text.toString().trim().isEmpty()) {
-            binding.edtlFoodComment.error = "Required Field!"
+            binding.edtFoodComment.error = "Required Field!"
             binding.edtFoodComment.requestFocus()
             return false
         } else {
-            binding.edtlFoodComment.isErrorEnabled = false
+            binding.edtFoodComment.error = null
         }
         return true
     }

@@ -14,101 +14,502 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edtl_client_name"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:hint="@string/client_name"
-                    app:boxStrokeWidth="2dp"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="50"
-                    app:errorEnabled="true"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edt_client_name"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:backgroundTint="@color/white" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/white_border_with_radius"
+                        android:orientation="vertical"
+                        android:padding="@dimen/_10dp">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edtl_visit_purpose"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:hint="@string/edt_visit_purpose"
-                    app:boxStrokeWidth="2dp"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="50"
-                    app:errorEnabled="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edtl_client_name">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edt_visit_purpose"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:backgroundTint="@color/white" />
+                        <EditText
+                            android:id="@+id/edt_client_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/edit_text_color_changer"
+                            android:hint="@string/customer_name"
+                            android:inputType="text"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="5dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/gray"
+                            android:textSize="18dp" />
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <EditText
+                            android:id="@+id/edt_visit_purpose"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/edit_text_color_changer"
+                            android:hint="@string/edt_visit_purpose"
+                            android:inputType="text"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="5dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/gray"
+                            android:textSize="18dp" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edtl_no_of_days"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:hint="@string/edt_no_of_days"
-                    app:boxStrokeWidth="2dp"
-                    app:counterEnabled="false"
-                    app:counterMaxLength="2"
-                    app:errorEnabled="false"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edtl_visit_purpose">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="1">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edt_no_of_days"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:backgroundTint="@color/white"
-                        android:inputType="number" />
 
-                </com.google.android.material.textfield.TextInputLayout>
+                            <EditText
+                                android:id="@+id/edt_date"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerVertical="true"
+                                android:layout_weight="0.5"
+                                android:background="@drawable/edit_text_color_changer"
+                                android:focusable="false"
+                                android:hint="@string/visit_date"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="5dp"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/gray"
+                                android:textSize="18dp" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_visit_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="@dimen/_10dp"
-                    android:text="@string/visit_date"
-                    android:textSize="@dimen/font_size_16"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edtl_no_of_days" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/date_visit_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/widget_size_4"
-                    android:text="@string/visit_date"
-                    app:chipIcon="@drawable/ic_baseline_date_range_24"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_visit_date"
-                    app:layout_constraintVertical_chainStyle="packed" />
+                            <EditText
+                                android:id="@+id/edt_time"
+                                style="@style/stlEdittextHorizontal"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.5"
+                                android:backgroundTint="@android:color/white"
+                                android:focusable="false"
+                                android:hint="@string/time"
+                                android:visibility="gone" />
+
+                        </LinearLayout>
+
+                        <EditText
+                            android:id="@+id/edt_no_of_days"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/edit_text_color_changer"
+                            android:hint="@string/edt_no_of_days"
+                            android:inputType="number"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="5dp"
+                            android:visibility="gone"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/gray"
+                            android:textSize="18dp" />
+
+
+                        <EditText
+                            android:id="@+id/edt_contactNo"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/edit_text_color_changer"
+                            android:hint="@string/customer_contact"
+                            android:inputType="phone"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="5dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/gray"
+                            android:textSize="18dp" />
+
+                        <EditText
+                            android:id="@+id/edt_email_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/edit_text_color_changer"
+                            android:hint="@string/customer_email"
+                            android:inputType="textEmailAddress"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="5dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/gray"
+                            android:textSize="18dp" />
+
+                        <EditText
+                            android:id="@+id/edt_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_color_changer"
+                            android:hint="@string/description"
+                            android:maxLines="5"
+                            android:minLines="3"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="5dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/gray"
+                            android:textSize="18sp" />
+
+                        <com.tekskills.er_tekskills.presentation.view.spinner.SearchableSpinner
+                            android:id="@+id/s_mode_of_travel"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/spinner_item_height"
+                            android:background="@drawable/edit_text_color_changer"
+                            android:padding="@dimen/_10dp"
+                            app:label_alignment="1"
+                            app:label_color="@color/colorPrimary"
+                            app:label_hint="Mode Of Travel"
+                            app:label_text_size="@dimen/font_size_16"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/ll_allotted_expenses"
+                            app:selected_item_color="@color/colorPrimary"
+                            app:showSearch="true"
+                            app:sort="true" />
+
+                        <!--                            <EditText-->
+                        <!--                                android:id="@+id/edt_recepient"-->
+                        <!--                                style="@style/stlEdittext"-->
+                        <!--                                android:hint="@string/select_recipient"-->
+                        <!--                                android:layout_marginTop="5dp"-->
+                        <!--                                android:backgroundTint="@android:color/white"/>-->
+
+                        <!--                            <EditText-->
+                        <!--                                android:id="@+id/edt_company_name"-->
+                        <!--                                style="@style/stlEdittext"-->
+                        <!--                                android:hint="@string/company_name"-->
+                        <!--                                android:backgroundTint="@android:color/white"/>-->
+
+
+                        <LinearLayout
+                            android:id="@+id/location_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/white_border"
+                            android:orientation="horizontal"
+                            android:paddingRight="5dp"
+                            android:weightSum="2">
+
+                            <ImageView
+                                android:id="@+id/addSourceLocation_map"
+                                android:layout_width="50dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_location_blue" />
+
+                            <fragment
+                                android:id="@+id/source_maps_place_autocomplete_fragment"
+                                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:background="@drawable/rounded_edit_text"
+                                android:padding="8dp" />
+
+                            <TextView
+                                android:id="@+id/addSourceLocation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentRight="true"
+                                android:layout_gravity="right"
+                                android:layout_weight="2"
+                                android:background="@null"
+                                android:hint="Add Source location"
+                                android:inputType="textPostalAddress"
+                                android:maxLines="2"
+                                android:padding="8dp"
+                                android:textColorHint="#bebebe"
+                                android:textSize="16dp"
+                                android:textStyle="italic"
+                                android:visibility="gone" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/destination_location_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/white_border"
+                            android:orientation="horizontal"
+                            android:paddingRight="5dp"
+                            android:weightSum="2">
+
+                            <ImageView
+                                android:id="@+id/addDestinationLocation_map"
+                                android:layout_width="50dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_location_red" />
+
+                            <fragment
+                                android:id="@+id/destination_maps_place_autocomplete_fragment"
+                                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:background="@drawable/rounded_edit_text"
+                                android:padding="8dp" />
+
+                            <TextView
+                                android:id="@+id/addDestinationLocation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentRight="true"
+                                android:layout_gravity="right"
+                                android:layout_weight="2"
+                                android:background="@null"
+                                android:hint="Add Destination location"
+                                android:inputType="textPostalAddress"
+                                android:maxLines="2"
+                                android:padding="8dp"
+                                android:textColorHint="#bebebe"
+                                android:textSize="16dp"
+                                android:textStyle="italic"
+                                android:visibility="gone" />
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/maplinear"
+                            android:layout_width="match_parent"
+                            android:layout_height="400dp"
+                            android:layout_marginTop="24dp"
+                            android:visibility="gone">
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <fragment
+                                    android:id="@+id/map"
+                                    class="com.google.android.gms.maps.SupportMapFragment"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent" />
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <ImageView
+                                        android:id="@+id/mapclose"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_gravity="right|center_vertical"
+                                        android:layout_marginLeft="10dp"
+                                        android:src="@android:drawable/btn_dialog" />
+                                </RelativeLayout>
+                            </FrameLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_distance"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/white_border"
+                            android:orientation="horizontal"
+                            android:paddingRight="5dp"
+                            android:weightSum="2">
+
+                            <TextView
+                                android:id="@+id/addDistance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@null"
+                                android:padding="8dp"
+                                android:text="Distance:"
+                                android:textSize="16dp" />
+
+                            <TextView
+                                android:id="@+id/distanceLocation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentRight="true"
+                                android:layout_gravity="right"
+                                android:layout_weight="1"
+                                android:background="@null"
+                                android:inputType="textPostalAddress"
+                                android:maxLines="2"
+                                android:padding="8dp"
+                                android:textColorHint="#bebebe"
+                                android:textSize="16dp"
+                                android:textStyle="italic" />
+                        </LinearLayout>
+
+                        <FrameLayout
+                            android:id="@+id/frameLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="@dimen/widget_size_500"
+                            android:visibility="visible"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/s_add_meeting">
+
+                            <FrameLayout
+                                android:id="@+id/booking_info_data"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:minHeight="@dimen/widget_size_500" />
+                        </FrameLayout>
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginLeft="10dp"-->
+<!--                            android:layout_marginTop="20dp"-->
+<!--                            android:layout_marginRight="10dp"-->
+<!--                            android:layout_marginBottom="10dp"-->
+<!--                            android:orientation="horizontal"-->
+<!--                            android:weightSum="1">-->
+
+                            <Button
+                                android:id="@+id/btn_save"
+                                android:layout_width="@dimen/widget_size_120"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.5"
+                                android:layout_gravity="center"
+                                android:background="@drawable/btn_background"
+                                android:padding="12dp"
+                                android:text="@string/save"
+                                android:textColor="@android:color/white"
+                                android:textSize="16sp" />
+
+                            <Button
+                                android:id="@+id/btn_cancel"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_weight="0.5"
+                                android:background="@drawable/btn_background"
+                                android:padding="12dp"
+                                android:text="@string/cancel"
+                                android:visibility="gone"
+                                android:textColor="@android:color/white"
+                                android:textSize="16sp" />
+
+<!--                        </LinearLayout>-->
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+<!--                <com.google.android.material.textfield.TextInputLayout-->
+<!--                    android:id="@+id/edtl_client_name"-->
+<!--                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginHorizontal="10dp"-->
+<!--                    android:hint="@string/client_name"-->
+<!--                    app:boxStrokeWidth="2dp"-->
+<!--                    app:counterEnabled="false"-->
+<!--                    app:counterMaxLength="50"-->
+<!--                    app:errorEnabled="false"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/s_add_meeting">-->
+
+<!--                    <com.google.android.material.textfield.TextInputEditText-->
+<!--                        android:id="@+id/edt_client_name"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center_horizontal"-->
+<!--                        android:backgroundTint="@color/white" />-->
+<!--                </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--                <com.google.android.material.textfield.TextInputLayout-->
+<!--                    android:id="@+id/edtl_visit_purpose"-->
+<!--                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginHorizontal="10dp"-->
+<!--                    android:hint="@string/edt_visit_purpose"-->
+<!--                    app:boxStrokeWidth="2dp"-->
+<!--                    app:counterEnabled="false"-->
+<!--                    app:counterMaxLength="50"-->
+<!--                    app:errorEnabled="false"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/edtl_client_name">-->
+
+<!--                    <com.google.android.material.textfield.TextInputEditText-->
+<!--                        android:id="@+id/edt_visit_purpose"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center_horizontal"-->
+<!--                        android:backgroundTint="@color/white" />-->
+
+<!--                </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--                <com.google.android.material.textfield.TextInputLayout-->
+<!--                    android:id="@+id/edtl_no_of_days"-->
+<!--                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginHorizontal="10dp"-->
+<!--                    android:hint="@string/edt_no_of_days"-->
+<!--                    app:boxStrokeWidth="2dp"-->
+<!--                    app:counterEnabled="false"-->
+<!--                    app:counterMaxLength="2"-->
+<!--                    app:errorEnabled="false"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/edtl_visit_purpose">-->
+
+<!--                    <com.google.android.material.textfield.TextInputEditText-->
+<!--                        android:id="@+id/edt_no_of_days"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center_horizontal"-->
+<!--                        android:backgroundTint="@color/white"-->
+<!--                        android:inputType="number" />-->
+
+<!--                </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/tv_visit_date"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_centerHorizontal="true"-->
+<!--                    android:layout_margin="@dimen/_10dp"-->
+<!--                    android:text="@string/visit_date"-->
+<!--                    android:textSize="@dimen/font_size_16"-->
+<!--                    android:textStyle="bold"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/edtl_no_of_days" />-->
+
+<!--                <com.google.android.material.chip.Chip-->
+<!--                    android:id="@+id/date_visit_date"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_margin="@dimen/widget_size_4"-->
+<!--                    android:text="@string/visit_date"-->
+<!--                    app:chipIcon="@drawable/ic_baseline_date_range_24"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/tv_visit_date"-->
+<!--                    app:layout_constraintVertical_chainStyle="packed" />-->
 
                 <!--                &lt;!&ndash;                <androidx.constraintlayout.widget.ConstraintLayout&ndash;&gt;-->
                 <!--                &lt;!&ndash;                    android:id="@+id/maps"&ndash;&gt;-->
@@ -130,22 +531,7 @@
                 <!--                    app:layout_constraintStart_toStartOf="parent"-->
                 <!--                    app:layout_constraintTop_toBottomOf="@+id/date_visit_date" />-->
 
-                <FrameLayout
-                    android:id="@+id/frameLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:minHeight="@dimen/widget_size_500"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/date_visit_date">
 
-                    <FrameLayout
-                        android:id="@+id/booking_info_data"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:minHeight="@dimen/widget_size_500" />
-                </FrameLayout>
 
 
                 <!--                <com.google.android.material.floatingactionbutton.FloatingActionButton-->
@@ -175,266 +561,266 @@
                 <!--                    app:srcCompat="@drawable/ic_find_my_location" />-->
                 <!--&lt;!&ndash;                &lt;!&ndash;                </androidx.constraintlayout.widget.ConstraintLayout>&ndash;&gt;&ndash;&gt;-->
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_maps_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/date_visit_date">
+<!--                <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                    android:id="@+id/cl_maps_details"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:visibility="visible"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/s_add_meeting">-->
 
-                    <TextView
-                        android:id="@+id/originTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity=""
-                        android:drawableLeft="@drawable/ic_location_blue"
-                        android:maxLines="2"
-                        android:paddingHorizontal="@dimen/widget_size_4"
-                        android:paddingVertical="@dimen/widget_size_2"
-                        android:text="@string/source"
-                        android:textSize="@dimen/font_size_16"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/originTextView"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity=""-->
+<!--                        android:drawableLeft="@drawable/ic_location_blue"-->
+<!--                        android:maxLines="2"-->
+<!--                        android:paddingHorizontal="@dimen/widget_size_4"-->
+<!--                        android:paddingVertical="@dimen/widget_size_2"-->
+<!--                        android:text="@string/source"-->
+<!--                        android:textSize="@dimen/font_size_16"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent" />-->
 
-                    <TextView
-                        android:id="@+id/destinationTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity=""
-                        android:drawableLeft="@drawable/ic_location_red"
-                        android:maxLines="2"
-                        android:paddingHorizontal="@dimen/widget_size_4"
-                        android:paddingVertical="@dimen/widget_size_2"
-                        android:text="@string/des_loc"
-                        android:textSize="@dimen/font_size_16"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/originTextView" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/destinationTextView"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity=""-->
+<!--                        android:drawableLeft="@drawable/ic_location_red"-->
+<!--                        android:maxLines="2"-->
+<!--                        android:paddingHorizontal="@dimen/widget_size_4"-->
+<!--                        android:paddingVertical="@dimen/widget_size_2"-->
+<!--                        android:text="@string/des_loc"-->
+<!--                        android:textSize="@dimen/font_size_16"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/originTextView" />-->
 
-                    <LinearLayout
-                        android:id="@+id/linearLayout5"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="@dimen/widget_size_4"
-                        android:paddingVertical="@dimen/widget_size_2"
-                        app:layout_constraintTop_toBottomOf="@+id/destinationTextView">
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/linearLayout5"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:gravity="center"-->
+<!--                        android:orientation="horizontal"-->
+<!--                        android:paddingHorizontal="@dimen/widget_size_4"-->
+<!--                        android:paddingVertical="@dimen/widget_size_2"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/destinationTextView">-->
 
-                        <ImageView
-                            android:id="@+id/imageView6"
-                            android:layout_width="@dimen/widget_size_24"
-                            android:layout_height="@dimen/widget_size_24"
-                            android:layout_marginStart="4dp"
-                            android:layout_weight="0"
-                            app:srcCompat="@drawable/ic_switch" />
+<!--                        <ImageView-->
+<!--                            android:id="@+id/imageView6"-->
+<!--                            android:layout_width="@dimen/widget_size_24"-->
+<!--                            android:layout_height="@dimen/widget_size_24"-->
+<!--                            android:layout_marginStart="4dp"-->
+<!--                            android:layout_weight="0"-->
+<!--                            app:srcCompat="@drawable/ic_switch" />-->
 
-                        <TextView
-                            android:id="@+id/textView6"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:layout_weight="1"
-                            android:text="Distance"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/font_size_16" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/textView6"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginStart="4dp"-->
+<!--                            android:layout_weight="1"-->
+<!--                            android:text="Distance"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:textSize="@dimen/font_size_16" />-->
 
-                        <TextView
-                            android:id="@+id/distanceBikeTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_weight="1"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/font_size_16" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/distanceBikeTextView"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginLeft="10dp"-->
+<!--                            android:layout_weight="1"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:textSize="@dimen/font_size_16" />-->
 
-                        <TextView
-                            android:id="@+id/priceBikeTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0"
-                            android:text="50.000 IND"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:visibility="gone" />
-                    </LinearLayout>
+<!--                        <TextView-->
+<!--                            android:id="@+id/priceBikeTextView"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_weight="0"-->
+<!--                            android:text="50.000 IND"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:textStyle="bold"-->
+<!--                            android:visibility="gone" />-->
+<!--                    </LinearLayout>-->
 
-                    <!--                    <com.google.android.material.textview.MaterialTextView-->
-                    <!--                        android:id="@+id/tv_source"-->
-                    <!--                        android:layout_width="match_parent"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_centerHorizontal="true"-->
-                    <!--                        android:layout_margin="@dimen/widget_size_4"-->
-                    <!--                        android:text="@string/source"-->
-                    <!--                        android:textSize="@dimen/font_size_14"-->
-                    <!--                        android:textStyle="bold"-->
-                    <!--                        app:layout_constraintEnd_toEndOf="parent"-->
-                    <!--                        app:layout_constraintStart_toStartOf="parent"-->
-                    <!--                        app:layout_constraintTop_toTopOf="parent" />-->
+<!--                    &lt;!&ndash;                    <com.google.android.material.textview.MaterialTextView&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:id="@+id/tv_source"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_width="match_parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_centerHorizontal="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_margin="@dimen/widget_size_4"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:text="@string/source"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:textSize="@dimen/font_size_14"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:textStyle="bold"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintTop_toTopOf="parent" />&ndash;&gt;-->
 
-                    <!--                    <RelativeLayout-->
-                    <!--                        android:id="@+id/locationLayout"-->
-                    <!--                        android:layout_width="match_parent"-->
-                    <!--                        android:layout_height="@dimen/widget_size_40"-->
-                    <!--                        app:layout_constraintEnd_toEndOf="@+id/relativeLayout2"-->
-                    <!--                        app:layout_constraintStart_toStartOf="parent"-->
-                    <!--                        app:layout_constraintTop_toBottomOf="@+id/tv_source">-->
+<!--                    &lt;!&ndash;                    <RelativeLayout&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:id="@+id/locationLayout"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_width="match_parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_height="@dimen/widget_size_40"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintEnd_toEndOf="@+id/relativeLayout2"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintTop_toBottomOf="@+id/tv_source">&ndash;&gt;-->
 
-                    <!--                        <ImageView-->
-                    <!--                            android:id="@+id/locationImage"-->
-                    <!--                            android:layout_width="wrap_content"-->
-                    <!--                            android:layout_height="wrap_content"-->
-                    <!--                            android:layout_centerVertical="true"-->
-                    <!--                            android:layout_marginLeft="15dp"-->
-                    <!--                            android:layout_marginRight="15dp"-->
-                    <!--                            android:src="@drawable/ic_location_blue" />-->
+<!--                    &lt;!&ndash;                        <ImageView&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:id="@+id/locationImage"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_width="wrap_content"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_centerVertical="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginLeft="15dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginRight="15dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:src="@drawable/ic_location_blue" />&ndash;&gt;-->
 
-                    <!--                        <TextView-->
-                    <!--                            android:id="@+id/edt_source"-->
-                    <!--                            android:layout_width="220dp"-->
-                    <!--                            android:layout_height="wrap_content"-->
-                    <!--                            android:layout_alignLeft="@id/locationImage"-->
-                    <!--                            android:layout_centerHorizontal="true"-->
-                    <!--                            android:layout_marginLeft="35dp"-->
-                    <!--                            android:layout_marginTop="14dp"-->
-                    <!--                            android:background="@android:color/transparent"-->
-                    <!--                            android:hint="Source"-->
-                    <!--                            android:maxWidth="250dp"-->
-                    <!--                            android:singleLine="true"-->
-                    <!--                            android:textSize="@dimen/font_size_18" />-->
+<!--                    &lt;!&ndash;                        <TextView&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:id="@+id/edt_source"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_width="220dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_alignLeft="@id/locationImage"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_centerHorizontal="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginLeft="35dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginTop="14dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:background="@android:color/transparent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:hint="Source"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:maxWidth="250dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:singleLine="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:textSize="@dimen/font_size_18" />&ndash;&gt;-->
 
-                    <!--                        <ImageButton-->
-                    <!--                            android:id="@+id/switchTextBtn"-->
-                    <!--                            android:layout_width="20dp"-->
-                    <!--                            android:layout_height="20dp"-->
-                    <!--                            android:layout_alignParentRight="true"-->
-                    <!--                            android:layout_centerInParent="true"-->
-                    <!--                            android:layout_gravity="center_horizontal"-->
-                    <!--                            android:layout_marginRight="15dp"-->
-                    <!--                            android:visibility="gone"-->
-                    <!--                            android:background="@drawable/ic_switch"-->
-                    <!--                            android:backgroundTint="@color/grey" />-->
+<!--                    &lt;!&ndash;                        <ImageButton&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:id="@+id/switchTextBtn"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_width="20dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_height="20dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_alignParentRight="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_centerInParent="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_gravity="center_horizontal"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginRight="15dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:visibility="gone"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:background="@drawable/ic_switch"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:backgroundTint="@color/grey" />&ndash;&gt;-->
 
-                    <!--                    </RelativeLayout>-->
+<!--                    &lt;!&ndash;                    </RelativeLayout>&ndash;&gt;-->
 
-                    <!--                    <com.google.android.material.textview.MaterialTextView-->
-                    <!--                        android:id="@+id/tv_destination"-->
-                    <!--                        android:layout_width="match_parent"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_centerHorizontal="true"-->
-                    <!--                        android:layout_margin="@dimen/widget_size_4"-->
-                    <!--                        android:text="@string/destination"-->
-                    <!--                        android:textSize="@dimen/font_size_14"-->
-                    <!--                        android:textStyle="bold"-->
-                    <!--                        app:layout_constraintEnd_toEndOf="parent"-->
-                    <!--                        app:layout_constraintStart_toStartOf="parent"-->
-                    <!--                        app:layout_constraintTop_toBottomOf="@+id/locationLayout" />-->
+<!--                    &lt;!&ndash;                    <com.google.android.material.textview.MaterialTextView&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:id="@+id/tv_destination"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_width="match_parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_centerHorizontal="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_margin="@dimen/widget_size_4"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:text="@string/destination"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:textSize="@dimen/font_size_14"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:textStyle="bold"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintTop_toBottomOf="@+id/locationLayout" />&ndash;&gt;-->
 
-                    <!--                    <RelativeLayout-->
-                    <!--                        android:id="@+id/relativeLayout2"-->
-                    <!--                        android:layout_width="match_parent"-->
-                    <!--                        android:layout_height="@dimen/widget_size_40"-->
-                    <!--                        app:layout_constraintEnd_toEndOf="parent"-->
-                    <!--                        app:layout_constraintStart_toStartOf="parent"-->
-                    <!--                        app:layout_constraintTop_toBottomOf="@+id/tv_destination">-->
+<!--                    &lt;!&ndash;                    <RelativeLayout&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:id="@+id/relativeLayout2"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_width="match_parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_height="@dimen/widget_size_40"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintTop_toBottomOf="@+id/tv_destination">&ndash;&gt;-->
 
-                    <!--                        <ImageView-->
-                    <!--                            android:id="@+id/destinationImageView"-->
-                    <!--                            android:layout_width="wrap_content"-->
-                    <!--                            android:layout_height="wrap_content"-->
-                    <!--                            android:layout_centerVertical="true"-->
-                    <!--                            android:layout_marginLeft="15dp"-->
-                    <!--                            android:layout_marginRight="15dp"-->
-                    <!--                            android:src="@drawable/ic_location_red" />-->
+<!--                    &lt;!&ndash;                        <ImageView&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:id="@+id/destinationImageView"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_width="wrap_content"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_centerVertical="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginLeft="15dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginRight="15dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:src="@drawable/ic_location_red" />&ndash;&gt;-->
 
-                    <!--                        <TextView-->
-                    <!--                            android:id="@+id/edt_destination"-->
-                    <!--                            android:layout_width="220dp"-->
-                    <!--                            android:layout_height="wrap_content"-->
-                    <!--                            android:layout_alignLeft="@id/destinationImageView"-->
-                    <!--                            android:layout_alignParentTop="true"-->
-                    <!--                            android:layout_centerHorizontal="true"-->
-                    <!--                            android:layout_marginLeft="35dp"-->
-                    <!--                            android:layout_marginTop="14dp"-->
-                    <!--                            android:background="@android:color/transparent"-->
-                    <!--                            android:hint="Destination"-->
-                    <!--                            android:maxWidth="250dp"-->
-                    <!--                            android:singleLine="true"-->
-                    <!--                            android:textSize="@dimen/font_size_18" />-->
+<!--                    &lt;!&ndash;                        <TextView&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:id="@+id/edt_destination"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_width="220dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_alignLeft="@id/destinationImageView"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_alignParentTop="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_centerHorizontal="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginLeft="35dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginTop="14dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:background="@android:color/transparent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:hint="Destination"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:maxWidth="250dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:singleLine="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:textSize="@dimen/font_size_18" />&ndash;&gt;-->
 
-                    <!--                        <Button-->
-                    <!--                            android:id="@+id/searchBtn"-->
-                    <!--                            android:layout_width="35dp"-->
-                    <!--                            android:layout_height="35dp"-->
-                    <!--                            android:layout_alignParentRight="true"-->
-                    <!--                            android:layout_marginTop="9dp"-->
-                    <!--                            android:layout_marginRight="8dp"-->
-                    <!--                            android:background="@drawable/ic_arrow_right"-->
-                    <!--                            android:backgroundTint="@color/black"-->
-                    <!--                            android:visibility="gone" />-->
-                    <!--                    </RelativeLayout>-->
+<!--                    &lt;!&ndash;                        <Button&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:id="@+id/searchBtn"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_width="35dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_height="35dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_alignParentRight="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginTop="9dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginRight="8dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:background="@drawable/ic_arrow_right"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:backgroundTint="@color/black"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:visibility="gone" />&ndash;&gt;-->
+<!--                    &lt;!&ndash;                    </RelativeLayout>&ndash;&gt;-->
 
-                    <!--                    <com.google.android.material.textview.MaterialTextView-->
-                    <!--                        android:id="@+id/tv_distance"-->
-                    <!--                        android:layout_width="match_parent"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_centerHorizontal="true"-->
-                    <!--                        android:layout_margin="@dimen/widget_size_4"-->
-                    <!--                        android:text="@string/distance"-->
-                    <!--                        android:textSize="@dimen/font_size_14"-->
-                    <!--                        android:textStyle="bold"-->
-                    <!--                        app:layout_constraintEnd_toEndOf="parent"-->
-                    <!--                        app:layout_constraintStart_toStartOf="parent"-->
-                    <!--                        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />-->
+<!--                    &lt;!&ndash;                    <com.google.android.material.textview.MaterialTextView&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:id="@+id/tv_distance"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_width="match_parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_centerHorizontal="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_margin="@dimen/widget_size_4"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:text="@string/distance"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:textSize="@dimen/font_size_14"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:textStyle="bold"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />&ndash;&gt;-->
 
-                    <!--                    <RelativeLayout-->
-                    <!--                        android:id="@+id/relativeLayout3"-->
-                    <!--                        android:layout_width="match_parent"-->
-                    <!--                        android:layout_height="@dimen/widget_size_40"-->
-                    <!--                        app:layout_constraintEnd_toEndOf="parent"-->
-                    <!--                        app:layout_constraintStart_toStartOf="parent"-->
-                    <!--                        app:layout_constraintTop_toBottomOf="@+id/tv_distance">-->
+<!--                    &lt;!&ndash;                    <RelativeLayout&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:id="@+id/relativeLayout3"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_width="match_parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        android:layout_height="@dimen/widget_size_40"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        app:layout_constraintTop_toBottomOf="@+id/tv_distance">&ndash;&gt;-->
 
-                    <!--                        <ImageView-->
-                    <!--                            android:id="@+id/distanceImageView"-->
-                    <!--                            android:layout_width="@dimen/widget_size_24"-->
-                    <!--                            android:layout_height="wrap_content"-->
-                    <!--                            android:layout_centerVertical="true"-->
-                    <!--                            android:layout_marginLeft="15dp"-->
-                    <!--                            android:layout_marginRight="15dp"-->
-                    <!--                            android:src="@drawable/ic_switch" />-->
+<!--                    &lt;!&ndash;                        <ImageView&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:id="@+id/distanceImageView"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_width="@dimen/widget_size_24"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_centerVertical="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginLeft="15dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginRight="15dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:src="@drawable/ic_switch" />&ndash;&gt;-->
 
-                    <!--                        <TextView-->
-                    <!--                            android:id="@+id/edt_distance"-->
-                    <!--                            android:layout_width="220dp"-->
-                    <!--                            android:layout_height="wrap_content"-->
-                    <!--                            android:layout_alignLeft="@id/distanceImageView"-->
-                    <!--                            android:layout_alignParentTop="true"-->
-                    <!--                            android:layout_centerHorizontal="true"-->
-                    <!--                            android:layout_marginLeft="35dp"-->
-                    <!--                            android:layout_marginTop="14dp"-->
-                    <!--                            android:background="@android:color/transparent"-->
-                    <!--                            android:hint="Distance"-->
-                    <!--                            android:maxWidth="250dp"-->
-                    <!--                            android:singleLine="true"-->
-                    <!--                            android:textSize="@dimen/font_size_18" />-->
-                    <!--                        <TextView-->
-                    <!--                            android:id="@+id/distanceBikeTextView"-->
-                    <!--                            android:layout_width="wrap_content"-->
-                    <!--                            android:layout_height="wrap_content"-->
-                    <!--                            android:layout_marginLeft="10dp"-->
-                    <!--                            android:layout_weight="1"-->
-                    <!--                            android:layout_alignParentRight="true"-->
-                    <!--                            android:layout_marginTop="9dp"-->
-                    <!--                            android:layout_marginRight="8dp"-->
-                    <!--                            android:textColor="@color/black"-->
-                    <!--                            android:textSize="15sp"-->
-                    <!--                            />-->
-                    <!--                    </RelativeLayout>-->
-                </androidx.constraintlayout.widget.ConstraintLayout>
+<!--                    &lt;!&ndash;                        <TextView&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:id="@+id/edt_distance"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_width="220dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_alignLeft="@id/distanceImageView"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_alignParentTop="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_centerHorizontal="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginLeft="35dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginTop="14dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:background="@android:color/transparent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:hint="Distance"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:maxWidth="250dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:singleLine="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:textSize="@dimen/font_size_18" />&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        <TextView&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:id="@+id/distanceBikeTextView"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_width="wrap_content"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginLeft="10dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_weight="1"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_alignParentRight="true"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginTop="9dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:layout_marginRight="8dp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:textColor="@color/black"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            android:textSize="15sp"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                            />&ndash;&gt;-->
+<!--                    &lt;!&ndash;                    </RelativeLayout>&ndash;&gt;-->
+<!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
 
                 <ProgressBar
                     android:id="@+id/progress"

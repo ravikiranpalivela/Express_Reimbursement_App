@@ -4,16 +4,16 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.tekskills.psv_tekskills.debug",
+  "applicationId": "com.tekskills.er_tekskills.debug",
   "variantName": "debug",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 231205007,
+      "versionCode": 240504007,
       "versionName": "1.0.2",
-      "outputFile": "PSV_TEKSKILLS-debug-v.231205007.apk"
+      "outputFile": "ER_TEKSKILLS-debug-v.240504007.apk"
     }
   ],
   "elementType": "File"

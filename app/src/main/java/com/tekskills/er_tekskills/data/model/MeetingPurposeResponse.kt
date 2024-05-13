@@ -71,7 +71,7 @@ data class MeetingPurposeData(
     @SerializedName("updatedBy")
     val updatedBy: Int,
     @SerializedName("userCordinates")
-    val userCordinates: UserCordinatesData,
+    val userCordinates: UserCoordinates,
     @SerializedName("userExpences")
     val userExpences: Any,
     @SerializedName("visitDate")

@@ -8,8 +8,9 @@ import com.tekskills.er_tekskills.data.model.AddCommentOpportunity
 import com.tekskills.er_tekskills.data.model.AddEscalationRequest
 import com.tekskills.er_tekskills.data.model.AddMOMOpportunityRequest
 import com.tekskills.er_tekskills.data.model.AddOpportunityRequest
-import com.tekskills.er_tekskills.data.model.AddPurposeMeetingRequest
+import com.tekskills.er_tekskills.data.model.AddMeetingRequest
 import com.tekskills.er_tekskills.data.model.AddPurposeMeetingResponse
+import com.tekskills.er_tekskills.data.model.AddTravelExpenceResponse
 import com.tekskills.er_tekskills.data.model.AssignProjectListResponse
 import com.tekskills.er_tekskills.data.model.ClientEscalationGraphByIDResponse
 import com.tekskills.er_tekskills.data.model.PendingActionGraphResponse
@@ -30,8 +31,16 @@ import com.tekskills.er_tekskills.data.model.PracticeHeadResponse
 import com.tekskills.er_tekskills.data.model.ProjectListResponse
 import com.tekskills.er_tekskills.data.model.ProjectManagerResponse
 import com.tekskills.er_tekskills.data.model.ProjectOpportunityResponse
+import com.tekskills.er_tekskills.data.model.UserAllowenceResponse
 import com.tekskills.er_tekskills.data.model.UserMeResponse
+import com.tekskills.er_tekskills.utils.Common
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
+import retrofit2.http.Header
+import retrofit2.http.Part
+import retrofit2.http.PartMap
+import retrofit2.http.Path
 
 interface ApiHelper {
 
@@ -39,15 +48,28 @@ interface ApiHelper {
 
     suspend fun getEmployeeMe(authorization: String): Response<UserMeResponse>
 
+    suspend fun getEmployeeAllowences(authorization: String, itemID:String): Response<UserAllowenceResponse>
+
     suspend fun addMeetingPurpose(
-        authorization: String, user: AddPurposeMeetingRequest
+        authorization: String, user: AddMeetingRequest
     ): Response<AddPurposeMeetingResponse>
 
     suspend fun getMeetingPurpose(authorization: String): Response<MeetingPurposeResponse>
 
     suspend fun getMeetingPurposeByID(authorization: String, itemID:String): Response<MeetingPurposeResponseData>
 
+    suspend fun addTravelExpense(authorization: String,purposeID: RequestBody, amount: Long,
+        file: MutableList<MultipartBody.Part>, user: Map<String, RequestBody>
+    ): Response<AddTravelExpenceResponse>
 
+    suspend fun addHotelExpense(authorization: String,purposeID: RequestBody,
+                                 file: MultipartBody.Part, user: Map<String, RequestBody>
+    ): Response<AddTravelExpenceResponse>
+
+
+    suspend fun addFoodExpense(authorization: String,purposeID: RequestBody,
+                               user: Map<String, RequestBody>
+    ): Response<AddTravelExpenceResponse>
     /**
      * Dashboard Graph items
      */

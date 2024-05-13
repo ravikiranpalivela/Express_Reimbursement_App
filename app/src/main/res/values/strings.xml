@@ -137,7 +137,7 @@
     <string name="src_loc">Source Location</string>
     <string name="des_loc">Destination Location</string>
     <string name="advance_amount">Advance Amount</string>
-    <string name="expenses">Expenses-></string>
+    <string name="expenses">Expenses</string>
     <string name="travel_expenses">Travel Expenses</string>
     <string name="hotel_expenses">Hotel Expenses</string>
     <string name="food_expenses">Food Expenses</string>
@@ -150,4 +150,42 @@
     <string name="food_amount">Food Amount</string>
     <string name="food_comment">Comment</string>
     <string name="distance">Distance</string>
+    <string name="msgDeniedPermission">Permission Denied</string>
+    <string name="mode_type">Mode Of Travel</string>
+    <string name="hotel_from_date">Booking Date</string>
+    <string name="hotel_to_date">Vacate Date</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="contact">Contact</string>
+    <string name="email">Email Address</string>
+    <string name="description">Description</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="return_from_loc">Return From Location</string>
+    <string name="return_to_loc">Return To Location</string>
+    <string name="return_travel_date">Return Travel Date</string>
+    <string name="customer_name">Customer Name</string>
+    <string name="customer_contact">Customer Contact Number</string>
+    <string name="customer_email">Customer Email-ID</string>
+    <string name="home">Home</string>
+    <string name="farmer_name">Farmer Name</string>
+    <string name="farmer_contact">Farmer Contact Number</string>
+    <string name="farmer_email">Farmer Email-ID</string>
+
+    <string name="mode_of_travel_prompt">Mode Of Travel</string>
+    <string name="travel_expenses_details">Travel Expenses Details</string>
+    <string name="hotel_expenses_details">Hotel Expenses Details</string>
+    <string name="allotted_expenses">Allotted Expenses</string>
+    <string name="travel_expenses_info">Expenses Info</string>
+    <string name="hotel_expenses_info">Expenses Info</string>
+    <string name="view_all_expenses">View All Expenses</string>
+    <string name="travel_expense_amount">Travel Expense Amount</string>
+    <string name="hotel_expense_amount">Hotel Expense Amount</string>
+    <string-array name="mode_of_travel_options">
+        <item>Train</item>
+        <item>Bus</item>
+        <item>Bike</item>
+        <item>Car</item>
+        <item>Flight</item>
+    </string-array>
 </resources>

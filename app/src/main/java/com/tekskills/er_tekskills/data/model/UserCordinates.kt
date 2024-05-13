@@ -23,7 +23,7 @@ data class UserCordinates(
     @SerializedName("tenantId")
     val tenantId: Int,
     @SerializedName("totalDistance")
-    val totalDistance: Int,
+    val totalDistance: Double,
     @SerializedName("updatedAt")
     val updatedAt: String,
     @SerializedName("updatedBy")

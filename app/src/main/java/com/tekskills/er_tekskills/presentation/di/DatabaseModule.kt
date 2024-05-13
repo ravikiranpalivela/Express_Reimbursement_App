@@ -78,6 +78,9 @@ object DatabaseModule {
         if (response.code == 401) {
             Log.d("okhttp.OkHttpClient","401 error occurred")
         }
+        Log.d("okhttp.OkHttpClient",request.body.toString())
+
+        Log.d("okhttp.OkHttpClient",response.message)
 
 //        return@Interceptor if (response.code == 204) {
 //            response.newBuilder().code(200).build()
@@ -87,6 +90,8 @@ object DatabaseModule {
 
         return@Interceptor response
     }
+
+
     var gson = GsonBuilder()
         .setLenient()
         .create()

@@ -17,7 +17,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        tools:text="Testing Demo"
-        />
+        android:layout_marginStart="@dimen/_1dp"
+        android:layout_marginTop="@dimen/_1dp"
+        android:layout_marginEnd="@dimen/_1dp"
+        android:layout_marginBottom="@dimen/_1dp"
+        tools:text="Testing Demo" />
 
 </RelativeLayout>

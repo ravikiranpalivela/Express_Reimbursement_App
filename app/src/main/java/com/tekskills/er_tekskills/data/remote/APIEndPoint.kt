@@ -38,12 +38,15 @@ class APIEndPoint {
         const val GET_COMMENT_BY_ID = "api/comment"
         const val GET_OPPORTUNITY_BY_PROJECT_ID = "api/projects/get-projectbyId"
 
-
+        const val MULTI_PART = "Content-Type: multipart/form-data; boundary=<calculated when request is sent>"
 
         const val POST_USER_LOGIN = "api/public/authenticate"
         const val GET_ME = "api/me"
+        const val GET_USER_ALLOWENCE = "api/allowences"
         const val POST_ADD_MEETING_PURPOSE = "api/purpose"
         const val GET_MEETING_PURPOSE = "api/purpose"
+
+        const val POST_TRAVEL_EXPENSES="api/expence"
 
 
     }

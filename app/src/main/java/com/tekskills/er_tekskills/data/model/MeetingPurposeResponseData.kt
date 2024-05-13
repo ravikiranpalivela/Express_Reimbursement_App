@@ -13,15 +13,25 @@ data class MeetingPurposeResponseData(
     @SerializedName("employeeId")
     val employeeId: Int,
     @SerializedName("expenceType")
-    val expenceType: Any,
+    val expenceType: Any?,
     @SerializedName("financeComments")
-    val financeComments: Any,
+    val financeComments: Any?,
     @SerializedName("financeId")
     val financeId: Int,
     @SerializedName("financeStatus")
     val financeStatus: Any,
     @SerializedName("id")
     val id: Int,
+    @SerializedName("customerName")
+    val customerName: String,
+    @SerializedName("custmerEmail")
+    val custmerEmail: String,
+    @SerializedName("modeOfTravel")
+    val modeOfTravel: String,
+    @SerializedName("description")
+    val description: String,
+    @SerializedName("customerPhone")
+    val customerPhone: String,
     @SerializedName("managerComments")
     val managerComments: Any,
     @SerializedName("managerId")
@@ -35,19 +45,21 @@ data class MeetingPurposeResponseData(
     @SerializedName("tenantId")
     val tenantId: Int,
     @SerializedName("travelDeskComments")
-    val travelDeskComments: Any,
+    val travelDeskComments: Any?,
     @SerializedName("travelDeskId")
     val travelDeskId: Int,
     @SerializedName("travelDeskStatus")
-    val travelDeskStatus: Any,
+    val travelDeskStatus: Any?,
     @SerializedName("updatedAt")
     val updatedAt: String,
     @SerializedName("updatedBy")
     val updatedBy: Int,
     @SerializedName("userCordinates")
-    val userCordinates: UserCordinates,
+    val userCordinates: UserCoordinates,
     @SerializedName("userExpences")
     val userExpences: List<UserExpence>,
+    @SerializedName("allowncesLimit")
+    val allowncesLimit: UserAllowenceResponse,
     @SerializedName("visitDate")
     val visitDate: String,
     @SerializedName("visitPurpose")

@@ -6,13 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.tekskills.er_tekskills.R
 import com.tekskills.er_tekskills.presentation.activities.MainActivity
 import com.tekskills.er_tekskills.presentation.viewmodel.MainActivityViewModel
-import com.tekskills.er_tekskills.utils.UtilsConstants
 
 class CheckoutFragment : Fragment() {
     private var mViewModel: MainActivityViewModel? = null
@@ -82,9 +80,9 @@ class CheckoutFragment : Fragment() {
             if (s == null) return@Observer
             transportationType = s
         })
-        mViewModel!!.getDistanceInKmString()!!.observe(viewLifecycleOwner, Observer<String?> { s ->
+        mViewModel!!.getDistanceInKmString()!!.observe(viewLifecycleOwner, Observer<Double?> { s ->
             if (s == null) return@Observer
-            distanceInKmString = s
+            distanceInKmString = s.toString()
             setCheckoutInfo()
         })
         mViewModel!!.getPriceInVNDString()!!.observe(viewLifecycleOwner, Observer<String?> { s ->

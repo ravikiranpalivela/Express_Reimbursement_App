@@ -141,7 +141,7 @@ class BookingFragment : Fragment(),
         //Remove current route
         removeCurrentRoute()
         //Go back to the picking drop-off place step
-        loadPickupPlacePickerFragment()
+//        loadPickupPlacePickerFragment()
         //Hide back btn
         binding.fragmentMapsBackBtn.setVisibility(View.GONE)
     }
@@ -172,18 +172,18 @@ class BookingFragment : Fragment(),
      */
     private fun loadDropOffPlacePickerFragment() {
         //Load drop-off picker fragment
-        val dropoffFragment = DropoffFragment()
-        val transaction = childFragmentManager.beginTransaction()
-        transaction.replace(R.id.booking_info, dropoffFragment).commit()
+//        val dropoffFragment = DropoffFragment()
+//        val transaction = childFragmentManager.beginTransaction()
+//        transaction.replace(R.id.booking_info, dropoffFragment).commit()
     }
 
     /**
      * Load pick up picker fragment
      */
     private fun loadPickupPlacePickerFragment() {
-        val pickupFragment = PickupFragment()
-        val transaction = childFragmentManager.beginTransaction()
-        transaction.replace(R.id.booking_info, pickupFragment).commit()
+//        val pickupFragment = PickupFragment()
+//        val transaction = childFragmentManager.beginTransaction()
+//        transaction.replace(R.id.booking_info, pickupFragment).commit()
     }
 
     /**
@@ -460,10 +460,10 @@ class BookingFragment : Fragment(),
      */
     @SuppressLint("DefaultLocale")
     private fun sendCheckoutInfoToCheckoutFragment() {
-        distanceInKmString = String.format("%.1fkm", distanceInKm)
-        mViewModel!!.setDistanceInKmString(distanceInKmString)
+        distanceInKmString = distanceInKm.toString()
+        mViewModel!!.setDistanceInKmString(distanceInKm)
 //        val price: Int = (distanceInKm!! * UtilsConstants.Transportation.UnitPrice.bikeType) as Int
-
+//
 //        priceInVNDString = Integer.toString(price) + " VND"
     }
 
@@ -497,7 +497,7 @@ class BookingFragment : Fragment(),
             .observe(viewLifecycleOwner, Observer<Any?> { place ->
                 if (place == null) return@Observer
                 customerDropOffPlace = place as Place?
-                binding.fragmentMapsBackBtn.visibility = View.VISIBLE //Show back button
+//                binding.fragmentMapsBackBtn.visibility = View.VISIBLE //Show back button
 //                binding.edtDestination.text = (place?.toString() ?: "") as Editable?
 
                 //TODO Move to customerPickUpPlace fragment
@@ -575,7 +575,6 @@ class BookingFragment : Fragment(),
 //                        //TODO Draw route from pickup place to drop-off place
 //                        drawRouteFromPickupToDropOff()
 //                    })
-
 
         mViewModel!!.getTransportationType()!!
             .observe(viewLifecycleOwner, Observer<String?> { s ->

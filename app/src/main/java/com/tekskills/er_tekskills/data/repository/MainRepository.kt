@@ -7,7 +7,8 @@ import com.tekskills.er_tekskills.data.model.AddCommentOpportunity
 import com.tekskills.er_tekskills.data.model.AddEscalationRequest
 import com.tekskills.er_tekskills.data.model.AddMOMOpportunityRequest
 import com.tekskills.er_tekskills.data.model.AddOpportunityRequest
-import com.tekskills.er_tekskills.data.model.AddPurposeMeetingRequest
+import com.tekskills.er_tekskills.data.model.AddMeetingRequest
+import com.tekskills.er_tekskills.data.model.AddTravelExpenceResponse
 import com.tekskills.er_tekskills.data.model.ClientsEscalationResponse
 import com.tekskills.er_tekskills.data.model.CommentsListResponse
 import com.tekskills.er_tekskills.data.model.MeetingPurposeResponse
@@ -18,7 +19,10 @@ import com.tekskills.er_tekskills.data.model.NewClientResponse
 import com.tekskills.er_tekskills.data.model.OpportunityByProjectIDResponse
 import com.tekskills.er_tekskills.data.model.ProjectListResponse
 import com.tekskills.er_tekskills.data.model.ProjectOpportunityResponse
+import com.tekskills.er_tekskills.data.model.UserAllowenceResponse
 import com.tekskills.er_tekskills.data.remote.ApiHelper
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -30,8 +34,11 @@ class MainRepository @Inject constructor(
 
     suspend fun getEmployeeMe(authorization: String) = apiHelper.getEmployeeMe(authorization)
 
+    suspend fun getEmployeeAllowences(authorization: String, itemID:String)
+    = apiHelper.getEmployeeAllowences(authorization, itemID)
+
     suspend fun addMeetingPurpose(
-        authorization: String, user: AddPurposeMeetingRequest
+        authorization: String, user: AddMeetingRequest
     ) = apiHelper.addMeetingPurpose(authorization, user)
 
 
@@ -40,6 +47,23 @@ class MainRepository @Inject constructor(
 
     suspend fun getMeetingPurposeByID(authorization: String, itemID:String): Response<MeetingPurposeResponseData>
     = apiHelper.getMeetingPurposeByID(authorization, itemID)
+
+
+    suspend fun addTravelExpense(authorization: String,purposeID: RequestBody, amount: Long,
+                                 file: MutableList<MultipartBody.Part>, user: Map<String, RequestBody>
+    ): Response<AddTravelExpenceResponse>
+    = apiHelper.addTravelExpense(authorization, purposeID, amount,file, user)
+
+    suspend fun addHotelExpense(authorization: String,purposeID: RequestBody,
+                                 file: MultipartBody.Part, user: Map<String, RequestBody>
+    ): Response<AddTravelExpenceResponse>
+            = apiHelper.addHotelExpense(authorization, purposeID,file, user)
+
+    suspend fun addFoodExpense(authorization: String,purposeID: RequestBody,
+                               user: Map<String, RequestBody>
+    ): Response<AddTravelExpenceResponse>
+            = apiHelper.addFoodExpense(authorization, purposeID, user)
+
 
     /**
      * Dashboard Graph items

@@ -15,7 +15,7 @@ android {
         applicationId "com.tekskills.er_tekskills"
         minSdk 26
         targetSdk 33
-        versionCode 231205007
+        versionCode 240504007
         versionName "1.0.2"//previos 1.0.4 updated by ravi on 11th Oct '23
         vectorDrawables {
             useSupportLibrary true
@@ -29,7 +29,7 @@ android {
             versionCode env['VERSION_NUMBER'].toInteger()
         } else {
             // Build number not available. Build number should be entered manually.
-            versionCode 231205007
+            versionCode 240504007
         }
 
         print "versionName ::: " + env['VERSION_NAME']
@@ -108,7 +108,7 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            outputFileName = "PSV_TEKSKILLS-${variant.name}-v.${variant.versionCode}.apk"
+            outputFileName = "ER_TEKSKILLS-${variant.name}-v.${variant.versionCode}.apk"
         }
     }
 
@@ -139,6 +139,11 @@ android {
         dataBinding true
     }
 
+}
+
+ext {
+    versions = [
+            glide: '4.11.0']
 }
 
 dependencies {
@@ -183,4 +188,16 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-location:21.2.0'
     implementation 'com.google.android.gms:play-services-maps:18.2.0'
+
+    implementation 'com.github.bumptech.glide:glide:' + versions.glide
+
+    kapt 'com.github.bumptech.glide:compiler:' + versions.glide
+
+    // Pagination
+    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
+
+    implementation files('libs/socketio.jar')
+    implementation files('libs/httpclient-4.4.1.jar')
+    implementation project(":android-pickers")
+
 }

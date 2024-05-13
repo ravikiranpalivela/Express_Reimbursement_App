@@ -16,6 +16,7 @@ import com.tekskills.er_tekskills.data.model.TaskCategoryInfo
 import com.google.android.material.snackbar.Snackbar
 import com.tekskills.er_tekskills.databinding.FragmentViewPurposeMeetingsBinding
 import com.tekskills.er_tekskills.presentation.adapter.ViewMeetingPurposeAdapter
+import com.tekskills.er_tekskills.utils.DummyData
 import com.tekskills.er_tekskills.utils.RestApiStatus
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -55,15 +56,16 @@ class ViewMeetingPurposeFragment : ParentFragment() {
 //            editTaskInformation(it)
         }
         adapter.setOnEditItemClickListener {
-            val action =
-                ViewMeetingPurposeFragmentDirections.actionViewOpportunityFragmentToEditAssignedProjectFragment()
-            binding.root.findNavController().navigate(action)
+//            val action =
+//                ViewMeetingPurposeFragmentDirections.actionViewOpportunityFragmentToEditAssignedProjectFragment()
+//            binding.root.findNavController().navigate(action)
 //            editTaskInformation(it)
         }
 
-        viewModel.getMeetingPurpose("")
-
         initRecyclerView()
+
+        viewModel.getMeetingPurpose("")
+//        viewModel._resMeetingPurposeList.value = DummyData().createDummyData()
 
         viewModel.resMeetingPurposeList.observe(viewLifecycleOwner, Observer {
             when (it.status) {
@@ -104,7 +106,7 @@ class ViewMeetingPurposeFragment : ParentFragment() {
 
         binding.fab.setOnClickListener {
             val action =
-                ViewMeetingPurposeFragmentDirections.actionViewOpportunityFragmentToNewAssignedProjectFragment()
+                ViewMeetingPurposeFragmentDirections.actionViewOpportunityFragmentToNewMeetingPurpose("")
             it.findNavController().navigate(action)
         }
     }
@@ -116,12 +118,12 @@ class ViewMeetingPurposeFragment : ParentFragment() {
 //        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }
 
-    private fun editTaskInformation(taskCategoryInfo: TaskCategoryInfo) {
-        val action = CompletedTasksFragmentDirections.actionCompletedTasksFragmentToNewTaskFragment(
-            taskCategoryInfo
-        )
-        findNavController().navigate(action)
-    }
+//    private fun editTaskInformation(taskCategoryInfo: TaskCategoryInfo) {
+//        val action = CompletedTasksFragmentDirections.actionCompletedTasksFragmentToNewTaskFragment(
+//            taskCategoryInfo
+//        )
+//        findNavController().navigate(action)
+//    }
 
 //    private val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
 //        ItemTouchHelper.SimpleCallback(

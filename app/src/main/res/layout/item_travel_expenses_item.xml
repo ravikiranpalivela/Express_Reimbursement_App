@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="dateConvert"
+            type="com.tekskills.er_tekskills.data.util.DateToString" />
+
+        <variable
+            name="taskCategoryInfo"
+            type="com.tekskills.er_tekskills.data.model.UserExpence" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardView"
+        style="@style/Widget.App.CardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_4dp"
+        app:cardElevation="8dp"
+        app:strokeColor="@color/white"
+        app:strokeWidth="1dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/_4dp">
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/isCompleted"
+                android:layout_width="2dp"
+                android:layout_height="2dp"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/ll_from_addr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_from_addr"
+                    style="@style/stlTxtKey"
+                    android:text="@string/from_loc" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/from_addr"
+                    style="@style/stlTxtValue"
+                    android:text="@{taskCategoryInfo.travelFrom}"
+                    tools:text="Testing" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_to_addr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_from_addr"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_from_addr">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_to_addr"
+                    style="@style/stlTxtKey"
+                    android:text="@string/to_loc" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/to_addr"
+                    style="@style/stlTxtValue"
+                    android:text="@{taskCategoryInfo.travelTo.toString()}"
+                    tools:text="Testing" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_book_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_to_addr"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_to_addr">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_book_date"
+                    style="@style/stlTxtKey"
+                    android:text="@string/book_date" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/book_date"
+                    style="@style/stlTxtValue"
+                    android:text="@{taskCategoryInfo.travelDate}"
+                    tools:text="Testing" />
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/book_date"-->
+<!--                    style="@style/stlTxtValue"-->
+<!--                    android:text="@{dateConvert.Companion.getTimeAgo(taskCategoryInfo.meetingTime)}"-->
+<!--                    tools:text="Testing" />-->
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_travel_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_book_date"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_book_date">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_travel_mode"
+                    style="@style/stlTxtKey"
+                    android:text="@string/mode_type" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/travel_mode"
+                    style="@style/stlTxtValue"
+                    android:text="@{taskCategoryInfo.modeOfTravel}"
+                    tools:text="Testing" />
+            </LinearLayout>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/priority"
+                style="@style/stlTxtValue"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_travel_mode" />
+
+            <ImageButton
+                android:id="@+id/iv_edit_travel"
+                android:layout_width="@dimen/_36dp"
+                android:layout_height="@dimen/_36dp"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_8dp"
+                android:background="@drawable/ic_edit"
+                android:contentDescription="@string/travel_expenses"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageButton
+                android:id="@+id/iv_view_travel"
+                android:layout_width="@dimen/_36dp"
+                android:layout_height="@dimen/_36dp"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_8dp"
+                android:background="@drawable/ic_view"
+                android:contentDescription="@string/travel_expenses"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/iv_edit_travel" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintGuide_percent="0.5" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

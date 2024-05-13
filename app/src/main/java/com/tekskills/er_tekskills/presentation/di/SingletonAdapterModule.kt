@@ -1,13 +1,17 @@
 package com.tekskills.er_tekskills.presentation.di
 
 import com.tekskills.er_tekskills.presentation.adapter.ActionItemsOpportunitysAdapter
+import com.tekskills.er_tekskills.presentation.adapter.AdvanceAmountAdapter
 import com.tekskills.er_tekskills.presentation.adapter.CategoryAdapter
 import com.tekskills.er_tekskills.presentation.adapter.ClientEscalationOpportunitysAdapter
 import com.tekskills.er_tekskills.presentation.adapter.ClientWiseEscalationAdapter
 import com.tekskills.er_tekskills.presentation.adapter.CommentsOpportunitysAdapter
+import com.tekskills.er_tekskills.presentation.adapter.FoodExpenseAdapter
+import com.tekskills.er_tekskills.presentation.adapter.HotelExpenseAdapter
 import com.tekskills.er_tekskills.presentation.adapter.MomActionItemsOpportunitysAdapter
 import com.tekskills.er_tekskills.presentation.adapter.ProjectWiseActionItemsAdapter
 import com.tekskills.er_tekskills.presentation.adapter.TasksAdapter
+import com.tekskills.er_tekskills.presentation.adapter.TravelExpenseAdapter
 import com.tekskills.er_tekskills.presentation.adapter.ViewMeetingPurposeAdapter
 import com.tekskills.er_tekskills.presentation.adapter.ViewOpportunitysAdapter
 import dagger.Module
@@ -60,6 +64,27 @@ object SingletonAdapterModule {
     @Singleton
     @Named("opportunity_details_fragment")
     fun provideEscalationListToOpportunityDetailsFragment() = ClientEscalationOpportunitysAdapter()
+
+    @Provides
+    @Singleton
+    @Named("food_meeting_purpose_details_fragment")
+    fun provideFoodExpansesDetailsFragment() = FoodExpenseAdapter()
+
+    @Provides
+    @Singleton
+    @Named("advance_meeting_purpose_details_fragment")
+    fun provideAdvanceAmountDetailsFragment() = AdvanceAmountAdapter()
+
+
+    @Provides
+    @Singleton
+    @Named("travel_meeting_purpose_details_fragment")
+    fun provideTravelExpansesDetailsFragment() = TravelExpenseAdapter()
+
+    @Provides
+    @Singleton
+    @Named("hotel_meeting_purpose_details_fragment")
+    fun provideHotelExpansesDetailsFragment() = HotelExpenseAdapter()
 
     @Provides
     @Singleton

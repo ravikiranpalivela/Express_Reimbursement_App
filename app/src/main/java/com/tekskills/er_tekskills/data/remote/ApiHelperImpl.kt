@@ -1,5 +1,6 @@
 package com.tekskills.er_tekskills.data.remote
 
+import okhttp3.RequestBody
 import com.tekskills.er_tekskills.data.model.AccountHeadResponse
 import com.tekskills.er_tekskills.data.model.ActionItemProjectIDResponse
 import com.tekskills.er_tekskills.data.model.ActionItemProjectIDResponseItem
@@ -8,8 +9,9 @@ import com.tekskills.er_tekskills.data.model.AddCommentOpportunity
 import com.tekskills.er_tekskills.data.model.AddEscalationRequest
 import com.tekskills.er_tekskills.data.model.AddMOMOpportunityRequest
 import com.tekskills.er_tekskills.data.model.AddOpportunityRequest
-import com.tekskills.er_tekskills.data.model.AddPurposeMeetingRequest
+import com.tekskills.er_tekskills.data.model.AddMeetingRequest
 import com.tekskills.er_tekskills.data.model.AddPurposeMeetingResponse
+import com.tekskills.er_tekskills.data.model.AddTravelExpenceResponse
 import com.tekskills.er_tekskills.data.model.AssignProjectListResponse
 import com.tekskills.er_tekskills.data.model.ClientEscalationGraphByIDResponse
 import com.tekskills.er_tekskills.data.model.PendingActionGraphResponse
@@ -30,7 +32,9 @@ import com.tekskills.er_tekskills.data.model.PracticeHeadResponse
 import com.tekskills.er_tekskills.data.model.ProjectListResponse
 import com.tekskills.er_tekskills.data.model.ProjectManagerResponse
 import com.tekskills.er_tekskills.data.model.ProjectOpportunityResponse
+import com.tekskills.er_tekskills.data.model.UserAllowenceResponse
 import com.tekskills.er_tekskills.data.model.UserMeResponse
+import okhttp3.MultipartBody
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -46,15 +50,34 @@ class ApiHelperImpl @Inject constructor(
     override suspend fun getEmployeeMe(authorization: String): Response<UserMeResponse> =
         apiService.getEmployeeMe(authorization)
 
+
+    override suspend fun getEmployeeAllowences(authorization: String, itemID:String)
+    : Response<UserAllowenceResponse> = apiService.getEmployeeAllowences(authorization, itemID)
+
+
     override suspend fun getMeetingPurpose(authorization: String): Response<MeetingPurposeResponse> =
         apiService.getMeetingPurpose(authorization)
 
     override suspend fun getMeetingPurposeByID(authorization: String, itemID:String): Response<MeetingPurposeResponseData>
     = apiService.getMeetingPurposeByID(authorization, itemID)
 
+   override suspend fun addTravelExpense(authorization: String, purposeID: RequestBody,amount: Long,
+                                 file: MutableList<MultipartBody.Part>, user: Map<String, RequestBody>
+    ): Response<AddTravelExpenceResponse>
+           = apiService.addTravelExpense(authorization, purposeID,amount, file, user)
+
+    override suspend fun addHotelExpense(authorization: String, purposeID: RequestBody,
+                                          file: MultipartBody.Part, user: Map<String, RequestBody>
+    ): Response<AddTravelExpenceResponse>
+            = apiService.addHotelExpense(authorization, purposeID, file, user)
+
+    override suspend fun addFoodExpense(authorization: String, purposeID: RequestBody,
+                                         user: Map<String, RequestBody>
+    ): Response<AddTravelExpenceResponse>
+            = apiService.addFoodExpense(authorization, purposeID, user)
 
     override suspend fun addMeetingPurpose(
-        authorization: String, user: AddPurposeMeetingRequest
+        authorization: String, user: AddMeetingRequest
     ): Response<AddPurposeMeetingResponse> = apiService.addMeetingPurpose(authorization, user)
 
 

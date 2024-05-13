@@ -1,6 +1,289 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="dateConvert"
+            type="com.tekskills.er_tekskills.data.util.DateToString" />
+
+        <!--        <variable-->
+        <!--            name="dateConvert"-->
+        <!--            type="com.tekskills.er_tekskills.data.util.DateToString" />-->
+
+        <variable
+            name="viewElement"
+            type="com.tekskills.er_tekskills.utils.TextViewHtmlString" />
+
+        <variable
+            name="taskCategoryInfo"
+            type="com.tekskills.er_tekskills.data.model.MeetingPurposeResponseData" />
+    </data>
+<!--    <androidx.coordinatorlayout.widget.CoordinatorLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+
+<!--        <ScrollView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent">-->
+
+<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content">-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent">-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:layout_marginTop="20dp"-->
+<!--                    android:layout_marginRight="10dp"-->
+<!--                    android:background="@drawable/white_border_with_radius"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:padding="@dimen/_10dp">-->
+
+
+<!--                <EditText-->
+<!--                    android:id="@+id/edt_hotel_loc"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:layout_alignParentLeft="true"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:background="@drawable/edit_text_color_changer"-->
+<!--                    android:hint="@string/hotel_loc"-->
+<!--                    android:paddingLeft="10dp"-->
+<!--                    android:paddingRight="5dp"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textColorHint="@color/gray"-->
+<!--                    android:textSize="18dp" />-->
+
+<!--                <EditText-->
+<!--                    android:id="@+id/edt_hotel_expenses"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:layout_alignParentLeft="true"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:background="@drawable/edit_text_color_changer"-->
+<!--                    android:hint="@string/hotel_amount"-->
+<!--                    android:paddingLeft="10dp"-->
+<!--                    android:paddingRight="5dp"-->
+<!--                    android:inputType="numberDecimal"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textColorHint="@color/gray"-->
+<!--                    android:textSize="18dp" />-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="horizontal"-->
+<!--                        android:weightSum="1">-->
+
+
+<!--                        <EditText-->
+<!--                            android:id="@+id/tv_book_from_date"-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_height="40dp"-->
+<!--                            android:layout_alignParentLeft="true"-->
+<!--                            android:layout_centerVertical="true"-->
+<!--                            android:layout_weight="0.5"-->
+<!--                            android:background="@drawable/edit_text_color_changer"-->
+<!--                            android:focusable="false"-->
+<!--                            android:hint="@string/hotel_from_date"-->
+<!--                            android:paddingLeft="10dp"-->
+<!--                            android:paddingRight="5dp"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:textColorHint="@color/gray"-->
+<!--                            android:textSize="18dp" />-->
+
+<!--                        <EditText-->
+<!--                            android:id="@+id/tv_book_to_date"-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_height="40dp"-->
+<!--                            android:layout_alignParentLeft="true"-->
+<!--                            android:layout_centerVertical="true"-->
+<!--                            android:layout_weight="0.5"-->
+<!--                            android:background="@drawable/edit_text_color_changer"-->
+<!--                            android:focusable="false"-->
+<!--                            android:hint="@string/hotel_to_date"-->
+<!--                            android:paddingLeft="10dp"-->
+<!--                            android:paddingRight="5dp"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:textColorHint="@color/gray"-->
+<!--                            android:textSize="18dp" />-->
+
+<!--                        <EditText-->
+<!--                            android:id="@+id/edt_time"-->
+<!--                            style="@style/stlEdittextHorizontal"-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_weight="0.5"-->
+<!--                            android:backgroundTint="@android:color/white"-->
+<!--                            android:focusable="false"-->
+<!--                            android:hint="@string/time"-->
+<!--                            android:visibility="gone" />-->
+
+<!--                    </LinearLayout>-->
+
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/ll_attach_docx"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:background="@drawable/edit_text_color_changer"-->
+<!--                        android:orientation="horizontal"-->
+<!--                        android:weightSum="2"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/tv_journey_type">-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/tv_file_name"-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_height="40dp"-->
+<!--                            android:layout_gravity="right"-->
+<!--                            android:layout_weight="2"-->
+<!--                            android:background="@color/white"-->
+<!--                            android:cursorVisible="false"-->
+<!--                            android:hint="Attach Document"-->
+<!--                            android:inputType="none"-->
+<!--                            android:padding="8dp"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:textColorHint="@color/grey"-->
+<!--                            android:textSize="16dp" />-->
+
+<!--                        <ImageView-->
+<!--                            android:id="@+id/iv_add_file"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_gravity="center_vertical"-->
+<!--                            android:layout_marginRight="10dp"-->
+<!--                            android:padding="2dp"-->
+<!--                            android:src="@drawable/ic_baseline_add_24" />-->
+<!--                    </LinearLayout>-->
+
+
+<!--&lt;!&ndash;                    <LinearLayout&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:layout_marginLeft="10dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:layout_marginTop="20dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:layout_marginRight="10dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:layout_marginBottom="10dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:orientation="horizontal"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:weightSum="1">&ndash;&gt;-->
+
+<!--                        <Button-->
+<!--                            android:id="@+id/btn_save"-->
+<!--                            android:layout_width="@dimen/widget_size_120"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_weight="0.5"-->
+<!--                            android:layout_gravity="center"-->
+<!--                            android:background="@drawable/btn_background"-->
+<!--                            android:padding="12dp"-->
+<!--                            android:text="@string/save"-->
+<!--                            android:textColor="@android:color/white"-->
+<!--                            android:textSize="16sp" />-->
+
+<!--                        <Button-->
+<!--                            android:id="@+id/btn_cancel"-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginLeft="5dp"-->
+<!--                            android:layout_weight="0.5"-->
+<!--                            android:background="@drawable/btn_background"-->
+<!--                            android:padding="12dp"-->
+<!--                            android:text="@string/cancel"-->
+<!--                            android:visibility="gone"-->
+<!--                            android:textColor="@android:color/white"-->
+<!--                            android:textSize="16sp" />-->
+
+<!--&lt;!&ndash;                    </LinearLayout>&ndash;&gt;-->
+
+<!--                </LinearLayout>-->
+
+
+<!--                &lt;!&ndash;                <com.google.android.material.textview.MaterialTextView&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:id="@+id/mtv_create_project"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:layout_width="wrap_content"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:layout_height="wrap_content"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:layout_centerHorizontal="true"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:text="@string/create_project"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:textSize="24sp"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:textStyle="bold"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    app:layout_constraintTop_toTopOf="parent" />&ndash;&gt;-->
+
+
+<!--                &lt;!&ndash;                <Spinner&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:id="@+id/s_clients"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:layout_width="match_parent"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:layout_height="wrap_content"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:layout_margin="10dp"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:background="@drawable/blue_outline"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:popupBackground="@drawable/blue_outline_white"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:spinnerMode="dropdown"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    app:layout_constraintTop_toBottomOf="@+id/edtl_hotel_loc"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    tools:listitem="@layout/item_spinner" />&ndash;&gt;-->
+
+
+<!--                &lt;!&ndash;                <com.tekskills.psv_tekskills.presentation.view.spinner.MultiSelectSpinnerView&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:id="@+id/s_journey_types"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:layout_width="match_parent"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:layout_height="@dimen/spinner_item_height"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:layout_margin="@dimen/_10dp"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:background="@drawable/blue_outline"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    app:confirmTextColor="#669900"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    app:dropdown_footerConfirm_text="Ok"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    app:dropdown_headerSelectAll_text="All"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    app:layout_constraintTop_toBottomOf="@+id/tv_journey_type"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    app:placeholder_text="Select options"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    tools:listitem="@layout/item_spinner" />&ndash;&gt;-->
+
+<!--                </LinearLayout>-->
+
+
+<!--                <ProgressBar-->
+<!--                    android:id="@+id/progress"-->
+<!--                    style="?android:attr/progressBarStyleSmallTitle"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:visibility="gone"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintLeft_toLeftOf="parent"-->
+<!--                    app:layout_constraintRight_toRightOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+<!--        </ScrollView>-->
+
+<!--&lt;!&ndash;        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton&ndash;&gt;-->
+<!--&lt;!&ndash;            android:id="@+id/fab"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_gravity="bottom|end"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_marginEnd="@dimen/fab_margin"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_marginBottom="16dp"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:backgroundTint="@color/light_blue"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:text="@string/submit"&ndash;&gt;-->
+<!--&lt;!&ndash;            app:icon="@drawable/ic_baseline_keyboard_arrow_up_24"&ndash;&gt;-->
+<!--&lt;!&ndash;            app:iconGravity="end"&ndash;&gt;-->
+<!--&lt;!&ndash;            app:iconPadding="3dp" />&ndash;&gt;-->
+
+<!--    </androidx.coordinatorlayout.widget.CoordinatorLayout>-->
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -26,180 +309,573 @@
                 <!--                    app:layout_constraintStart_toStartOf="parent"-->
                 <!--                    app:layout_constraintTop_toTopOf="parent" />-->
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edtl_hotel_loc"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:hint="@string/hotel_loc"
-                    app:boxStrokeWidth="2dp"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="50"
-                    app:errorEnabled="true"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edt_hotel_loc"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_hotel_expenses_details"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:backgroundTint="@color/white" />
+                        android:orientation="horizontal"
+                        android:padding="@dimen/_2dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/isCompleted"
+                            android:layout_width="2dp"
+                            android:layout_height="2dp"
+                            android:visibility="invisible"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                <!--                <Spinner-->
-                <!--                    android:id="@+id/s_clients"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_margin="10dp"-->
-                <!--                    android:background="@drawable/blue_outline"-->
-                <!--                    android:popupBackground="@drawable/blue_outline_white"-->
-                <!--                    android:spinnerMode="dropdown"-->
-                <!--                    app:layout_constraintEnd_toEndOf="parent"-->
-                <!--                    app:layout_constraintStart_toStartOf="parent"-->
-                <!--                    app:layout_constraintTop_toBottomOf="@+id/edtl_hotel_loc"-->
-                <!--                    tools:listitem="@layout/item_spinner" />-->
+                        <LinearLayout
+                            android:id="@+id/ll_hotel_expenses"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/background_title"
+                            android:orientation="horizontal"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:id="@+id/tv_purpose_visit_details"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_margin="@dimen/widget_size_2"
+                                android:layout_weight="2"
+                                android:padding="@dimen/widget_size_2"
+                                android:text="@string/hotel_expenses_details"
+                                android:textAllCaps="true"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/font_size_14"
+                                android:textStyle="bold" />
+
+                            <ImageButton
+                                android:id="@+id/iv_view_hotel_expenses"
+                                android:layout_width="@dimen/widget_size_36"
+                                android:layout_height="@dimen/widget_size_36"
+                                android:layout_gravity="center"
+                                android:layout_margin="@dimen/_4dp"
+                                android:background="@drawable/ic_down_icon"
+                                android:backgroundTint="@color/white"
+                                android:visibility="visible" />
+
+                        </LinearLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/cl_vist_purpose"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/ll_hotel_expenses">
+
+                            <LinearLayout
+                                android:id="@+id/ll_hotel_loc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="2"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/tv_hotel_loc"
+                                    style="@style/stlTxtKey"
+                                    android:text="@string/hotel_loc" />
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/hotel_loc"
+                                    style="@style/stlTxtValue"
+                                    android:text="@{taskCategoryInfo.userCordinates.destination}"
+                                    tools:text="Testing" />
+                            </LinearLayout>
 
 
-                <!--                <com.tekskills.psv_tekskills.presentation.view.spinner.MultiSelectSpinnerView-->
-                <!--                    android:id="@+id/s_journey_types"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="@dimen/spinner_item_height"-->
-                <!--                    android:layout_margin="@dimen/_10dp"-->
-                <!--                    android:background="@drawable/blue_outline"-->
-                <!--                    app:confirmTextColor="#669900"-->
-                <!--                    app:dropdown_footerConfirm_text="Ok"-->
-                <!--                    app:dropdown_headerSelectAll_text="All"-->
-                <!--                    app:layout_constraintEnd_toEndOf="parent"-->
-                <!--                    app:layout_constraintStart_toStartOf="parent"-->
-                <!--                    app:layout_constraintTop_toBottomOf="@+id/tv_journey_type"-->
-                <!--                    app:placeholder_text="Select options"-->
-                <!--                    tools:listitem="@layout/item_spinner" />-->
+                            <LinearLayout
+                                android:id="@+id/ll_book_date"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="2"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/ll_hotel_loc">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edtl_hotel_expenses"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:hint="@string/hotel_amount"
-                    app:boxStrokeWidth="2dp"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="4"
-                    app:errorEnabled="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edtl_hotel_loc">
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/tv_book_date"
+                                    style="@style/stlTxtKey"
+                                    android:text="@string/hotel_from_date" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edt_hotel_expenses"
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/book_date"
+                                    style="@style/stlTxtValue"
+                                    android:text="@{taskCategoryInfo.visitDate}"
+                                    tools:text="Testing" />
+                            </LinearLayout>
+
+<!--                            <LinearLayout-->
+<!--                                android:id="@+id/ll_distance"-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_below="@+id/ll_book_date"-->
+<!--                                android:orientation="horizontal"-->
+<!--                                android:weightSum="2"-->
+<!--                                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                                app:layout_constraintStart_toStartOf="parent"-->
+<!--                                app:layout_constraintTop_toBottomOf="@+id/ll_book_date">-->
+
+<!--                                <com.google.android.material.textview.MaterialTextView-->
+<!--                                    android:id="@+id/tv_distance"-->
+<!--                                    style="@style/stlTxtKey"-->
+<!--                                    android:text="@string/distance" />-->
+
+<!--                                <com.google.android.material.textview.MaterialTextView-->
+<!--                                    android:id="@+id/distance"-->
+<!--                                    style="@style/stlTxtValue"-->
+<!--                                    android:text="@{dateConvert.Companion.hotelDistanceKms(taskCategoryInfo.userCordinates.totalDistance)}"-->
+<!--                                    tools:text="Testing" />-->
+<!--                            </LinearLayout>-->
+
+<!--                            <LinearLayout-->
+<!--                                android:id="@+id/ll_allotted_expenses"-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:orientation="horizontal"-->
+<!--                                android:weightSum="2"-->
+<!--                                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                                app:layout_constraintStart_toStartOf="parent"-->
+<!--                                app:layout_constraintTop_toBottomOf="@+id/ll_distance">-->
+
+<!--                                <com.google.android.material.textview.MaterialTextView-->
+<!--                                    android:id="@+id/tv_allotted_expenses"-->
+<!--                                    style="@style/stlTxtKey"-->
+<!--                                    android:text="@string/allotted_expenses" />-->
+
+<!--                                <com.google.android.material.textview.MaterialTextView-->
+<!--                                    android:id="@+id/rs_allotted_expenses"-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_gravity="center"-->
+<!--                                    android:layout_margin="@dimen/_2dp"-->
+<!--                                    android:fontFamily="@font/poppins"-->
+<!--                                    android:padding="@dimen/_2dp"-->
+<!--                                    android:text="Rs."-->
+<!--                                    android:textAllCaps="false"-->
+<!--                                    android:textColor="@color/black"-->
+<!--                                    android:textSize="@dimen/_14sp"-->
+<!--                                    android:textStyle="bold"-->
+<!--                                    tools:text="Rs." />-->
+
+<!--                                <com.google.android.material.textview.MaterialTextView-->
+<!--                                    android:id="@+id/allotted_expenses"-->
+<!--                                    style="@style/stlTxtValue"-->
+<!--                                    android:text="@{dateConvert.Companion.hotelDistanceAmount(taskCategoryInfo.userCordinates.totalDistance)}"-->
+<!--                                    tools:text="Testing Answer" />-->
+<!--                            </LinearLayout>-->
+
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/priority"
+                                style="@style/stlTxtValue"
+                                android:visibility="gone"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/ll_book_date" />
+
+
+                            <ImageButton
+                                android:id="@+id/iv_edit_purpose_visit"
+                                android:layout_width="@dimen/_36dp"
+                                android:layout_height="@dimen/_36dp"
+                                android:layout_gravity="center"
+                                android:layout_margin="@dimen/_4dp"
+                                android:background="@drawable/ic_edit_item"
+                                android:backgroundTint="@color/black"
+                                android:visibility="gone"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_hotel_expenses_info"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/background_title"
+                            android:orientation="horizontal"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/cl_vist_purpose">
+
+                            <TextView
+                                android:id="@+id/tv_purpose_visit_details_info"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_margin="@dimen/widget_size_2"
+                                android:layout_weight="2"
+                                android:padding="@dimen/widget_size_2"
+                                android:text="@string/hotel_expenses_info"
+                                android:textAllCaps="true"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/font_size_14"
+                                android:textStyle="bold" />
+
+                            <ImageButton
+                                android:id="@+id/iv_view_hotel_expenses_info"
+                                android:layout_width="@dimen/widget_size_36"
+                                android:layout_height="@dimen/widget_size_36"
+                                android:layout_gravity="center"
+                                android:layout_margin="@dimen/_4dp"
+                                android:background="@drawable/ic_down_icon"
+                                android:backgroundTint="@color/white"
+                                android:visibility="visible" />
+
+                        </LinearLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_hotel_expense"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
-                        android:layout_gravity="center_horizontal"
-                        android:backgroundTint="@color/white" />
+                        android:orientation="vertical"
+                        android:padding="@dimen/widget_size_4">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.tekskills.er_tekskills.presentation.view.spinner.SearchableSpinner
+                            android:id="@+id/s_mode_of_hotel"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/spinner_item_height"
+                            android:background="@drawable/edit_text_color_changer"
+                            android:padding="@dimen/_10dp"
+                            app:label_alignment="1"
+                            android:visibility="gone"
+                            app:label_color="@color/colorPrimary"
+                            app:label_hint="Mode Of hotel"
+                            app:label_text_size="@dimen/_16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/ll_allotted_expenses"
+                            app:selected_item_color="@color/colorPrimary"
+                            app:showSearch="true"
+                            app:sort="true" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_book_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="@dimen/_10dp"
-                    android:text="@string/book_date"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edtl_hotel_expenses" />
+                        <EditText
+                            android:id="@+id/edt_hotel_expenses"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/edit_text_color_changer"
+                            android:hint="@string/hotel_expense_amount"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="5dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/gray"
+                            android:textSize="18dp" />
+                        <CheckBox
+                            android:id="@+id/chk_round_trip"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:text="More than One Day"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/s_journey_types" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/date_book_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/widget_size_4"
-                    android:text="@string/book_date"
-                    app:chipIcon="@drawable/ic_baseline_date_range_24"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_book_date" />
+                        <LinearLayout
+                            android:id="@+id/ll_round_trip_details"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone"
+                            tools:visibility="visible">
 
-                <TextView
-                    android:id="@+id/tv_attach_doc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_10dp"
-                    android:fontFamily="@font/poppins"
-                    android:text="Attach Document"
-                    android:textSize="@dimen/_14sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/date_book_date" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="1">
+                                <EditText
+                                    android:id="@+id/tv_return_hotel_date"
+                                    android:layout_width="0dp"
+                                    android:layout_height="40dp"
+                                    android:layout_weight="0.5"
+                                    android:background="@drawable/edit_text_color_changer"
+                                    android:focusable="false"
+                                    android:hint="@string/hotel_to_date"
+                                    android:paddingHorizontal="@dimen/widget_size_4"
+                                    android:textColor="@color/black"
+                                    android:textColorHint="@color/gray"
+                                    android:textSize="18dp" />
 
-                <TextView
-                    android:id="@+id/tv_file_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins"
-                    android:gravity="center"
-                    android:padding="@dimen/widget_size_4"
-                    android:text="File Name"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/font_size_16"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_attach_doc" />
 
-                <LinearLayout
-                    android:id="@+id/ll_upload_genres_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_file_name">
+                                <EditText
+                                    android:id="@+id/edt_return_time"
+                                    style="@style/stlEdittextHorizontal"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.5"
+                                    android:backgroundTint="@android:color/white"
+                                    android:focusable="false"
+                                    android:hint="@string/time"
+                                    android:visibility="gone" />
 
-                    <TextView
-                        android:id="@+id/chooseBtn"
-                        android:layout_width="@dimen/widget_size_0"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="@dimen/widget_size_4"
-                        android:layout_weight="50"
-                        android:background="@drawable/background_select"
-                        android:fontFamily="@font/poppins"
-                        android:paddingTop="@dimen/widget_size_12"
-                        android:paddingBottom="@dimen/widget_size_12"
-                        android:text="Select File"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/font_size_16"
-                        android:textStyle="bold" />
+                            </LinearLayout>
+                        </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/uploadBtn"
-                        android:layout_width="@dimen/widget_size_0"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="@dimen/widget_size_4"
-                        android:layout_weight="50"
-                        android:background="@drawable/background_select"
-                        android:fontFamily="@font/poppins"
-                        android:paddingTop="@dimen/widget_size_12"
-                        android:paddingBottom="@dimen/widget_size_12"
-                        android:text="Upload File"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/font_size_16"
-                        android:textStyle="bold" />
 
+                        <!--                        <EditText-->
+                        <!--                            android:id="@+id/edt_to_loc"-->
+                        <!--                            android:layout_width="match_parent"-->
+                        <!--                            android:layout_height="40dp"-->
+                        <!--                            android:layout_alignParentLeft="true"-->
+                        <!--                            android:layout_centerVertical="true"-->
+                        <!--                            android:background="@drawable/edit_text_color_changer"-->
+                        <!--                            android:hint="@string/to_loc"-->
+                        <!--                            android:paddingLeft="10dp"-->
+                        <!--                            android:paddingRight="5dp"-->
+                        <!--                            android:textColor="@color/black"-->
+                        <!--                            android:textColorHint="@color/gray"-->
+                        <!--                            android:textSize="18dp" />-->
+
+                        <!--                        <LinearLayout-->
+                        <!--                            android:layout_width="match_parent"-->
+                        <!--                            android:layout_height="wrap_content"-->
+                        <!--                            android:orientation="horizontal"-->
+                        <!--                            android:weightSum="1">-->
+
+
+                        <!--                            <EditText-->
+                        <!--                                android:id="@+id/tv_hotel_date"-->
+                        <!--                                android:layout_width="0dp"-->
+                        <!--                                android:layout_height="40dp"-->
+                        <!--                                android:layout_alignParentLeft="true"-->
+                        <!--                                android:layout_centerVertical="true"-->
+                        <!--                                android:layout_weight="0.5"-->
+                        <!--                                android:background="@drawable/edit_text_color_changer"-->
+                        <!--                                android:focusable="false"-->
+                        <!--                                android:hint="@string/hotel_date"-->
+                        <!--                                android:paddingLeft="10dp"-->
+                        <!--                                android:paddingRight="5dp"-->
+                        <!--                                android:textColor="@color/black"-->
+                        <!--                                android:textColorHint="@color/gray"-->
+                        <!--                                android:textSize="18dp" />-->
+
+
+                        <!--                            <EditText-->
+                        <!--                                android:id="@+id/edt_time"-->
+                        <!--                                style="@style/stlEdittextHorizontal"-->
+                        <!--                                android:layout_width="0dp"-->
+                        <!--                                android:layout_height="wrap_content"-->
+                        <!--                                android:layout_weight="0.5"-->
+                        <!--                                android:backgroundTint="@android:color/white"-->
+                        <!--                                android:focusable="false"-->
+                        <!--                                android:hint="@string/time"-->
+                        <!--                                android:visibility="gone" />-->
+
+                        <!--                        </LinearLayout>-->
+
+                        <!--                        <Spinner-->
+                        <!--                            android:id="@+id/s_journey_types"-->
+                        <!--                            style="@style/stlEdittext"-->
+                        <!--                            android:layout_margin="10dp"-->
+                        <!--                            android:background="@drawable/spinner_edit_bg"-->
+                        <!--                            android:overlapAnchor="false"-->
+                        <!--                            android:popupBackground="@color/grey"-->
+                        <!--                            android:text="Mode Of hotel"-->
+                        <!--                             />-->
+
+                        <!--                        <com.tekskills.er_tekskills.presentation.view.spinner.SearchableSpinner-->
+                        <!--                            android:id="@+id/s_mode_of_hotel"-->
+                        <!--                            android:layout_width="match_parent"-->
+                        <!--                            android:layout_height="@dimen/spinner_item_height"-->
+                        <!--                            android:padding="@dimen/_10dp"-->
+                        <!--                            app:showSearch="true"-->
+                        <!--                            app:sort="true"-->
+                        <!--                            app:label_hint="Mode Of hotel"-->
+                        <!--                            app:label_alignment="1"-->
+                        <!--                            app:label_text_size="@dimen/_16sp"-->
+                        <!--                            android:background="@drawable/edit_text_color_changer"-->
+                        <!--                            app:label_color="@color/colorPrimary"-->
+                        <!--                            app:selected_item_color="@color/colorPrimary"-->
+                        <!--                            app:layout_constraintEnd_toEndOf="parent"-->
+                        <!--                            app:layout_constraintStart_toStartOf="parent"-->
+                        <!--                            app:layout_constraintTop_toBottomOf="@+id/tv_client"-->
+                        <!--                            />-->
+
+
+                        <!--                        <Spinner-->
+                        <!--                            android:id="@+id/spinner_of_hotel"-->
+                        <!--                            android:layout_width="match_parent"-->
+                        <!--                            android:layout_height="40dp"-->
+                        <!--                            android:layout_gravity="right"-->
+                        <!--                            android:layout_margin="@dimen/widget_size_2"-->
+                        <!--                            android:layout_weight="2"-->
+                        <!--                            android:drawableEnd="@drawable/arrow_down_grey"-->
+                        <!--                            android:background="@drawable/edit_text_color_changer"-->
+                        <!--                            android:entries="@array/mode_of_hotel_options"-->
+                        <!--                            android:prompt="@string/mode_of_hotel_prompt"-->
+                        <!--                            android:textColor="@color/black"-->
+                        <!--                            android:textSize="16dp" />-->
+
+                        <!--                        <LinearLayout-->
+                        <!--                            android:id="@+id/ll_mode_of_hotel"-->
+                        <!--                            android:layout_width="match_parent"-->
+                        <!--                            android:layout_height="wrap_content"-->
+                        <!--                            android:background="@drawable/edit_text_color_changer"-->
+                        <!--                            android:orientation="horizontal"-->
+                        <!--                            android:weightSum="2"-->
+                        <!--                            app:layout_constraintEnd_toEndOf="parent"-->
+                        <!--                            app:layout_constraintStart_toStartOf="parent"-->
+                        <!--                            app:layout_constraintTop_toBottomOf="@+id/tv_journey_type">-->
+
+                        <!--                            <Spinner-->
+                        <!--                                android:id="@+id/edt_mode_of_hotel"-->
+                        <!--                                android:layout_width="match_parent"-->
+                        <!--                                android:layout_height="40dp"-->
+                        <!--                                android:layout_gravity="right"-->
+                        <!--                                android:layout_margin="@dimen/widget_size_2"-->
+                        <!--                                android:layout_weight="2"-->
+                        <!--                                android:drawableEnd="@drawable/arrow_down_grey"-->
+                        <!--                                android:entries="@array/mode_of_hotel_options"-->
+                        <!--                                android:prompt="@string/mode_of_hotel_prompt"-->
+                        <!--                                android:textColor="@color/black"-->
+                        <!--                                android:textSize="16dp" />-->
+
+                        <!--&lt;!&ndash;                            <EditText&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:id="@+id/edt_mode_of_hotel"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:layout_width="0dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:layout_height="40dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:layout_gravity="right"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:layout_margin="@dimen/widget_size_2"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:layout_weight="2"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:background="@color/white"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:cursorVisible="false"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:hint="Mode Of hotel"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:inputType="none"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:textColor="@color/black"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:textColorHint="@color/grey"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:textSize="16dp" />&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;                            <ImageView&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:id="@+id/iv_mode_of_hotel"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:layout_width="wrap_content"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:layout_height="wrap_content"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:layout_gravity="center_vertical"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:layout_marginRight="10dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:padding="2dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                android:src="@drawable/arrow_down_grey" />&ndash;&gt;-->
+                        <!--                        </LinearLayout>-->
+
+
+                        <LinearLayout
+                            android:id="@+id/ll_attach_docx"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_color_changer"
+                            android:orientation="horizontal"
+                            android:weightSum="2"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_journey_type">
+
+                            <TextView
+                                android:id="@+id/tv_file_name"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="right"
+                                android:layout_weight="2"
+                                android:background="@color/white"
+                                android:text="Attach Document"
+                                android:inputType="none"
+                                android:padding="8dp"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/grey"
+                                android:textSize="16dp" />
+
+                            <ImageView
+                                android:id="@+id/iv_add_file"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginRight="10dp"
+                                android:padding="2dp"
+                                android:visibility="gone"
+                                android:src="@drawable/ic_baseline_add_24" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="90dp"
+                            android:layout_marginStart="10dp"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:id="@+id/ivAddImage"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_add_image"
+                                tools:ignore="ContentDescription" />
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvImage"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:paddingStart="10dp"
+                                android:paddingEnd="10dp"
+                                android:scrollbars="none"
+                                android:clipToPadding="false"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
+
+                        <!--                        <LinearLayout-->
+                        <!--                            android:layout_width="match_parent"-->
+                        <!--                            android:layout_height="wrap_content"-->
+                        <!--                            android:layout_marginLeft="10dp"-->
+                        <!--                            android:layout_marginTop="20dp"-->
+                        <!--                            android:layout_marginRight="10dp"-->
+                        <!--                            android:layout_marginBottom="10dp"-->
+                        <!--                            android:orientation="horizontal"-->
+                        <!--                            android:weightSum="1">-->
+
+                        <Button
+                            android:id="@+id/btn_save"
+                            android:layout_width="@dimen/widget_size_120"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:layout_gravity="center"
+                            android:background="@drawable/btn_background"
+                            android:padding="12dp"
+                            android:text="@string/save"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
+
+                        <Button
+                            android:id="@+id/btn_cancel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="0.5"
+                            android:background="@drawable/btn_background"
+                            android:padding="12dp"
+                            android:visibility="gone"
+                            android:text="@string/cancel"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
+
+                        <!--                        </LinearLayout>-->
+
+                    </LinearLayout>
                 </LinearLayout>
-
 
                 <ProgressBar
                     android:id="@+id/progress"
@@ -215,18 +891,20 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/light_blue"
-            android:text="@string/submit"
-            app:icon="@drawable/ic_baseline_keyboard_arrow_up_24"
-            app:iconGravity="end"
-            app:iconPadding="3dp" />
+        <!--        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
+        <!--            android:id="@+id/fab"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_gravity="bottom|end"-->
+        <!--            android:layout_marginEnd="@dimen/fab_margin"-->
+        <!--            android:layout_marginBottom="16dp"-->
+        <!--            android:backgroundTint="@color/light_blue"-->
+        <!--            android:text="@string/submit"-->
+        <!--            app:icon="@drawable/ic_baseline_keyboard_arrow_up_24"-->
+        <!--            app:iconGravity="end"-->
+        <!--            app:iconPadding="3dp" />-->
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
 </layout>

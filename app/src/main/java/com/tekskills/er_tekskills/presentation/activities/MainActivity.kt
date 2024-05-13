@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 //                        binding.progress.visibility = View.GONE
                     if (it.data != null)
                         it.data.let { res ->
-                            viewModel.saveUserEmployeeID(res.employeeMaster.id.toString())
+                            viewModel.saveUserEmployeeID(res.employeeMaster.roleId.toString())
 
 //                                viewModel.saveUserSubscription(res.employeeMaster.roleId.r)
 //                                val intent = Intent(requireActivity(), MainActivity::class.java)
@@ -123,14 +123,10 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.home_fragment,
-                R.id.base_fragment,
-                R.id.opportunity,
                 R.id.view_opportunity_fragment,
                 R.id.new_purpose_meeting,
                 R.id.view_meetings,
-                R.id.new_client,
                 R.id.settings_fragment,
-                R.id.completed_tasks_fragment,
                 R.id.logout
             ), binding.drawerLayout
         )

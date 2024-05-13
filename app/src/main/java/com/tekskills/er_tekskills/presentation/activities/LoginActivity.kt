@@ -1,12 +1,16 @@
 package com.tekskills.er_tekskills.presentation.activities
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.snackbar.Snackbar
@@ -22,7 +26,8 @@ class LoginActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityLoginBinding
     private val viewModel: MainActivityViewModel by viewModels()
-
+    private val REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124
+    private val PERMISSION_REQUEST_CODE = 1
 //    @Inject
 //    lateinit var sharedPreferences: SharedPreferences
 
@@ -32,6 +37,10 @@ class LoginActivity : AppCompatActivity() {
 //        val editor: SharedPreferences.Editor = sharedPreferences.edit()
 
         setupListeners()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            insertDummyContactWrapper()
+        }
 
         if (viewModel.checkIfUserLogin() != Common.PREF_DEFAULT) {
             val intent = Intent(this, MainActivity::class.java)
@@ -178,5 +187,121 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+
+    /**
+     * PERMISSIONS
+     */
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private fun insertDummyContactWrapper() {
+        val permissionsNeeded: MutableList<String> = ArrayList()
+        val permissionsList: MutableList<String> = ArrayList()
+        if (!addPermission(
+                permissionsList,
+                Manifest.permission.READ_PHONE_STATE
+            )
+        ) permissionsNeeded.add("READ_PHONE_STATE")
+        if (!addPermission(
+                permissionsList,
+                Manifest.permission.RECORD_AUDIO
+            )
+        ) permissionsNeeded.add("RECORD_AUDIO")
+        if (!addPermission(
+                permissionsList,
+                Manifest.permission.INTERNET
+            )
+        ) permissionsNeeded.add("INTERNET")
+        if (!addPermission(
+                permissionsList,
+                Manifest.permission.RECEIVE_BOOT_COMPLETED
+            )
+        ) permissionsNeeded.add("RECEIVE_BOOT_COMPLETED")
+        if (!addPermission(
+                permissionsList,
+                Manifest.permission.CALL_PHONE
+            )
+        ) permissionsNeeded.add("CALL_PHONE")
+        if (!addPermission(
+                permissionsList,
+                Manifest.permission.READ_CALENDAR
+            )
+        ) permissionsNeeded.add("READ_CALENDAR")
+        if (!addPermission(
+                permissionsList,
+                Manifest.permission.WRITE_CALENDAR
+            )
+        ) permissionsNeeded.add("WRITE_CALENDAR")
+        if (!addPermission(
+                permissionsList,
+                Manifest.permission.WAKE_LOCK
+            )
+        ) permissionsNeeded.add("WAKE_LOCK")
+        if (!addPermission(
+                permissionsList,
+                Manifest.permission.ACCESS_WIFI_STATE
+            )
+        ) permissionsNeeded.add("ACCESS_WIFI_STATE")
+        if (!addPermission(
+                permissionsList,
+                Manifest.permission.ACCESS_NETWORK_STATE
+            )
+        ) permissionsNeeded.add("ACCESS_NETWORK_STATE")
+        if (!addPermission(
+                permissionsList,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        ) permissionsNeeded.add("WRITE_EXTERNAL_STORAGE")
+//        if (!addPermission(
+//                permissionsList,
+//                Manifest.permission.CAPTURE_VIDEO_OUTPUT
+//            )
+//        ) permissionsNeeded.add("CAPTURE_VIDEO_OUTPUT")
+        if (!addPermission(
+                permissionsList,
+                Manifest.permission.READ_CALL_LOG
+            )
+        ) permissionsNeeded.add("READ_CALL_LOG")
+        if (!addPermission(
+                permissionsList,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        ) permissionsNeeded.add("ACCESS_FINE_LOCATION")
+        if (!addPermission(
+                permissionsList,
+                Manifest.permission.READ_SMS
+            )
+        ) permissionsNeeded.add("READ_SMS")
+        if (!addPermission(
+                permissionsList,
+                Manifest.permission.READ_CONTACTS
+            )
+        ) permissionsNeeded.add("READ_CONTACTS")
+        if (permissionsList.size > 0) {
+            if (permissionsNeeded.size > 0) {
+                var message = "You need to grant access to " + permissionsNeeded[0]
+                for (i in 1 until permissionsNeeded.size) message =
+                    message + ", " + permissionsNeeded[i]
+                requestPermissions(
+                    permissionsList.toTypedArray(),
+                    REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS
+                )
+                return
+            }
+            requestPermissions(
+                permissionsList.toTypedArray(),
+                REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS
+            )
+            return
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private fun addPermission(permissionsList: MutableList<String>, permission: String): Boolean {
+        if (checkSelfPermission(permission) !== PackageManager.PERMISSION_GRANTED) {
+            permissionsList.add(permission)
+            if (!shouldShowRequestPermissionRationale(permission)) return false
+        }
+        return true
     }
 }

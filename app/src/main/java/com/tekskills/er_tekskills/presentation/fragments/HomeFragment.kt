@@ -29,7 +29,6 @@ class HomeFragment : ParentFragment() {
     @Named("view_main_meetings")
     lateinit var adapter: ViewMeetingPurposeAdapter
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

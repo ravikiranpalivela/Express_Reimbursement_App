@@ -9,7 +9,7 @@ class UtilsConstants {
 
         object UnitPrice {
             const val carType = 5000.0
-            const val bikeType = 3000.0
+            const val bikeType = 10.0
         }
     }
 

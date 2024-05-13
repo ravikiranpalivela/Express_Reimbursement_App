@@ -2,9 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
     <data>
-
         <variable
             name="viewElement"
             type="com.tekskills.er_tekskills.utils.TextViewHtmlString" />
@@ -46,10 +44,9 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <LinearLayout
-                        android:id="@+id/ll_oppor_details"
+                        android:id="@+id/ll_purpose_meeting"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/_4dp"
                         android:background="@drawable/background_title"
                         android:orientation="horizontal"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -71,117 +68,209 @@
                             android:textStyle="bold" />
 
                         <ImageButton
-                            android:id="@+id/iv_edit_purpose_visit"
+                            android:id="@+id/iv_view_purpose_meeting"
                             android:layout_width="@dimen/_50dp"
                             android:layout_height="@dimen/_50dp"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_4dp"
-                            android:background="@drawable/ic_edit_item"
+                            android:background="@drawable/ic_down_icon"
+                            android:backgroundTint="@color/white"
                             android:visibility="visible" />
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/ll_visit_purpose"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_vist_purpose"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/ll_oppor_details">
+                        app:layout_constraintTop_toBottomOf="@+id/ll_purpose_meeting">
+
+                        <LinearLayout
+                            android:id="@+id/ll_cust_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="2"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_cust_name"
+                                style="@style/stlTxtKey"
+                                android:text="@string/customer_name" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/cust_name"
+                                style="@style/stlTxtValue"
+                                android:text="@{taskCategoryInfo.customerName}"
+                                tools:text="Testing" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_cust_contact"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="2"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/ll_cust_name">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_cust_contact"
+                                style="@style/stlTxtKey"
+                                android:text="@string/customer_contact" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/cust_contact"
+                                style="@style/stlTxtValue"
+                                android:text="@{taskCategoryInfo.customerPhone}"
+                                tools:text="Testing" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_cust_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="2"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/ll_cust_contact">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_cust_email"
+                                style="@style/stlTxtKey"
+                                android:text="@string/customer_email" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/cust_email"
+                                style="@style/stlTxtValue"
+                                android:text="@{taskCategoryInfo.custmerEmail}"
+                                tools:text="Testing" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_visit_purpose"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="2"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/ll_cust_email">
 
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tv_visit_purpose"
-                            style="@style/stlTxtKey"
-                            android:text="@string/edt_visit_purpose" />
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_visit_purpose"
+                                style="@style/stlTxtKey"
+                                android:text="@string/edt_visit_purpose" />
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/projectName"
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/projectName"
+                                style="@style/stlTxtValue"
+                                android:text="@{taskCategoryInfo.visitPurpose}"
+                                tools:text="Testing" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_visit_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/ll_visit_purpose"
+                            android:orientation="horizontal"
+                            android:weightSum="2"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/ll_visit_purpose">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_visit_date"
+                                style="@style/stlTxtKey"
+                                android:text="@string/visit_date" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/clientName"
+                                style="@style/stlTxtValue"
+                                android:text="@{taskCategoryInfo.visitDate}"
+                                tools:text="Testing" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_src_loc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/ll_visit_date"
+                            android:orientation="horizontal"
+                            android:weightSum="2"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/ll_visit_date">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_src_loc"
+                                style="@style/stlTxtKey"
+                                android:text="@string/src_loc" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/oppor_type"
+                                style="@style/stlTxtValue"
+                                android:text="@{taskCategoryInfo.userCordinates.source}"
+                                tools:text="Testing" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_des_loc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/ll_src_loc"
+                            android:orientation="horizontal"
+                            android:weightSum="2"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/ll_src_loc">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_des_loc"
+                                style="@style/stlTxtKey"
+                                android:singleLine="true"
+                                android:text="@string/des_loc" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/opportunity_desc"
+                                style="@style/stlTxtValue"
+                                android:singleLine="true"
+                                android:text="@{taskCategoryInfo.userCordinates.destination}"
+                                tools:text="Testing" />
+                        </LinearLayout>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/priority"
                             style="@style/stlTxtValue"
-                            android:text="@{taskCategoryInfo.visitPurpose}"
-                            tools:text="Testing" />
+                            android:visibility="visible"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/ll_des_loc" />
 
-                    </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/ll_visit_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/ll_visit_purpose"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/ll_visit_purpose">
+                        <ImageButton
+                            android:id="@+id/iv_edit_purpose_visit"
+                            android:layout_width="@dimen/_36dp"
+                            android:layout_height="@dimen/_36dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/_4dp"
+                            android:background="@drawable/ic_edit_item"
+                            android:backgroundTint="@color/black"
+                            android:visibility="visible"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tv_visit_date"
-                            style="@style/stlTxtKey"
-                            android:text="@string/visit_date" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/clientName"
-                            style="@style/stlTxtValue"
-                            android:text="@{taskCategoryInfo.visitDate}"
-                            tools:text="Testing" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ll_src_loc"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/ll_visit_date"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/ll_visit_date">
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tv_src_loc"
-                            style="@style/stlTxtKey"
-                            android:text="@string/src_loc" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/oppor_type"
-                            style="@style/stlTxtValue"
-                            android:text="@{taskCategoryInfo.userCordinates.sourceLatitude}"
-                            tools:text="Testing" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ll_des_loc"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/ll_src_loc"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/ll_src_loc">
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tv_des_loc"
-                            style="@style/stlTxtKey"
-                            android:singleLine="true"
-                            android:text="@string/des_loc" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/opportunity_desc"
-                            style="@style/stlTxtValue"
-                            android:singleLine="true"
-                            android:text="@{taskCategoryInfo.userCordinates.destinantionLatitude}"
-                            tools:text="Testing" />
-                    </LinearLayout>
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/priority"
-                        style="@style/stlTxtValue"
-                        android:visibility="visible"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/ll_des_loc" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -190,7 +279,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:visibility="visible"
                     app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
                     <LinearLayout
@@ -199,7 +287,8 @@
                         android:layout_height="match_parent"
                         android:layout_margin="@dimen/_4dp"
                         android:background="@drawable/background_title"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/tv_advance_amount"
@@ -220,8 +309,8 @@
                             android:layout_height="@dimen/_50dp"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_4dp"
-                            android:visibility="visible"
-                            android:src="@drawable/ic_baseline_add_24" />
+                            android:src="@drawable/ic_baseline_add_24"
+                            android:visibility="visible" />
 
                     </LinearLayout>
 
@@ -278,12 +367,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_4dp"
-                        android:padding="@dimen/_4dp" />
+                        android:padding="@dimen/_4dp"
+                        android:visibility="gone" />
 
                     <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/av_advance_amount"
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
+                        android:visibility="gone"
                         app:lottie_autoPlay="true"
                         app:lottie_loop="true"
                         app:lottie_rawRes="@raw/noresultanim" />
@@ -308,7 +399,8 @@
                             android:textAllCaps="true"
                             android:textColor="@color/white"
                             android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:visibility="gone" />
 
                         <ImageButton
                             android:id="@+id/iv_expenses"
@@ -316,8 +408,8 @@
                             android:layout_height="@dimen/_50dp"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_4dp"
-                            android:visibility="gone"
-                            android:src="@drawable/ic_baseline_add_24" />
+                            android:src="@drawable/ic_baseline_add_24"
+                            android:visibility="gone" />
 
                     </LinearLayout>
 
@@ -349,25 +441,52 @@
                             android:layout_height="@dimen/_50dp"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_4dp"
-                            android:visibility="visible"
-                            android:src="@drawable/ic_baseline_add_24" />
+                            android:background="@drawable/ic_baseline_add_24"
+                            android:backgroundTint="@color/white"
+                            android:visibility="visible" />
 
                     </LinearLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_travel_expenses"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_travel_expenses"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/_4dp"
-                        android:padding="@dimen/_4dp" />
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_purpose_meeting">
 
-                    <com.airbnb.lottie.LottieAnimationView
-                        android:id="@+id/av_travel_expenses"
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        app:lottie_autoPlay="true"
-                        app:lottie_loop="true"
-                        app:lottie_rawRes="@raw/noresultanim" />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_travel_expenses"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_4dp"
+                            android:padding="@dimen/_4dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <!--                    <com.airbnb.lottie.LottieAnimationView-->
+                        <!--                        android:id="@+id/av_travel_expenses"-->
+                        <!--                        android:layout_width="match_parent"-->
+                        <!--                        android:layout_height="100dp"-->
+                        <!--                        app:lottie_autoPlay="true"-->
+                        <!--                        app:lottie_loop="true"-->
+                        <!--                        app:lottie_rawRes="@raw/noresultanim" />-->
+
+                        <ImageButton
+                            android:id="@+id/iv_travel_expenses"
+                            android:layout_width="@dimen/_50dp"
+                            android:layout_height="@dimen/_50dp"
+                            android:layout_gravity="right"
+                            android:layout_margin="@dimen/_4dp"
+                            android:src="@drawable/ic_baseline_add_24"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/rv_travel_expenses"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <LinearLayout
                         android:id="@+id/ll_hotel_expenses"
@@ -392,29 +511,72 @@
                             android:textStyle="bold" />
 
                         <ImageButton
-                            android:id="@+id/iv_add_hotel_expenses"
+                            android:id="@+id/iv_hotel_expenses"
                             android:layout_width="@dimen/_50dp"
                             android:layout_height="@dimen/_50dp"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_4dp"
-                            android:src="@drawable/ic_baseline_add_24" />
+                            android:background="@drawable/ic_down_icon"
+                            android:backgroundTint="@color/white"/>
 
                     </LinearLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_hotel_expenses"
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_hotel_expenses"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/_4dp"
-                        android:padding="@dimen/_4dp" />
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_purpose_meeting">
 
-                    <com.airbnb.lottie.LottieAnimationView
-                        android:id="@+id/av_hotel_expenses"
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        app:lottie_autoPlay="true"
-                        app:lottie_loop="true"
-                        app:lottie_rawRes="@raw/noresultanim" />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_hotel_expenses"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_4dp"
+                            android:padding="@dimen/_4dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <!--                    <com.airbnb.lottie.LottieAnimationView-->
+                        <!--                        android:id="@+id/av_travel_expenses"-->
+                        <!--                        android:layout_width="match_parent"-->
+                        <!--                        android:layout_height="100dp"-->
+                        <!--                        app:lottie_autoPlay="true"-->
+                        <!--                        app:lottie_loop="true"-->
+                        <!--                        app:lottie_rawRes="@raw/noresultanim" />-->
+
+                        <ImageButton
+                            android:id="@+id/iv_add_hotel_expenses"
+                            android:layout_width="@dimen/_50dp"
+                            android:layout_height="@dimen/_50dp"
+                            android:layout_gravity="right"
+                            android:layout_margin="@dimen/_4dp"
+                            android:src="@drawable/ic_baseline_add_24"
+                            android:visibility="visible"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/rv_hotel_expenses"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--                    <androidx.recyclerview.widget.RecyclerView-->
+<!--                        android:id="@+id/rv_hotel_expenses"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="@dimen/_4dp"-->
+<!--                        android:padding="@dimen/_4dp" />-->
+
+<!--                    <com.airbnb.lottie.LottieAnimationView-->
+<!--                        android:id="@+id/av_hotel_expenses"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="100dp"-->
+<!--                        app:lottie_autoPlay="true"-->
+<!--                        app:lottie_loop="true"-->
+<!--                        app:lottie_rawRes="@raw/noresultanim" />-->
 
                     <LinearLayout
                         android:id="@+id/ll_food_expenses"
@@ -439,29 +601,183 @@
                             android:textStyle="bold" />
 
                         <ImageButton
-                            android:id="@+id/iv_add_food_expenses"
+                            android:id="@+id/iv_food_expenses"
                             android:layout_width="@dimen/_50dp"
                             android:layout_height="@dimen/_50dp"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_4dp"
-                            android:src="@drawable/ic_baseline_add_24" />
+                            android:background="@drawable/ic_down_icon"
+                            android:backgroundTint="@color/white"/>
 
                     </LinearLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_food_expenses"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_food_expenses"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/_4dp"
-                        android:padding="@dimen/_4dp" />
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_purpose_meeting">
 
-                    <com.airbnb.lottie.LottieAnimationView
-                        android:id="@+id/av_food_expenses"
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_food_expenses"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_4dp"
+                            android:padding="@dimen/_4dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <!--                    <com.airbnb.lottie.LottieAnimationView-->
+                        <!--                        android:id="@+id/av_travel_expenses"-->
+                        <!--                        android:layout_width="match_parent"-->
+                        <!--                        android:layout_height="100dp"-->
+                        <!--                        app:lottie_autoPlay="true"-->
+                        <!--                        app:lottie_loop="true"-->
+                        <!--                        app:lottie_rawRes="@raw/noresultanim" />-->
+
+                        <ImageButton
+                            android:id="@+id/iv_add_food_expenses"
+                            android:layout_width="@dimen/_50dp"
+                            android:layout_height="@dimen/_50dp"
+                            android:layout_gravity="right"
+                            android:layout_margin="@dimen/_4dp"
+                            android:src="@drawable/ic_baseline_add_24"
+                            android:visibility="visible"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/rv_food_expenses"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_all_expenses"
                         android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        app:lottie_autoPlay="true"
-                        app:lottie_loop="true"
-                        app:lottie_rawRes="@raw/noresultanim" />
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/_4dp"
+                        android:background="@drawable/background_title"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_all_expenses"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="@dimen/_4dp"
+                            android:layout_weight="2"
+                            android:padding="@dimen/_4dp"
+                            android:text="@string/view_all_expenses"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/iv_all_expenses"
+                            android:layout_width="@dimen/_50dp"
+                            android:layout_height="@dimen/_50dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/_4dp"
+                            android:background="@drawable/ic_down_icon"
+                            android:backgroundTint="@color/white"/>
+
+                    </LinearLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_all_expenses"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ll_purpose_meeting">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:gravity="center_horizontal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+                            <TableLayout
+                                android:id="@+id/table_header"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"/>
+                            <ScrollView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content">
+                                <LinearLayout
+                                    android:orientation="horizontal"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent"
+                                    android:gravity="center_horizontal"
+                                    android:id="@+id/fillable_area">
+                                    <TableLayout
+                                        android:id="@+id/fixed_column"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"/>
+                                    <HorizontalScrollView
+                                        android:layout_width="fill_parent"
+                                        android:layout_height="wrap_content">
+                                        <TableLayout
+                                            android:id="@+id/scrollable_part"
+                                            android:layout_width="fill_parent"
+                                            android:layout_height="fill_parent"/>
+                                    </HorizontalScrollView>
+                                </LinearLayout>
+                            </ScrollView>
+                        </LinearLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_all_expenses"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_4dp"
+                            android:padding="@dimen/_4dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <!--                    <com.airbnb.lottie.LottieAnimationView-->
+                        <!--                        android:id="@+id/av_travel_expenses"-->
+                        <!--                        android:layout_width="match_parent"-->
+                        <!--                        android:layout_height="100dp"-->
+                        <!--                        app:lottie_autoPlay="true"-->
+                        <!--                        app:lottie_loop="true"-->
+                        <!--                        app:lottie_rawRes="@raw/noresultanim" />-->
+
+<!--                        <ImageButton-->
+<!--                            android:id="@+id/iv_add_all_expenses"-->
+<!--                            android:layout_width="@dimen/_50dp"-->
+<!--                            android:layout_height="@dimen/_50dp"-->
+<!--                            android:layout_gravity="right"-->
+<!--                            android:layout_margin="@dimen/_4dp"-->
+<!--                            android:src="@drawable/ic_baseline_add_24"-->
+<!--                            android:visibility="visible"-->
+<!--                            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                            app:layout_constraintEnd_toEndOf="parent" />-->
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--                    <androidx.recyclerview.widget.RecyclerView-->
+<!--                        android:id="@+id/rv_food_expenses"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="@dimen/_4dp"-->
+<!--                        android:padding="@dimen/_4dp" />-->
+
+<!--                    <com.airbnb.lottie.LottieAnimationView-->
+<!--                        android:id="@+id/av_food_expenses"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="100dp"-->
+<!--                        app:lottie_autoPlay="true"-->
+<!--                        app:lottie_loop="true"-->
+<!--                        app:lottie_rawRes="@raw/noresultanim" />-->
 
 
                     <!--                <LinearLayout-->

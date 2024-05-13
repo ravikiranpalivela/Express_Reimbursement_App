@@ -12,6 +12,7 @@
 
     <color name="red">#ffff0000</color>
     <color name="light_white">#bcbcbc</color>
+    <color name="appBackground">#F2F2F2</color>
 
     <color name="list_even">#FFF5F5</color>
     <color name="list_odd">#F3FFFF</color>
@@ -20,4 +21,8 @@
     <color name="colorResultCloseIcon">#FF000000</color>
     <color name="colorRefreshIcon">#FF000000</color>
     <color name="colorPermissionPageDescription">#FF000000</color>
+    <color name="aegean_blue">#0C4B6C</color>
+    <color name="lightgray">#D2D2D2</color>
+    <color name="lightgray02">#7DCD50</color>
+    <color name="gray">#808080</color>
 </resources>

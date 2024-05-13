@@ -4,9 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import com.tekskills.er_tekskills.R
+import com.tekskills.er_tekskills.utils.UtilsConstants
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 class DateToString {
@@ -21,21 +24,43 @@ class DateToString {
                 val df = SimpleDateFormat(format1)
                 df.format(date)
             } else {
-                val df = SimpleDateFormat(format2)
+                val df = SimpleDateFormat(format1)
                 df.format(date)
             }
         }
 
+        fun convertDateToStringmain() {
+            val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+            val outputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+            val inputDateString = "2024-04-01T00:00:00.000+00:00"
+            val date = inputDateFormat.parse(inputDateString)
+
+            val outputDateString = outputDateFormat.format(date)
+            println(outputDateString) // Output: 2024-04-01
+        }
+
+        fun travelDistanceAmount(distanceInKm: Double): String {
+            val price: Double =
+                (distanceInKm!! * UtilsConstants.Transportation.UnitPrice.bikeType) as Double
+
+            return String.format("%.2f", price) + ""
+        }
+
+        fun travelDistanceKms(distanceInKm: Double): String {
+            return String.format("%.2fkms", distanceInKm)
+        }
+
         fun convertDateToStringDateWise(date: Date): String {
             val format1 =  "MMM dd, yyyy"
-            val format2 = "MMM dd, yyyy, hh:mm a"
+//            val format2 = "MMM dd, yyyy, hh:mm a"
             val dateInfinity = Date(Constants.MAX_TIMESTAMP)
             return if (dateInfinity.compareTo(date) == 0) "N/A"
             else if (date.seconds == 0) {
                 val df = SimpleDateFormat(format1)
                 df.format(date)
             } else {
-                val df = SimpleDateFormat(format2)
+                val df = SimpleDateFormat(format1)
                 df.format(date)
             }
         }
@@ -57,7 +82,6 @@ class DateToString {
                 }
             }
         }
-
 
         fun getTimeAgo(timestampDate: String): String {
             val currentTimeMillis = System.currentTimeMillis()
@@ -146,6 +170,52 @@ class DateToString {
             return if(dateString.length>=10) dateString.substring(0, 10) else ""
         }
 
+
+        fun calculateDaysBetweenDates(startDate: String, endDate: String): Long {
+            // Parse the date strings into LocalDate objects
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val start = LocalDate.parse(startDate, formatter)
+            val end = LocalDate.parse(endDate, formatter)
+
+            // Calculate the difference in days
+            return ChronoUnit.DAYS.between(start, end)
+        }
+
+
+        fun convertDateStringToNormalFormat(dateString: String): String {
+            val inputFormats = listOf(
+                "yyyy-MM-dd",
+                "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+                "yyyy-MM-dd'T'HH:mm:ss.SSS",
+                "yyyy-MM-dd'T'HH:mm:ss",
+                "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+            )
+
+            val outputFormats = listOf(
+                "yyyy-MM-dd",
+            )
+
+            for (inputFormat in inputFormats) {
+                try {
+                    val inputFormatter = SimpleDateFormat(inputFormat, Locale.US)
+                    val parsedDate = inputFormatter.parse(dateString)
+
+                    for (outputFormat in outputFormats) {
+                        try {
+                            val outputFormatter = SimpleDateFormat(outputFormat, Locale.US)
+                            return outputFormatter.format(parsedDate)
+                        } catch (e2: Exception) {
+                            Log.d("TAG","exception at time formatter ${e2.toString()}")
+                        }
+                    }
+                } catch (e1: Exception) {
+                    Log.d("TAG","exception at time formatter ${e1.toString()}")
+                }
+            }
+
+            return if(dateString.length>=10) dateString.substring(0, 10) else ""
+        }
+
         fun getTimeAgo(context: Context, timestampDate: String): String {
             val currentTimeMillis = System.currentTimeMillis()
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
@@ -211,11 +281,13 @@ class DateToString {
             }
         }
 
-        fun convertStringToString(dateString: String): Date? {
+
+
+        fun convertStringToDateformat(dateString: String): Date? {
 
 
             val format1 = SimpleDateFormat("yyyy-MM-dd")
-            val format2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+            val format2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
 
             try {
                 // Try to parse the date string using the first format
@@ -231,4 +303,7 @@ class DateToString {
             }
         }
     }
+
+
+
 }
