@@ -417,7 +417,7 @@
                         android:id="@+id/ll_travel_expenses"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/_4dp"
+                        android:layout_margin="@dimen/widget_size_2"
                         android:background="@drawable/background_title"
                         android:orientation="horizontal">
 
@@ -426,13 +426,13 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_margin="@dimen/_4dp"
+                            android:layout_margin="@dimen/widget_size_2"
                             android:layout_weight="2"
-                            android:padding="@dimen/_4dp"
+                            android:padding="@dimen/widget_size_1"
                             android:text="@string/travel_expenses"
                             android:textAllCaps="true"
                             android:textColor="@color/white"
-                            android:textSize="20sp"
+                            android:textSize="@dimen/font_size_18"
                             android:textStyle="bold" />
 
                         <ImageButton
@@ -492,7 +492,7 @@
                         android:id="@+id/ll_hotel_expenses"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/_4dp"
+                        android:layout_margin="@dimen/widget_size_2"
                         android:background="@drawable/background_title"
                         android:orientation="horizontal">
 
@@ -501,22 +501,22 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_margin="@dimen/_4dp"
+                            android:layout_margin="@dimen/widget_size_2"
                             android:layout_weight="2"
-                            android:padding="@dimen/_4dp"
+                            android:padding="@dimen/widget_size_1"
                             android:text="@string/hotel_expenses"
                             android:textAllCaps="true"
                             android:textColor="@color/white"
-                            android:textSize="20sp"
+                            android:textSize="@dimen/font_size_18"
                             android:textStyle="bold" />
 
                         <ImageButton
-                            android:id="@+id/iv_hotel_expenses"
+                            android:id="@+id/iv_add_hotel_expenses"
                             android:layout_width="@dimen/_50dp"
                             android:layout_height="@dimen/_50dp"
                             android:layout_gravity="center"
-                            android:layout_margin="@dimen/_4dp"
-                            android:background="@drawable/ic_down_icon"
+                            android:layout_margin="@dimen/widget_size_2"
+                            android:background="@drawable/ic_baseline_add_24"
                             android:backgroundTint="@color/white"/>
 
                     </LinearLayout>
@@ -551,13 +551,13 @@
                         <!--                        app:lottie_rawRes="@raw/noresultanim" />-->
 
                         <ImageButton
-                            android:id="@+id/iv_add_hotel_expenses"
+                            android:id="@+id/iv_hotel_expenses"
                             android:layout_width="@dimen/_50dp"
                             android:layout_height="@dimen/_50dp"
                             android:layout_gravity="right"
                             android:layout_margin="@dimen/_4dp"
                             android:src="@drawable/ic_baseline_add_24"
-                            android:visibility="visible"
+                            android:visibility="gone"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/rv_hotel_expenses"/>
@@ -582,7 +582,7 @@
                         android:id="@+id/ll_food_expenses"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/_4dp"
+                        android:layout_margin="@dimen/widget_size_2"
                         android:background="@drawable/background_title"
                         android:orientation="horizontal">
 
@@ -591,22 +591,22 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_margin="@dimen/_4dp"
+                            android:layout_margin="@dimen/widget_size_2"
                             android:layout_weight="2"
-                            android:padding="@dimen/_4dp"
+                            android:padding="@dimen/widget_size_1"
                             android:text="@string/food_expenses"
                             android:textAllCaps="true"
                             android:textColor="@color/white"
-                            android:textSize="20sp"
+                            android:textSize="@dimen/font_size_18"
                             android:textStyle="bold" />
 
                         <ImageButton
-                            android:id="@+id/iv_food_expenses"
+                            android:id="@+id/iv_add_food_expenses"
                             android:layout_width="@dimen/_50dp"
                             android:layout_height="@dimen/_50dp"
                             android:layout_gravity="center"
-                            android:layout_margin="@dimen/_4dp"
-                            android:background="@drawable/ic_down_icon"
+                            android:layout_margin="@dimen/widget_size_2"
+                            android:background="@drawable/ic_baseline_add_24"
                             android:backgroundTint="@color/white"/>
 
                     </LinearLayout>
@@ -640,13 +640,13 @@
                         <!--                        app:lottie_rawRes="@raw/noresultanim" />-->
 
                         <ImageButton
-                            android:id="@+id/iv_add_food_expenses"
+                            android:id="@+id/iv_food_expenses"
                             android:layout_width="@dimen/_50dp"
                             android:layout_height="@dimen/_50dp"
                             android:layout_gravity="right"
                             android:layout_margin="@dimen/_4dp"
                             android:src="@drawable/ic_baseline_add_24"
-                            android:visibility="visible"
+                            android:visibility="gone"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/rv_food_expenses"/>
@@ -657,7 +657,7 @@
                         android:id="@+id/ll_all_expenses"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/_4dp"
+                        android:layout_margin="@dimen/widget_size_2"
                         android:background="@drawable/background_title"
                         android:orientation="horizontal">
 
@@ -666,13 +666,13 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_margin="@dimen/_4dp"
+                            android:layout_margin="@dimen/widget_size_2"
                             android:layout_weight="2"
-                            android:padding="@dimen/_4dp"
+                            android:padding="@dimen/widget_size_1"
                             android:text="@string/view_all_expenses"
                             android:textAllCaps="true"
                             android:textColor="@color/white"
-                            android:textSize="20sp"
+                            android:textSize="@dimen/font_size_18"
                             android:textStyle="bold" />
 
                         <ImageButton
@@ -680,7 +680,7 @@
                             android:layout_width="@dimen/_50dp"
                             android:layout_height="@dimen/_50dp"
                             android:layout_gravity="center"
-                            android:layout_margin="@dimen/_4dp"
+                            android:layout_margin="@dimen/widget_size_2"
                             android:background="@drawable/ic_down_icon"
                             android:backgroundTint="@color/white"/>
 

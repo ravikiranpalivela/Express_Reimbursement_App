@@ -359,15 +359,13 @@
                             android:id="@+id/edt_travel_expenses"
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
-                            android:layout_alignParentLeft="true"
-                            android:layout_centerVertical="true"
                             android:background="@drawable/edit_text_color_changer"
                             android:hint="@string/travel_expense_amount"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="5dp"
+                            android:padding="5dp"
+                            android:inputType="numberDecimal"
                             android:textColor="@color/black"
                             android:textColorHint="@color/gray"
-                            android:textSize="18dp" />
+                            android:textSize="@dimen/font_size_18" />
                         <CheckBox
                             android:id="@+id/chk_round_trip"
                             android:layout_width="match_parent"
@@ -394,18 +392,15 @@
                                 <EditText
                                     android:id="@+id/tv_return_travel_date"
                                     android:layout_width="0dp"
-                                    android:layout_height="40dp"
-                                    android:layout_alignParentLeft="true"
-                                    android:layout_centerVertical="true"
+                                    android:layout_height="@dimen/widget_size_40"
                                     android:layout_weight="0.5"
                                     android:background="@drawable/edit_text_color_changer"
                                     android:focusable="false"
                                     android:hint="@string/return_travel_date"
-                                    android:paddingLeft="10dp"
-                                    android:paddingRight="5dp"
+                                    android:padding="5dp"
                                     android:textColor="@color/black"
                                     android:textColorHint="@color/gray"
-                                    android:textSize="18dp" />
+                                    android:textSize="@dimen/font_size_18" />
 
 
                                 <EditText

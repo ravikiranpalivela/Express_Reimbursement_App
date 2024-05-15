@@ -51,6 +51,10 @@ class DateToString {
             return String.format("%.2fkms", distanceInKm)
         }
 
+        fun amountConverter(distanceInKm: Double): String {
+            return String.format("₹%.2f", distanceInKm)
+        }
+
         fun convertDateToStringDateWise(date: Date): String {
             val format1 =  "MMM dd, yyyy"
 //            val format2 = "MMM dd, yyyy, hh:mm a"

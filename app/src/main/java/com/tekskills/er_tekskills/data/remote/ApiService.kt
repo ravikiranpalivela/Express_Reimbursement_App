@@ -57,7 +57,6 @@ import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_PROJECT_
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_PROJECT_MANAGER
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_SRMANAGEMENT
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_USER_ALLOWENCE
-import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.MULTI_PART
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.POST_ADD_OPPORTUNITY
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.POST_TRAVEL_EXPENSES
 import com.tekskills.er_tekskills.utils.Common.Companion.APP_JSON
@@ -107,11 +106,11 @@ interface ApiService {
     @Multipart
     @POST(POST_TRAVEL_EXPENSES)
     suspend fun addTravelExpense(
-        @Header(AUTHORIZATION) authorization: String,
-        @Part("purposeId") purposeID: RequestBody,
-        @Part("amount") amount: Long,
-        @Part file:  MutableList<MultipartBody.Part>,
-        @PartMap user: Map<String,@JvmSuppressWildcards RequestBody>
+    @Header(AUTHORIZATION) authorization: String,
+    @Part("purposeId") purposeID: RequestBody,
+    @Part("amount") amount: Long,
+    @Part file: MutableList<MultipartBody.Part>?,
+    @PartMap user: Map<String,@JvmSuppressWildcards RequestBody>
     ): Response<AddTravelExpenceResponse>
 
 //    @Headers(MULTI_PART)

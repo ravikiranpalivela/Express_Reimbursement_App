@@ -19,7 +19,6 @@ import com.tekskills.er_tekskills.data.model.NewClientResponse
 import com.tekskills.er_tekskills.data.model.OpportunityByProjectIDResponse
 import com.tekskills.er_tekskills.data.model.ProjectListResponse
 import com.tekskills.er_tekskills.data.model.ProjectOpportunityResponse
-import com.tekskills.er_tekskills.data.model.UserAllowenceResponse
 import com.tekskills.er_tekskills.data.remote.ApiHelper
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -49,8 +48,9 @@ class MainRepository @Inject constructor(
     = apiHelper.getMeetingPurposeByID(authorization, itemID)
 
 
-    suspend fun addTravelExpense(authorization: String,purposeID: RequestBody, amount: Long,
-                                 file: MutableList<MultipartBody.Part>, user: Map<String, RequestBody>
+    suspend fun addTravelExpense(
+        authorization: String, purposeID: RequestBody, amount: Long,
+        file: MutableList<MultipartBody.Part>?, user: Map<String, RequestBody>
     ): Response<AddTravelExpenceResponse>
     = apiHelper.addTravelExpense(authorization, purposeID, amount,file, user)
 

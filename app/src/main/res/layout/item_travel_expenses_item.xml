@@ -114,6 +114,34 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_book_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_book_date">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_book_amount"
+                    style="@style/stlTxtKey"
+                    android:text="@string/book_amount" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/book_amount"
+                    style="@style/stlTxtValue"
+                    android:text="@{dateConvert.Companion.amountConverter(taskCategoryInfo.amount)}"
+                    tools:text="Testing" />
+
+                <!--                <com.google.android.material.textview.MaterialTextView-->
+                <!--                    android:id="@+id/book_date"-->
+                <!--                    style="@style/stlTxtValue"-->
+                <!--                    android:text="@{dateConvert.Companion.getTimeAgo(taskCategoryInfo.meetingTime)}"-->
+                <!--                    tools:text="Testing" />-->
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:id="@+id/ll_travel_mode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,7 +150,7 @@
                 android:weightSum="2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ll_book_date">
+                app:layout_constraintTop_toBottomOf="@+id/ll_book_amount">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_travel_mode"

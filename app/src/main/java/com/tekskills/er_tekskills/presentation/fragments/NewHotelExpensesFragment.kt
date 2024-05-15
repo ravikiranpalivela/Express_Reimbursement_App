@@ -67,11 +67,11 @@ class NewHotelExpensesFragment : Fragment() {
     private lateinit var dialog: AlertDialog
     private var listImage: MutableList<File> = ArrayList()
     private var selectedSelectImage: Int = 0
+    private val listSelectImage = arrayOf("Take Photo", "Choose from Gallery")
 
     private var purposeID: String = ""
     private val args: NewHotelExpensesFragmentArgs by navArgs()
     var hotelDate: Date = Date(Constants.MAX_TIMESTAMP)
-    private val listSelectImage = arrayOf("Take Photo", "Choose from Gallery")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -334,8 +334,7 @@ class NewHotelExpensesFragment : Fragment() {
                 expensesUser = "Hotel",
             )
             viewModel.addHotelExpense(hotelExpense, listImage)
-        }catch (e:Exception)
-        {
+        } catch (e: Exception) {
             Log.d("TAG", "addHotelExpenseDetails: ${e.message}")
         }
     }
@@ -364,20 +363,20 @@ class NewHotelExpensesFragment : Fragment() {
             when {
                 listSelectImage[item] == "Take Photo" -> {
                     selectedSelectImage = 0
-                    if (checkPersmission()) {
+//                    if (checkPersmission()) {
                         takePhoto()
-                    } else {
-                        requestPermission()
-                    }
+//                    } else {
+//                        requestPermission()
+//                    }
                 }
 
                 listSelectImage[item] == "Choose from Gallery" -> {
                     selectedSelectImage = 1
-                    if (checkPersmission()) {
+//                    if (checkPersmission()) {
                         openGallery()
-                    } else {
-                        requestPermission()
-                    }
+//                    } else {
+//                        requestPermission()
+//                    }
                 }
             }
         }
@@ -429,14 +428,12 @@ class NewHotelExpensesFragment : Fragment() {
     private fun takePhoto() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         fileImage = createFile()
-        val uri = if (Build.VERSION.SDK_INT >= 24) {
+        val uri =
             FileProvider.getUriForFile(
                 requireContext(), "com.tekskills.er_tekskills.fileprovider",
                 fileImage
             )
-        } else {
-            Uri.fromFile(fileImage)
-        }
+
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
         startActivityForResult(intent, REQUEST_TAKE_PHOTO)
     }

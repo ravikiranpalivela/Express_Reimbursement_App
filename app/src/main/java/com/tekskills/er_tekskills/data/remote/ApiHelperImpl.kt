@@ -61,8 +61,9 @@ class ApiHelperImpl @Inject constructor(
     override suspend fun getMeetingPurposeByID(authorization: String, itemID:String): Response<MeetingPurposeResponseData>
     = apiService.getMeetingPurposeByID(authorization, itemID)
 
-   override suspend fun addTravelExpense(authorization: String, purposeID: RequestBody,amount: Long,
-                                 file: MutableList<MultipartBody.Part>, user: Map<String, RequestBody>
+   override suspend fun addTravelExpense(
+       authorization: String, purposeID: RequestBody, amount: Long,
+       file: MutableList<MultipartBody.Part>?, user: Map<String, RequestBody>
     ): Response<AddTravelExpenceResponse>
            = apiService.addTravelExpense(authorization, purposeID,amount, file, user)
 

@@ -181,6 +181,7 @@
     <string name="view_all_expenses">View All Expenses</string>
     <string name="travel_expense_amount">Travel Expense Amount</string>
     <string name="hotel_expense_amount">Hotel Expense Amount</string>
+    <string name="book_amount">Booking Amount</string>
     <string-array name="mode_of_travel_options">
         <item>Train</item>
         <item>Bus</item>

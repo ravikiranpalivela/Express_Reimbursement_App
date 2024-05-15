@@ -15,6 +15,7 @@ import com.tekskills.er_tekskills.data.model.ActionItemProjectIDResponseItem
 import com.tekskills.er_tekskills.data.model.AddActionItemOpportunityRequest
 import com.tekskills.er_tekskills.data.model.AddCommentOpportunity
 import com.tekskills.er_tekskills.data.model.AddEscalationRequest
+import com.tekskills.er_tekskills.data.model.AddFoodExpenceRequest
 import com.tekskills.er_tekskills.data.model.AddHotelExpenceRequest
 import com.tekskills.er_tekskills.data.model.AddMOMOpportunityRequest
 import com.tekskills.er_tekskills.data.model.AddMeetingRequest
@@ -685,6 +686,94 @@ class MainActivityViewModel @Inject constructor(
             }
         }
 
+    fun addFoodExpense(
+        travelExpence: AddFoodExpenceRequest,
+        listImage: MutableList<File>
+    ) =
+        viewModelScope.launch {
+            try {
+                _loading.value = View.VISIBLE
+                Log.d("TAG", "uploadGenresFile: ${travelExpence.toString()}")
+//                if (file == null) {
+//                    _eventChannel.send(MainEvent.Error("File is empty"))
+//                    return@launch
+//                }
+
+
+//                val reqBody =
+//                    file!!.toRequestBody(
+//                        "multipart/form-data".toMediaTypeOrNull(),
+//                        0,
+//                    )
+//                val formData = MultipartBody.Part.createFormData(
+//                    "file",
+//                    "expensesFile-${Random.nextInt(1, 10)}",
+//                    reqBody
+//                )
+
+                val requestBody: MutableMap<String, RequestBody> = HashMap()
+                requestBody["foodComments"] =
+                    travelExpence.foodComments.toRequestBody("text/plain".toMediaTypeOrNull())
+//                requestBody["hotelFromDate"] =
+//                    travelExpence..toRequestBody("text/plain".toMediaTypeOrNull())
+//                requestBody["hotelToDate"] =
+//                    travelExpence.hotelToDate.toRequestBody("text/plain".toMediaTypeOrNull())
+//                requestBody["noOfDays"] =
+//                    travelExpence.noOfDays.toRequestBody("text/plain".toMediaTypeOrNull())
+//                requestBody["amount"] =
+//                    travelExpence.hotelAmount.toString()
+//                        .toRequestBody("text/plain".toMediaTypeOrNull())
+                requestBody["expensesUser"] =
+                    travelExpence.expensesUser.toRequestBody("text/plain".toMediaTypeOrNull())
+
+                val listMultipartImage: MutableList<MultipartBody.Part> = ArrayList()
+                for (i in 0 until listImage.size) {
+                    listMultipartImage.add(
+                        MultipartBody.Part.createFormData(
+                            "files",
+                            listImage[i].name,
+//                        RequestBody.create(MediaType.parse("image/*")!!,
+                            listImage[i].readBytes().toRequestBody(
+                                "multipart/form-data".toMediaTypeOrNull(), 0,
+                            )
+                        )
+//                    )
+                    )
+                }
+
+//                val amountPart = MultipartBody.Part.createFormData("amount", travelExpence.hotelAmount.toString())
+
+                _resAddFoodExpence.postValue(SuccessResource.loading(null))
+                if (utlIsNetworkAvailable()) {
+                    Log.d("TAG", "addFoodExpense: ${travelExpence.toString()}")
+
+                    mainRepository.addTravelExpense(
+                        "Bearer ${checkIfUserLogin()}",
+                        travelExpence.purposeId.toString()
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+                        travelExpence.foodAmount.toLong(),
+//                    RequestBody.create(MediaType.parse("text/plain"), travelExpence.purposeId.toString()),
+                        listMultipartImage, requestBody
+                    )
+                        .let {
+                            if (it.isSuccessful) {
+                                _resAddFoodExpence.postValue(SuccessResource.success(it.body()))
+                            } else {
+                                _resAddFoodExpence.postValue(
+                                    SuccessResource.error(
+                                        it.errorBody().toString(), null
+                                    )
+                                )
+                            }
+                        }
+                }
+            } catch (e: Exception) {
+                Log.e("TAG", "Exception occur at add travel expenses ${e.message}")
+                _loading.value = View.GONE
+            } finally {
+            }
+        }
+
     fun addHotelExpense(
         travelExpence: AddHotelExpenceRequest,
         listImage: MutableList<File>
@@ -869,84 +958,6 @@ class MainActivityViewModel @Inject constructor(
 //        } finally {
 //        }
 //    }
-
-    fun addFoodExpense(travelExpence: AddTravelExpenceRequest) = viewModelScope.launch {
-
-        try {
-            _loading.value = View.VISIBLE
-            Log.d("TAG", "uploadGenresFile: ${travelExpence.toString()}")
-            if (file == null) {
-                _eventChannel.send(MainEvent.Error("File is empty"))
-                return@launch
-            }
-            val reqBody =
-                file!!.toRequestBody(
-                    "multipart/form-data".toMediaTypeOrNull(),
-                    0,
-                )
-            val formData = MultipartBody.Part.createFormData(
-                "file",
-                "expensesFile-${Random.nextInt(1, 10)}",
-                reqBody
-            )
-            val requestBody: MutableMap<String, RequestBody> = HashMap()
-//            requestBody["purposeId"] = travelExpence.purposeId.toString()
-            requestBody["travelFrom"] =
-                travelExpence.travelFrom.toRequestBody("text/plain".toMediaTypeOrNull())
-            requestBody["travelTo"] =
-                travelExpence.travelTo.toRequestBody("text/plain".toMediaTypeOrNull())
-            requestBody["travelDate"] =
-                travelExpence.travelDate.toRequestBody("text/plain".toMediaTypeOrNull())
-            requestBody["modeOfTravel"] =
-                travelExpence.modeOfTravel.toRequestBody("text/plain".toMediaTypeOrNull())
-            requestBody["expensesUser"] =
-                travelExpence.expensesUser.toRequestBody("text/plain".toMediaTypeOrNull())
-
-//            val fields: MutableMap<String, RequestBody> = HashMap()
-////            fields["purposeId"] =
-////                RequestBody.create(MediaType.parse("text/plain"), travelExpence.purposeId.toString())
-//            fields["travelFrom"] =
-//                RequestBody.create(MediaType.parse("text/plain"), travelExpence.travelFrom)
-//            fields["travelTo"] =
-//                RequestBody.create(MediaType.parse("text/plain"), travelExpence.travelTo)
-//            fields["travelDate"] =
-//                RequestBody.create(MediaType.parse("text/plain"), travelExpence.travelDate)
-//            fields["modeOfTravel"] =
-//                RequestBody.create(MediaType.parse("text/plain"), travelExpence.modeOfTravel)
-//            fields["expensesUser"] =
-//                RequestBody.create(MediaType.parse("text/plain"),  travelExpence.expensesUser)
-
-            _resMeetingPurposeIDItems.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable()) {
-                Log.d("TAG", "addTravelExpense: ${travelExpence.toString()}")
-
-                mainRepository.addFoodExpense(
-                    "Bearer ${checkIfUserLogin()}",
-                    travelExpence.purposeId.toString()
-                        .toRequestBody("text/plain".toMediaTypeOrNull()),
-//                    RequestBody.create(MediaType.parse("text/plain"), travelExpence.purposeId.toString()),
-//                    formData,
-                    requestBody
-                )
-                    .let {
-                        if (it.isSuccessful) {
-                            _resAddTravelExpence.postValue(SuccessResource.success(it.body()))
-                        } else {
-                            _resAddTravelExpence.postValue(
-                                SuccessResource.error(
-                                    it.errorBody().toString(), null
-                                )
-                            )
-                        }
-                    }
-            }
-        } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at add travel expenses ${e.message}")
-            _loading.value = View.GONE
-        } finally {
-        }
-    }
-
 
 //    fun uploadGenresFile(genresName: String, genresDesc: String) =
 //        viewModelScope.launch {

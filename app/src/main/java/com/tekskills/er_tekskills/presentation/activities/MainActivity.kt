@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
@@ -32,6 +33,51 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     val viewModel: MainActivityViewModel by viewModels()
+
+
+//    private var selectedAddress: AddressData? = null
+//
+//    private val activityResultLauncher = registerForActivityResult(
+//        ActivityResultContracts.StartIntentSenderForResult()
+//    ) { result ->
+//        viewModel.isRequestGPSDialogOn(false)
+//        when (result.resultCode) {
+//            Activity.RESULT_OK ->
+//                viewModel.startLocationUpdates()
+//            else -> {
+//                //keep asking if imp or do whatever
+//                viewModel.startLocationUpdates()
+//            }
+//        }
+//    }
+//
+//    private val locationType = LocationType.FINE_LOCATION
+//    private val intervalInSecond: Long = 6
+//    private val fastIntervalInSecond: Long = 3
+//
+//    // You can customize the resources of [permission dialog] if you wish
+//    private val foregroundUiData = PermissionUIData.Foreground(
+//        hideUi = false,
+//        btn_approve = R.string.approve_location_access,
+//        btn_cancel = android.R.string.cancel,
+//    )
+//
+//    // You can customize the resources of [permission dialog] if you wish
+//    private val backgroundUiData = PermissionUIData.Background(
+//        hideUi = false,
+//        btn_approve = R.string.approve_background_location_access,
+//        btn_cancel = android.R.string.cancel,
+//    )
+//
+//    private val mViewModel: GPSLocationViewModel by viewModels {
+//        @Suppress("UNCHECKED_CAST")
+//        GPSLocationViewModelFactory(application, LocationRepository.getInstance(
+//            this, locationType, intervalInSecond, fastIntervalInSecond, activityResultLauncher,
+//            PermissionUIData(foreground = foregroundUiData, background = backgroundUiData),
+//            // Don't forget to pass broadcast receiver class here
+//            LocationBroadcastReceiver::class.java as Class<BroadcastReceiver>
+//        ))
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,6 +165,37 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+//        mViewModel.setLocationType(LocationType.BACKGROUND_LOCATION)
+//        updateStartOrStopButtonState(mViewModel.isForegroundOn || mViewModel.isBackgroundOn)
+//
+//
+//        // Receiving location updates if it's starting or not
+//        mViewModel.receivingLocationUpdates.observe(this) {
+//            updateStartOrStopButtonState(it)
+//        }
+//
+//        // Receiving status of whether the app permission is granted or not.
+//        mViewModel.isPermissionGranted.observe(this) {
+//            // keep asking if imp or do whatever
+//            Log.e("Permission","isPermissionGranted: $it")
+//            // viewModel.startLocationUpdates() // keep asking
+//        }
+//
+//        // Receiving location data from [FusedLocationProviderClient]
+//        mViewModel.receivingLocation.observe(this) { location ->
+//            setToText(location,"Current Location:  ${location.latitude} - ${location.longitude}")
+//
+//            // Retrieve address data from [Geocoder] with the retrieved location
+//            mViewModel.retrieveAddressDataFromGeocoder {
+//                setToText(location, "Current Address: ${it.name} - ${it.address}")
+//            }
+//
+//            // Retrieve address data from [Geocoder] using custom location
+//            mViewModel.retrieveAddressDataFromGeocoder(location.latitude, location.longitude) {
+//                setToText(location, "Current Address: ${it.name} - ${it.address}")
+//            }
+//        }
+
         val navController = findNavController(R.id.nav_fragment)
         appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -191,6 +268,31 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
+//    private fun updateStartOrStopButtonState(receivingLocation: Boolean) {
+//        if (receivingLocation) {
+//            findViewById<Button>(R.id.btn_refresh).apply {
+//                text = getString(R.string.stop_receiving_location)
+//                setOnClickListener { viewModel.stopLocationUpdates() }
+//            }
+//        } else {
+//            findViewById<Button>(R.id.btn_refresh).apply {
+//                text = getString(R.string.start_receiving_location)
+//                setOnClickListener { viewModel.startLocationUpdates() }
+//            }
+//        }
+//    }
+//
+//    private var locationString: String = ""
+//    private fun setToText(location: AddressData, locationString: String) {
+//        this.selectedAddress = location
+//        this.locationString += "\n\n$locationString"
+//
+//        Log.d("TAG", locationString)
+//        findViewById<TextView>(R.id.textView).text = this.locationString
+//    }
+
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_fragment)

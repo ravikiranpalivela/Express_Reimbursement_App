@@ -33,14 +33,9 @@ import com.tekskills.er_tekskills.data.model.ProjectManagerResponse
 import com.tekskills.er_tekskills.data.model.ProjectOpportunityResponse
 import com.tekskills.er_tekskills.data.model.UserAllowenceResponse
 import com.tekskills.er_tekskills.data.model.UserMeResponse
-import com.tekskills.er_tekskills.utils.Common
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
-import retrofit2.http.Header
-import retrofit2.http.Part
-import retrofit2.http.PartMap
-import retrofit2.http.Path
 
 interface ApiHelper {
 
@@ -58,8 +53,9 @@ interface ApiHelper {
 
     suspend fun getMeetingPurposeByID(authorization: String, itemID:String): Response<MeetingPurposeResponseData>
 
-    suspend fun addTravelExpense(authorization: String,purposeID: RequestBody, amount: Long,
-        file: MutableList<MultipartBody.Part>, user: Map<String, RequestBody>
+    suspend fun addTravelExpense(
+        authorization: String, purposeID: RequestBody, amount: Long,
+        file: MutableList<MultipartBody.Part>?, user: Map<String, RequestBody>
     ): Response<AddTravelExpenceResponse>
 
     suspend fun addHotelExpense(authorization: String,purposeID: RequestBody,

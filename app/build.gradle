@@ -198,6 +198,6 @@ dependencies {
 
     implementation files('libs/socketio.jar')
     implementation files('libs/httpclient-4.4.1.jar')
-    implementation project(":android-pickers")
+//    implementation project(":android-pickers")
 
 }

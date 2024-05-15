@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="dateConvert"
+            type="com.tekskills.er_tekskills.data.util.DateToString" />
+
+        <variable
             name="foodExpense"
             type="com.tekskills.er_tekskills.data.model.UserExpence" /> <!-- Make sure to replace com.yourpackage with your actual package name -->
 
@@ -47,7 +51,7 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/food_amount"
                     style="@style/stlTxtValue"
-                    android:text="@{foodExpense.amount}"
+                    android:text="@{dateConvert.Companion.amountConverter(foodExpense.amount)}"
                     tools:text="Testing" />
 
             </LinearLayout>
