@@ -22,6 +22,7 @@
     <string name="opportunity">opportunity</string>
     <string name="create_opportunity">Create Opportunity</string>
     <string name="add_new_client">+ Add New Client</string>
+    <string name="adding_new_client">Add Client</string>
     <string name="edt_client_contact_name">Client Contact Name</string>
     <string name="edt_client_contact_pos">Client Contact Position</string>
     <string name="edt_opportunity_desc">Opportunity Description</string>
@@ -61,6 +62,8 @@
     <string name="edit_opportunity">Edit Opportunity</string>
     <string name="opportunity_details">Opportunity Details</string>
     <string name="comments_notes">Comments/Notes</string>
+    <string name="view_all_comments_notes">View All Comments/Notes</string>
+
     <string name="comment">Comment</string>
     <string name="action_items">Action Items</string>
     <string name="mom_items">MOM Action Items</string>
@@ -69,7 +72,7 @@
     <string name="client_escalation">Client Escalation</string>
     <string name="add_opportunity">Add Opportunity</string>
     <string name="add_meeting">Add Meeting</string>
-    <string name="view_meeting">View Meetings</string>
+    <string name="view_meeting">View All Meetings</string>
     <string name="edit_mom">Edit MOM</string>
     <string name="edit_action_item">Edit Action Item</string>
     <string name="escalation_items">Escalations</string>
@@ -126,7 +129,7 @@
     <string name="tekskills_action_items">Tekskills Action Item: </string>
     <string name="no_internet">No internet connection</string>
     <string name="active">Active</string>
-    <string name="edt_visit_purpose">Visit Purpose</string>
+    <string name="edt_visit_purpose">Purpose Of Visit</string>
     <string name="edt_no_of_days">No Of Day\'s</string>
     <string name="visit_date">Visit Date</string>
     <string name="source">Source Location</string>
@@ -164,9 +167,9 @@
     <string name="return_from_loc">Return From Location</string>
     <string name="return_to_loc">Return To Location</string>
     <string name="return_travel_date">Return Travel Date</string>
-    <string name="customer_name">Customer Name</string>
-    <string name="customer_contact">Customer Contact Number</string>
-    <string name="customer_email">Customer Email-ID</string>
+    <string name="customer_name">Contact Person Name</string>
+    <string name="customer_contact">Contact Person Phone Number</string>
+    <string name="customer_email">Contact Person Email-ID</string>
     <string name="home">Home</string>
     <string name="farmer_name">Farmer Name</string>
     <string name="farmer_contact">Farmer Contact Number</string>
@@ -175,6 +178,8 @@
     <string name="mode_of_travel_prompt">Mode Of Travel</string>
     <string name="travel_expenses_details">Travel Expenses Details</string>
     <string name="hotel_expenses_details">Hotel Expenses Details</string>
+    <string name="food_expenses_details">Food Expenses Details</string>
+
     <string name="allotted_expenses">Allotted Expenses</string>
     <string name="travel_expenses_info">Expenses Info</string>
     <string name="hotel_expenses_info">Expenses Info</string>
@@ -182,6 +187,26 @@
     <string name="travel_expense_amount">Travel Expense Amount</string>
     <string name="hotel_expense_amount">Hotel Expense Amount</string>
     <string name="book_amount">Booking Amount</string>
+    <string name="contact_person">Contact Person</string>
+    <string name="check_out">Check-Out</string>
+    <string name="check_in">Check-IN</string>
+    <string name="add_mom">Add MOM</string>
+    <string name="edt_info_from_clients">Info From client</string>
+    <string name="target_date">Target Date</string>
+    <string name="add_meeting_updates">Meeting Updates</string>
+    <string name="add_travel_expense">Add Travel Expense</string>
+    <string name="add_hotel_expenses">Add Hotel Expense</string>
+    <string name="add_food_expenses">Add Food Expense</string>
+    <string name="view_all_mom_items">View All MOM Items</string>
+    <string name="check_in_details">Check-IN Details</string>
+    <string name="meeting_status">Meetings Status</string>
+    <string name="note">Note:</string>
+    <string name="allotted_amount">Allotted Amount</string>
+    <string name="actual_amount">Actual Amount</string>
+    <string name="rupee"> ₹</string>
+    <string name="actual_amount_rupee">Actual ₹</string>
+    <string name="allotted_amount_rupee">Allotted ₹</string>
+    <string name="expense_type">Expense Type</string>
     <string-array name="mode_of_travel_options">
         <item>Train</item>
         <item>Bus</item>

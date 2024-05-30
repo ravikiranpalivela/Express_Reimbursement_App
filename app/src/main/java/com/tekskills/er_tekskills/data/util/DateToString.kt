@@ -2,8 +2,12 @@ package com.tekskills.er_tekskills.data.util
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.TextUtils
 import android.util.Log
+import android.view.View
+import androidx.databinding.Bindable
 import com.tekskills.er_tekskills.R
+import com.tekskills.er_tekskills.data.model.MeetingPurposeResponseData
 import com.tekskills.er_tekskills.utils.UtilsConstants
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -11,6 +15,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
+
 
 class DateToString {
     @SuppressLint("SimpleDateFormat")
@@ -29,8 +34,23 @@ class DateToString {
             }
         }
 
+        fun convertDateTimeToString(date: Date): String {
+//            val format1 = "yyyy-MM-dd"
+            val format1 = "yyyy-MM-dd'T'HH:mm:ss.S"
+            val dateInfinity = Date(Constants.MAX_TIMESTAMP)
+            return if (dateInfinity.compareTo(date) == 0) "N/A"
+            else if (date.seconds == 0) {
+                val df = SimpleDateFormat(format1)
+                df.format(date)
+            } else {
+                val df = SimpleDateFormat(format1)
+                df.format(date)
+            }
+        }
+
         fun convertDateToStringmain() {
-            val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+            val inputDateFormat =
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
             val outputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
             val inputDateString = "2024-04-01T00:00:00.000+00:00"
@@ -56,7 +76,7 @@ class DateToString {
         }
 
         fun convertDateToStringDateWise(date: Date): String {
-            val format1 =  "MMM dd, yyyy"
+            val format1 = "MMM dd, yyyy"
 //            val format2 = "MMM dd, yyyy, hh:mm a"
             val dateInfinity = Date(Constants.MAX_TIMESTAMP)
             return if (dateInfinity.compareTo(date) == 0) "N/A"
@@ -65,6 +85,20 @@ class DateToString {
                 df.format(date)
             } else {
                 val df = SimpleDateFormat(format1)
+                df.format(date)
+            }
+        }
+
+        fun convertDateToStringDateTimeWise(date: Date): String {
+//            val format1 = "MMM dd, yyyy"
+            val format2 = "MMM dd, yyyy, hh:mm a"
+            val dateInfinity = Date(Constants.MAX_TIMESTAMP)
+            return if (dateInfinity.compareTo(date) == 0) "N/A"
+            else if (date.seconds == 0) {
+                val df = SimpleDateFormat(format2)
+                df.format(date)
+            } else {
+                val df = SimpleDateFormat(format2)
                 df.format(date)
             }
         }
@@ -139,41 +173,78 @@ class DateToString {
             }
         }
 
-        fun convertDateStringToCustomFormat(dateString: String): String {
+        fun convertDateStringToCustomFormat(dateString: String?): String {
+            if (dateString.isNullOrEmpty()) return ""
+
             val inputFormats = listOf(
-                "yyyy-MM-dd",
+                "yyyy-MM-dd'T'HH:mm:ss.SSSSSS",
+                "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
                 "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
                 "yyyy-MM-dd'T'HH:mm:ss.SSS",
                 "yyyy-MM-dd'T'HH:mm:ss",
-                "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+                "yyyy-MM-dd"
             )
 
-            val outputFormats = listOf(
-                "MMM dd, yyyy",
-                "MMM dd, yyyy, hh:mm a",
-            )
+            val outputFormatWithTime = "MMM dd, yyyy, hh:mm a"
+            val outputFormatDateOnly = "MMM dd, yyyy"
 
             for (inputFormat in inputFormats) {
                 try {
                     val inputFormatter = SimpleDateFormat(inputFormat, Locale.US)
                     val parsedDate = inputFormatter.parse(dateString)
 
-                    for (outputFormat in outputFormats) {
-                        try {
-                            val outputFormatter = SimpleDateFormat(outputFormat, Locale.US)
-                            return outputFormatter.format(parsedDate)
-                        } catch (e2: Exception) {
-                            Log.d("TAG","exception at time formatter ${e2.toString()}")
-                        }
+                    if (inputFormat == "yyyy-MM-dd") {
+                        val outputFormatter = SimpleDateFormat(outputFormatDateOnly, Locale.US)
+                        return outputFormatter.format(parsedDate)
+                    } else {
+                        val outputFormatter = SimpleDateFormat(outputFormatWithTime, Locale.US)
+                        return outputFormatter.format(parsedDate)
                     }
-                } catch (e1: Exception) {
-                    Log.d("TAG","exception at time formatter ${e1.toString()}")
+                } catch (e: Exception) {
+                    Log.d("TAG", "Exception occurred: ${e.toString()}")
                 }
             }
 
-            return if(dateString.length>=10) dateString.substring(0, 10) else ""
+            return ""
         }
 
+
+//        fun convertDateStringToCustomFormat(dateString: String?): String {
+//            if (dateString.isNullOrEmpty()) return ""
+//            val inputFormats = listOf(
+//                "yyyy-MM-dd",
+//                "yyyy-MM-dd'T'HH:mm:ss.SSSSSS",
+//                "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+//                "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+//                "yyyy-MM-dd'T'HH:mm:ss.SSS",
+//                "yyyy-MM-dd'T'HH:mm:ss",
+//            )
+//
+//            val outputFormats = listOf(
+//                "MMM dd, yyyy, hh:mm a",
+//                "MMM dd, yyyy",
+//            )
+//
+//            for (inputFormat in inputFormats) {
+//                try {
+//                    val inputFormatter = SimpleDateFormat(inputFormat, Locale.US)
+//                    val parsedDate = inputFormatter.parse(dateString)
+//
+//                    for (outputFormat in outputFormats) {
+//                        try {
+//                            val outputFormatter = SimpleDateFormat(outputFormat, Locale.US)
+//                            return outputFormatter.format(parsedDate)
+//                        } catch (e2: Exception) {
+//                            Log.d("TAG", "exception at time formatter ${e2.toString()}")
+//                        }
+//                    }
+//                } catch (e1: Exception) {
+//                    Log.d("TAG", "exception at time formatter ${e1.toString()}")
+//                }
+//            }
+//
+//            return if (dateString.length >= 10) dateString.substring(0, 10) else ""
+//        }
 
         fun calculateDaysBetweenDates(startDate: String, endDate: String): Long {
             // Parse the date strings into LocalDate objects
@@ -209,15 +280,15 @@ class DateToString {
                             val outputFormatter = SimpleDateFormat(outputFormat, Locale.US)
                             return outputFormatter.format(parsedDate)
                         } catch (e2: Exception) {
-                            Log.d("TAG","exception at time formatter ${e2.toString()}")
+                            Log.d("TAG", "exception at time formatter ${e2.toString()}")
                         }
                     }
                 } catch (e1: Exception) {
-                    Log.d("TAG","exception at time formatter ${e1.toString()}")
+                    Log.d("TAG", "exception at time formatter ${e1.toString()}")
                 }
             }
 
-            return if(dateString.length>=10) dateString.substring(0, 10) else ""
+            return if (dateString.length >= 10) dateString.substring(0, 10) else ""
         }
 
         fun getTimeAgo(context: Context, timestampDate: String): String {
@@ -285,7 +356,46 @@ class DateToString {
             }
         }
 
+        fun getTextviewVisibility(textData: String?): Int {
+            return if (textData.isNullOrEmpty()) View.VISIBLE else View.GONE
+        }
 
+        fun getCheckINOUTVisibility(textData: String?): Int {
+            return if (textData.isNullOrEmpty()) View.GONE else View.VISIBLE
+        }
+
+        fun checkTextviewNullOrEmpty(textData: String?): Int {
+            return if (textData.isNullOrEmpty()) View.GONE else View.VISIBLE
+        }
+
+        fun setCheckoutVisibility(checkInDate: String?, checkOutDate: String?): Int {
+            return if (!checkInDate.isNullOrEmpty() && checkOutDate.isNullOrEmpty()) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+        }
+
+        fun determineStage(managerStatus: String?, financeStatus: String?): String {
+            return when {
+                managerStatus.isNullOrEmpty() && financeStatus.isNullOrEmpty() -> "Manager Approval Pending"
+                managerStatus == "Pending" -> "Manager Approval Pending"
+                managerStatus == "Rejected" -> "Manager Rejected"
+                managerStatus == "Approved" && financeStatus.isNullOrEmpty() -> "Finance Team Approval Pending"
+                managerStatus == "Approved" && financeStatus == "Pending" -> "Finance Team Approval Pending"
+                managerStatus == "Approved" && financeStatus == "Rejected" -> "Finance Team Rejected"
+                managerStatus == "Approved" && financeStatus == "Approved" -> "Approved by Finance"
+                else -> "Unknown Stage"
+            }
+        }
+
+        fun setAddMOMVisibility(checkInDate: String?, checkOutDate: String?): Int {
+            return if (!checkInDate.isNullOrEmpty() && !checkOutDate.isNullOrEmpty()) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+        }
 
         fun convertStringToDateformat(dateString: String): Date? {
 
@@ -307,7 +417,6 @@ class DateToString {
             }
         }
     }
-
 
 
 }

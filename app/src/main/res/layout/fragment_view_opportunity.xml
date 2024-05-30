@@ -50,8 +50,10 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/_4dp"
             android:backgroundTint="@color/light_blue"
+            android:textColor="@color/white"
+            app:iconTint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_baseline_add_24" />
+            app:icon="@drawable/ic_baseline_add_24" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

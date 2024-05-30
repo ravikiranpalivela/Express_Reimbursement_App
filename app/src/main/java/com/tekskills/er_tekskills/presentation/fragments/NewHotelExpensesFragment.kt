@@ -31,6 +31,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.tekskills.er_tekskills.R
 import com.tekskills.er_tekskills.data.model.AddHotelExpenceRequest
@@ -42,11 +45,13 @@ import com.tekskills.er_tekskills.databinding.FragmentNewHotelExpensesBinding
 import com.tekskills.er_tekskills.presentation.activities.MainActivity
 import com.tekskills.er_tekskills.presentation.adapter.AddImageAdapter
 import com.tekskills.er_tekskills.presentation.viewmodel.MainActivityViewModel
+import com.tekskills.er_tekskills.utils.AppUtil.showSnackBar
 import com.tekskills.er_tekskills.utils.FileCompressor
 import com.tekskills.er_tekskills.utils.RestApiStatus
 import com.tekskills.er_tekskills.utils.SmartDialog
 import com.tekskills.er_tekskills.utils.SmartDialogBuilder
 import com.tekskills.er_tekskills.utils.SmartDialogClickListener
+import com.tekskills.er_tekskills.utils.SuccessResource
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -68,6 +73,7 @@ class NewHotelExpensesFragment : Fragment() {
     private var listImage: MutableList<File> = ArrayList()
     private var selectedSelectImage: Int = 0
     private val listSelectImage = arrayOf("Take Photo", "Choose from Gallery")
+    private var validated:Boolean = false
 
     private var purposeID: String = ""
     private val args: NewHotelExpensesFragmentArgs by navArgs()
@@ -92,7 +98,8 @@ class NewHotelExpensesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
         purposeID = args.opportunityID
-
+        showSnackBar(binding.root)
+        viewModel._resAddHotelExpence.postValue(SuccessResource.loading(null))
         viewModel.resMeetingPurposeIDItems.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer {
@@ -140,7 +147,8 @@ class NewHotelExpensesFragment : Fragment() {
         viewModel.getMeetingPurposeByID(purposeID)
 
         binding.tvReturnHotelDate.setOnClickListener {
-            showToDatePicker()
+//            showToDatePicker()
+            showDateTimePicker()
         }
 
         viewModel.resAddHotelExpence.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -216,43 +224,43 @@ class NewHotelExpensesFragment : Fragment() {
 
                 Log.d("TAG", "onViewCreated: validated successfully")
 
-                if (binding.edtHotelExpenses.text.toString().toDouble() >
-                    binding.taskCategoryInfo!!.allowncesLimit.hotelLimit.toString()
-                        .toDouble()
-                ) {
-                    Log.d("TAG", "onViewCreated: showing alert dialog exceeds")
+//                if (binding.edtHotelExpenses.text.toString().toDouble() >
+//                    binding.taskCategoryInfo!!.allowncesLimit.hotelLimit.toString()
+//                        .toDouble()
+//                ) {
+//                    Log.d("TAG", "onViewCreated: showing alert dialog exceeds")
 
-                    SmartDialogBuilder(requireContext())
-                        .setTitle("Note")
-                        .setSubTitle("Manager Approval Mandatory")
-                        .setCancalable(false)
-                        .setCustomIcon(R.drawable.icon2)
-                        .setTitleColor(resources.getColor(R.color.black))
-                        .setSubTitleColor(resources.getColor(R.color.black))
-                        .setNegativeButtonHide(true)
-                        .useNeutralButton(true)
-                        .setPositiveButton("Okay", object : SmartDialogClickListener {
-                            override fun onClick(smartDialog: SmartDialog?) {
-                                Log.d("TAG", "onViewCreated: okay for alert dialog exceeds")
+//                    SmartDialogBuilder(requireContext())
+//                        .setTitle("Note")
+//                        .setSubTitle("Manager Approval Mandatory")
+//                        .setCancalable(false)
+//                        .setCustomIcon(R.drawable.icon2)
+//                        .setTitleColor(resources.getColor(R.color.black))
+//                        .setSubTitleColor(resources.getColor(R.color.black))
+//                        .setNegativeButtonHide(true)
+//                        .useNeutralButton(true)
+//                        .setPositiveButton("Okay", object : SmartDialogClickListener {
+//                            override fun onClick(smartDialog: SmartDialog?) {
+//                                Log.d("TAG", "onViewCreated: okay for alert dialog exceeds")
                                 addHotelExpenseDetails()
-                                smartDialog!!.dismiss()
-                            }
-                        })
-                        .setNegativeButton("Cancel", object : SmartDialogClickListener {
-                            override fun onClick(smartDialog: SmartDialog?) {
-                                smartDialog!!.dismiss()
-                            }
-                        })
-                        .setNeutralButton("Cancel", object : SmartDialogClickListener {
-                            override fun onClick(smartDialog: SmartDialog?) {
-                                smartDialog!!.dismiss()
-                            }
-                        })
-                        .build().show()
-                } else {
-
-                    Log.d("TAG", "onViewCreated: not exceeds")
-                    addHotelExpenseDetails()
+//                                smartDialog!!.dismiss()
+//                            }
+//                        })
+//                        .setNegativeButton("Cancel", object : SmartDialogClickListener {
+//                            override fun onClick(smartDialog: SmartDialog?) {
+//                                smartDialog!!.dismiss()
+//                            }
+//                        })
+//                        .setNeutralButton("Cancel", object : SmartDialogClickListener {
+//                            override fun onClick(smartDialog: SmartDialog?) {
+//                                smartDialog!!.dismiss()
+//                            }
+//                        })
+//                        .build().show()
+//                } else {
+//
+//                    Log.d("TAG", "onViewCreated: not exceeds")
+//                    addHotelExpenseDetails()
 //                    val hotelExpense = AddHotelExpenceRequest(
 //                        purposeId = purposeID.toInt(),
 //                        hotelFrom = binding.srcLoc.text.toString(),
@@ -267,7 +275,7 @@ class NewHotelExpensesFragment : Fragment() {
 //                    )
 //
 //                    viewModel.addHotelExpense(hotelExpense, listImage)
-                }
+//                }
 
 
 //                viewModel.addProject(
@@ -333,6 +341,7 @@ class NewHotelExpensesFragment : Fragment() {
 //                    noOfDays = binding.edtNoOfDays.text.toString(),
                 expensesUser = "Hotel",
             )
+            validated = true
             viewModel.addHotelExpense(hotelExpense, listImage)
         } catch (e: Exception) {
             Log.d("TAG", "addHotelExpenseDetails: ${e.message}")
@@ -534,6 +543,40 @@ class NewHotelExpensesFragment : Fragment() {
 //        }
 //        return true
 //    }
+
+    private fun showDateTimePicker() {
+
+        val date = binding.taskCategoryInfo!!.visitDate
+//        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+//        val dateString = convertStringToDateformat(date)
+        val myCal: Calendar = GregorianCalendar()
+        try {
+            myCal.time = convertStringToDateformat(date)!!
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Select a Travel Date")
+            .setSelection(myCal.timeInMillis) // Default selection to today
+            .setCalendarConstraints(
+                CalendarConstraints.Builder()
+                    .setValidator(DateValidatorPointForward.now()) // Prevents selecting past dates
+                    .build()
+            )
+            .build()
+        datePicker.addOnPositiveButtonClickListener {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = it
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            hotelDate = calendar.time
+            binding.tvReturnHotelDate.setText(DateToString.convertDateToStringDateWise(hotelDate))
+        }
+
+        datePicker.show(childFragmentManager, "TAG")
+    }
 
 
     private fun showToDatePicker() {

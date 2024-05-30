@@ -1,13 +1,15 @@
 package com.tekskills.er_tekskills.presentation.di
+
 import android.app.Application
 import android.util.Log
 import androidx.room.Room
 import com.google.gson.GsonBuilder
-import com.tekskills.er_tekskills.data.db.TaskCategoryDao
-import com.tekskills.er_tekskills.data.db.TaskDatabase
+//import com.tekskills.er_tekskills.data.db.TaskCategoryDao
+//import com.tekskills.er_tekskills.data.db.TaskDatabase
 import com.tekskills.er_tekskills.data.remote.ApiHelper
 import com.tekskills.er_tekskills.data.remote.ApiHelperImpl
 import com.tekskills.er_tekskills.data.remote.ApiService
+import com.tekskills.er_tekskills.data.repository.LocationRepository
 import com.tekskills.er_tekskills.utils.Common
 import dagger.Module
 import dagger.Provides
@@ -24,19 +26,19 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-    @Provides
-    @Singleton
-    fun provideTaskDatabase(app: Application) : TaskDatabase {
-        return Room.databaseBuilder(app, TaskDatabase::class.java, "task_db")
-            .fallbackToDestructiveMigration()
-            .build()
-    }
-
-    @Singleton
-    @Provides
-    fun provideTaskCategoryDao(taskDatabase: TaskDatabase): TaskCategoryDao {
-        return taskDatabase.getTaskCategoryDao()
-    }
+//    @Provides
+//    @Singleton
+//    fun provideTaskDatabase(app: Application) : TaskDatabase {
+//        return Room.databaseBuilder(app, TaskDatabase::class.java, "task_db")
+//            .fallbackToDestructiveMigration()
+//            .build()
+//    }
+//
+//    @Singleton
+//    @Provides
+//    fun provideTaskCategoryDao(taskDatabase: TaskDatabase): TaskCategoryDao {
+//        return taskDatabase.getTaskCategoryDao()
+//    }
 
     @Provides
     fun provideBaseUrl() = Common.BASE_URL
@@ -113,5 +115,11 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideApiHelper(apiHelper: ApiHelperImpl): ApiHelper = apiHelper
+
+    @Provides
+    @Singleton
+    fun provideLocationRepository(apiHelper : ApiHelper) : LocationRepository {
+        return LocationRepository(apiHelper)
+    }
 
 }

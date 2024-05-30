@@ -6,7 +6,9 @@ import com.tekskills.er_tekskills.data.model.ActionItemProjectIDResponseItem
 import com.tekskills.er_tekskills.data.model.AddActionItemOpportunityRequest
 import com.tekskills.er_tekskills.data.model.AddCommentOpportunity
 import com.tekskills.er_tekskills.data.model.AddEscalationRequest
+import com.tekskills.er_tekskills.data.model.AddLocationCoordinates
 import com.tekskills.er_tekskills.data.model.AddMOMOpportunityRequest
+import com.tekskills.er_tekskills.data.model.AddMOMResponse
 import com.tekskills.er_tekskills.data.model.AddOpportunityRequest
 import com.tekskills.er_tekskills.data.model.AddMeetingRequest
 import com.tekskills.er_tekskills.data.model.AddPurposeMeetingResponse
@@ -17,10 +19,13 @@ import com.tekskills.er_tekskills.data.model.PendingActionGraphResponse
 import com.tekskills.er_tekskills.data.model.ClientNamesResponse
 import com.tekskills.er_tekskills.data.model.ClientsEscalationResponse
 import com.tekskills.er_tekskills.data.model.CommentsListResponse
+import com.tekskills.er_tekskills.data.model.LeadNamesResponse
+import com.tekskills.er_tekskills.data.model.LocationResponse
 import com.tekskills.er_tekskills.data.model.LoginResponse
 import com.tekskills.er_tekskills.data.model.ManagementResponse
 import com.tekskills.er_tekskills.data.model.MeetingPurposeResponse
 import com.tekskills.er_tekskills.data.model.MeetingPurposeResponseData
+import com.tekskills.er_tekskills.data.model.MeetingStatusRequest
 import com.tekskills.er_tekskills.data.model.MomProjectResponse
 import com.tekskills.er_tekskills.data.model.MomProjectResponseItem
 import com.tekskills.er_tekskills.data.model.NewClientResponse
@@ -33,9 +38,18 @@ import com.tekskills.er_tekskills.data.model.ProjectManagerResponse
 import com.tekskills.er_tekskills.data.model.ProjectOpportunityResponse
 import com.tekskills.er_tekskills.data.model.UserAllowenceResponse
 import com.tekskills.er_tekskills.data.model.UserMeResponse
+import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.POST_ADD_MOM_MEETING
+import com.tekskills.er_tekskills.utils.Common.Companion.AUTHORIZATION
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.Header
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.Part
+import retrofit2.http.PartMap
+import retrofit2.http.Path
 
 interface ApiHelper {
 
@@ -43,29 +57,56 @@ interface ApiHelper {
 
     suspend fun getEmployeeMe(authorization: String): Response<UserMeResponse>
 
-    suspend fun getEmployeeAllowences(authorization: String, itemID:String): Response<UserAllowenceResponse>
+    suspend fun getEmployeeAllowences(
+        authorization: String,
+        itemID: String
+    ): Response<UserAllowenceResponse>
 
     suspend fun addMeetingPurpose(
         authorization: String, user: AddMeetingRequest
     ): Response<AddPurposeMeetingResponse>
 
+
+    suspend fun addUserCoordinates(
+        authorization: String,
+        user: AddLocationCoordinates
+    ): Response<LocationResponse>
+
     suspend fun getMeetingPurpose(authorization: String): Response<MeetingPurposeResponse>
 
-    suspend fun getMeetingPurposeByID(authorization: String, itemID:String): Response<MeetingPurposeResponseData>
+    suspend fun getMeetingPurposeByID(
+        authorization: String,
+        itemID: String
+    ): Response<MeetingPurposeResponseData>
+
+    suspend fun getMeetingPurposeByStatus(authorization: String,itemID:String): Response<MeetingPurposeResponse>
+
+    suspend fun getMeetingPurposeStatus(authorization: String,): Response<MeetingStatusRequest>
+
 
     suspend fun addTravelExpense(
         authorization: String, purposeID: RequestBody, amount: Long,
         file: MutableList<MultipartBody.Part>?, user: Map<String, RequestBody>
     ): Response<AddTravelExpenceResponse>
 
-    suspend fun addHotelExpense(authorization: String,purposeID: RequestBody,
-                                 file: MultipartBody.Part, user: Map<String, RequestBody>
+    suspend fun addHotelExpense(
+        authorization: String, purposeID: RequestBody,
+        file: MultipartBody.Part, user: Map<String, RequestBody>
     ): Response<AddTravelExpenceResponse>
 
 
-    suspend fun addFoodExpense(authorization: String,purposeID: RequestBody,
-                               user: Map<String, RequestBody>
+    suspend fun addFoodExpense(
+        authorization: String, purposeID: RequestBody,
+        user: Map<String, RequestBody>
     ): Response<AddTravelExpenceResponse>
+
+
+    suspend fun addMOMToMeeting(
+        authorization: String,
+        purposeID: RequestBody, file: MutableList<MultipartBody.Part>?,
+        user: Map<String, RequestBody>
+    ): Response<AddMOMResponse>
+
     /**
      * Dashboard Graph items
      */
@@ -73,21 +114,44 @@ interface ApiHelper {
 
     suspend fun getEscalationGraph(authorization: String): Response<PendingEscalationGraphResponse>
 
-    suspend fun getPendingActionGraphByID(authorization: String, itemID:String): Response<PendingActionItemGraphByIDResponse>
+    suspend fun getPendingActionGraphByID(
+        authorization: String,
+        itemID: String
+    ): Response<PendingActionItemGraphByIDResponse>
 
-    suspend fun getEscalationGraphByID(authorization: String, itemID:String): Response<ClientEscalationGraphByIDResponse>
+    suspend fun getEscalationGraphByID(
+        authorization: String,
+        itemID: String
+    ): Response<ClientEscalationGraphByIDResponse>
 
 
     /**
      * ADD Opportunity
      */
-    suspend fun addOpportunity(authorization: String,requestBody: AddOpportunityRequest): Response<NewClientResponse>
+    suspend fun addOpportunity(
+        authorization: String,
+        requestBody: AddOpportunityRequest
+    ): Response<NewClientResponse>
 
 
     suspend fun addClient(authorization: String, user: Map<String, String>)
             : Response<NewClientResponse>
 
     suspend fun getClients(authorization: String): Response<ClientNamesResponse>
+
+    suspend fun getLeads(authorization: String, itemID: String): Response<LeadNamesResponse>
+
+    suspend fun putUserMeetingCheckIN(
+        authorization: String, itemID: String,
+        requestBody: MutableMap<String, RequestBody>,
+        listMultipartImage: MultipartBody.Part
+    ): Response<LocationResponse>
+
+    suspend fun putUserMeetingCheckOUT(
+        authorization: String,
+        itemID: String,
+        requestBody: MutableMap<String, RequestBody>
+    ): Response<LocationResponse>
 
     suspend fun getProjects(authorization: String): Response<ProjectListResponse>
 
@@ -101,25 +165,43 @@ interface ApiHelper {
 
     suspend fun getProjectOpportunity(authorization: String): Response<ProjectOpportunityResponse>
 
-    suspend fun getMOMProjects(authorization: String,itemID:String): Response<MomProjectResponse>
+    suspend fun getMOMProjects(authorization: String, itemID: String): Response<MomProjectResponse>
 
-    suspend fun getMOMActionItemDetailsBYId(authorization: String, itemID:String): Response<MomProjectResponseItem>
+    suspend fun getMOMActionItemDetailsBYId(
+        authorization: String,
+        itemID: String
+    ): Response<MomProjectResponseItem>
 
-    suspend fun getOpportunityByProductID(authorization: String,itemID:String): Response<OpportunityByProjectIDResponse>
+    suspend fun getOpportunityByProductID(
+        authorization: String,
+        itemID: String
+    ): Response<OpportunityByProjectIDResponse>
 
     suspend fun getClientExist(authorization: String): Response<NewClientResponse>
 
     suspend fun getActionItemProjects(authorization: String): Response<NewClientResponse>
 
-    suspend fun getActionItemProjectID(authorization: String,itemID:String): Response<ActionItemProjectIDResponse>
+    suspend fun getActionItemProjectID(
+        authorization: String,
+        itemID: String
+    ): Response<ActionItemProjectIDResponse>
 
-    suspend fun getActionItemBYID(authorization: String, itemID:String): Response<ActionItemProjectIDResponseItem>
+    suspend fun getActionItemBYID(
+        authorization: String,
+        itemID: String
+    ): Response<ActionItemProjectIDResponseItem>
 
     suspend fun getProjectID(authorization: String): Response<ProjectListResponse>
 
-    suspend fun getEscalationItemProjectID(authorization: String,itemID:String): Response<ClientsEscalationResponse>
+    suspend fun getEscalationItemProjectID(
+        authorization: String,
+        itemID: String
+    ): Response<ClientsEscalationResponse>
 
-    suspend fun getCommentProjectID(authorization: String,itemID:String): Response<CommentsListResponse>
+    suspend fun getCommentProjectID(
+        authorization: String,
+        itemID: String
+    ): Response<CommentsListResponse>
 
     suspend fun addProject(authorization: String, user: Map<String, String>)
             : Response<NewClientResponse>

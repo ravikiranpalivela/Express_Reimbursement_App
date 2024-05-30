@@ -31,7 +31,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.tekskills.er_tekskills.R
 import com.tekskills.er_tekskills.data.model.AddReturnTravelExpenceRequest
 import com.tekskills.er_tekskills.data.model.AddTravelExpenceRequest
@@ -42,11 +47,13 @@ import com.tekskills.er_tekskills.databinding.FragmentNewTravelExpensesBinding
 import com.tekskills.er_tekskills.presentation.activities.MainActivity
 import com.tekskills.er_tekskills.presentation.adapter.AddImageAdapter
 import com.tekskills.er_tekskills.presentation.viewmodel.MainActivityViewModel
+import com.tekskills.er_tekskills.utils.AppUtil.showSnackBar
 import com.tekskills.er_tekskills.utils.FileCompressor
 import com.tekskills.er_tekskills.utils.RestApiStatus
 import com.tekskills.er_tekskills.utils.SmartDialog
 import com.tekskills.er_tekskills.utils.SmartDialogBuilder
 import com.tekskills.er_tekskills.utils.SmartDialogClickListener
+import com.tekskills.er_tekskills.utils.SuccessResource
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -60,6 +67,7 @@ class NewTravelExpensesFragment : Fragment() {
 
     private lateinit var binding: FragmentNewTravelExpensesBinding
     private lateinit var viewModel: MainActivityViewModel
+
     private var selectMOTPos = "Bike"
     private var mClientNames: ArrayList<String> = arrayListOf(
         "Train", "Bus", "Bike", "Car", "Flight"
@@ -72,6 +80,7 @@ class NewTravelExpensesFragment : Fragment() {
     private var listImage: MutableList<File> = ArrayList()
     private var selectedSelectImage: Int = 0
 
+    private var validated:Boolean = false
 
     private var purposeID: String = ""
     private val args: NewTravelExpensesFragmentArgs by navArgs()
@@ -98,66 +107,18 @@ class NewTravelExpensesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = (activity as MainActivity).viewModel
-        purposeID = args.opportunityID
 
-        viewModel.resMeetingPurposeIDItems.observe(
-            viewLifecycleOwner,
-            androidx.lifecycle.Observer {
-                when (it.status) {
-                    RestApiStatus.SUCCESS -> {
-                        binding.progress.visibility = View.GONE
-                        if (it.data != null) {
-                            it.data.let { list ->
-                                binding.taskCategoryInfo = list
+        try {
+            viewModel = (activity as MainActivity).viewModel
+            purposeID = args.opportunityID
+            showSnackBar(binding.root)
+            observers()
+            viewModel._resAddTravelExpence.postValue(SuccessResource.loading(null))
+            binding.ivAddImage.setOnClickListener {
+                selectImage()
+            }
 
-                                if (list.modeOfTravel != null) {
-                                    selectMOTPos = list.modeOfTravel
-                                    binding.sModeOfTravel.setSelection(list.modeOfTravel)
-                                    if (!(list.modeOfTravel == "Train" || list.modeOfTravel == "Flight")) {
-                                        binding.llDistance.visibility = View.VISIBLE
-                                        binding.llAllottedExpenses.visibility = View.VISIBLE
-                                    } else {
-                                        binding.llDistance.visibility = View.GONE
-                                        binding.llAllottedExpenses.visibility = View.GONE
-                                    }
-                                }
-
-                                binding.priority.text = if (list.status == "Active")
-                                    "Active" else "InActive"
-                            }
-                        } else {
-                            Snackbar.make(
-                                binding.root,
-                                "No Data Found",
-                                Snackbar.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-
-                    RestApiStatus.LOADING -> {
-                        binding.progress.visibility = View.VISIBLE
-                    }
-
-                    RestApiStatus.ERROR -> {
-                        binding.progress.visibility = View.GONE
-                        Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-                            .show()
-                    }
-
-                    else -> {
-                        binding.progress.visibility = View.GONE
-                        Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-                            .show()
-                    }
-                }
-            })
-
-        binding.ivAddImage.setOnClickListener {
-            selectImage()
-        }
-
-        viewModel.getMeetingPurposeByID(purposeID)
+            viewModel.getMeetingPurposeByID(purposeID)
 
 
 //        viewModel.getClientNameList()
@@ -182,9 +143,9 @@ class NewTravelExpensesFragment : Fragment() {
 //            }
 //        })
 
-        binding.tvReturnTravelDate.setOnClickListener {
-            showToDatePicker()
-        }
+            binding.tvReturnTravelDate.setOnClickListener {
+                showToDatePicker()
+            }
 
 //        viewModel.resClientNameList.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
 //            when (it.status) {
@@ -232,12 +193,249 @@ class NewTravelExpensesFragment : Fragment() {
 //            println("Selected Mode of Travel: $selectedMode")
 //        }
 
+            initAdapter()
+
+            binding.apply {
+                llTravelExpenses.setOnClickListener(View.OnClickListener {
+                    if (clVistPurpose.isVisible) {
+                        clVistPurpose.visibility = View.GONE
+                        ivViewTravelExpenses.background =
+                            resources.getDrawable(R.drawable.ic_down_icon)
+                    } else {
+                        clVistPurpose.visibility = View.VISIBLE
+                        ivViewTravelExpenses.background =
+                            resources.getDrawable(R.drawable.ic_up_icon)
+                    }
+                })
+                ivViewTravelExpenses.setOnClickListener(View.OnClickListener {
+                    if (clVistPurpose.isVisible) {
+                        clVistPurpose.visibility = View.GONE
+                        ivViewTravelExpenses.background =
+                            resources.getDrawable(R.drawable.ic_down_icon)
+                    } else {
+                        clVistPurpose.visibility = View.VISIBLE
+                        ivViewTravelExpenses.background =
+                            resources.getDrawable(R.drawable.ic_up_icon)
+                    }
+                })
+            }
+
+            binding.chkRoundTrip.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    binding.llRoundTripDetails.visibility = View.VISIBLE
+                } else {
+                    binding.llRoundTripDetails.visibility = View.GONE
+                }
+            })
+
+            binding.btnSave.setOnClickListener {
+                if (isValidate()) {
+                    Log.d("TAG", "onViewCreated: validated successfully")
+
+//                if (binding.edtTravelExpenses.text.toString().toDouble() >
+//                    binding.taskCategoryInfo!!.allowncesLimit.travelLimit.toString()
+//                        .toDouble()
+//                ) {
+//                    Log.d("TAG", "onViewCreated: showing alert dialog exceeds")
+
+//                    SmartDialogBuilder(requireContext())
+//                        .setTitle("Note")
+//                        .setSubTitle("Manager Approval Mandatory")
+//                        .setCancalable(false)
+//                        .setCustomIcon(R.drawable.icon2)
+//                        .setTitleColor(resources.getColor(R.color.black))
+//                        .setSubTitleColor(resources.getColor(R.color.black))
+//                        .setNegativeButtonHide(true)
+//                        .useNeutralButton(true)
+//                        .setPositiveButton("Okay", object : SmartDialogClickListener {
+//                            override fun onClick(smartDialog: SmartDialog?) {
+//                                Log.d("TAG", "onViewCreated: okay for alert dialog exceeds")
+                    addTravelExpenseDetails()
+//                                smartDialog!!.dismiss()
+//                            }
+//                        })
+//                        .setNegativeButton("Cancel", object : SmartDialogClickListener {
+//                            override fun onClick(smartDialog: SmartDialog?) {
+//                                smartDialog!!.dismiss()
+//                            }
+//                        })
+//                        .setNeutralButton("Cancel", object : SmartDialogClickListener {
+//                            override fun onClick(smartDialog: SmartDialog?) {
+//                                smartDialog!!.dismiss()
+//                            }
+//                        })
+//                        .build().show()
+//                } else {
+//
+//                    Log.d("TAG", "onViewCreated: not exceeds")
+//                    addTravelExpenseDetails()
+//                    val travelExpense = AddTravelExpenceRequest(
+//                        purposeId = purposeID.toInt(),
+//                        travelFrom = binding.srcLoc.text.toString(),
+//                        travelTo = binding.desLoc.text.toString(),
+//                        travelDate = DateToString.convertDateStringToNormalFormat(
+//                            binding.clientName.text.toString()
+//                        ),
+//                        modeOfTravel = selectMOTPos,
+//                        amount = binding.edtTravelExpenses.text.toString().toDouble(),
+////                    noOfDays = binding.edtNoOfDays.text.toString(),
+//                        expensesUser = "Travel",
+//                    )
+//
+//                    viewModel.addTravelExpense(travelExpense, listImage)
+//                }
+
+
+//                viewModel.addProject(
+//                    binding.edtFromLoc.text.toString(),
+//                    selectMOTPos.toString(),
+//                    binding.edtToLoc.text.toString(),
+//                    binding.tvTravelDate.text.toString(),
+//                    if (binding.chkRoundTrip.isChecked) "Active" else "InActive"
+//                )
+//                Toast.makeText(requireActivity(), "Added", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            binding.ivAddFile.setOnClickListener {
+                val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+//                    putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*", "video/*"))
+                    type = "*/*"
+                }
+                pdfLauncher.launch(intent)
+//            documentPick.launch(
+//                arrayOf(
+//                    "application/pdf",
+//                    "application/msword",
+//                    "application/ms-doc",
+//                    "application/doc",
+//                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+//                    "text/plain"
+//                )
+//            )
+            }
+        } catch (e: Exception) {
+            Log.d("TAG", "onViewCreated: ${e.message}")
+        }
+    }
+
+    fun addTravelExpenseDetails() {
+        val travelExpense = AddTravelExpenceRequest(
+            purposeId = purposeID.toInt(),
+            travelFrom = binding.srcLoc.text.toString(),
+            travelTo = binding.desLoc.text.toString(),
+            travelDate = DateToString.convertDateStringToNormalFormat(
+                binding.clientName.text.toString()
+            ),
+            modeOfTravel = selectMOTPos,
+            amount = binding.allottedExpenses.text.toString()
+                .toDouble(),
+//            amount = binding.edtTravelExpenses.text.toString()
+//                .toDouble(),
+//                    noOfDays = binding.edtNoOfDays.text.toString(),
+            expensesUser = "Travel",
+        )
+        if (!binding.chkRoundTrip.isChecked) {
+            validated = true
+            viewModel.addTravelExpense(travelExpense, null, listImage)
+        } else {
+            val returnTravelExpense = AddReturnTravelExpenceRequest(
+                returnFrom = binding.desLoc.text.toString(),
+                returnTo = binding.srcLoc.text.toString(),
+                returnTravelDate = DateToString.convertDateToString(travelDate),
+                returnModeOfTravel = selectMOTPos,
+            )
+            validated = true
+            viewModel.addTravelExpense(travelExpense, returnTravelExpense, listImage)
+        }
+    }
+
+    private fun initAdapter() {
+        addImageAdapter = AddImageAdapter(listImage)
+        binding.rvImage.apply {
+            setHasFixedSize(true)
+            layoutManager =
+                LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = addImageAdapter
+
+            addImageAdapter.setOnCustomClickListener(object :
+                AddImageAdapter.OnCustomClickListener {
+                override fun onDeleteClicked(position: Int) {
+                    listImage.removeAt(position)
+                    addImageAdapter.notifyDataSetChanged()
+                }
+            })
+        }
+    }
+
+    fun observers() {
+        viewModel.resMeetingPurposeIDItems.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer {
+                when (it.status) {
+                    RestApiStatus.SUCCESS -> {
+                        binding.progress.visibility = View.GONE
+                        if (it.data != null) {
+                            it.data.let { list ->
+                                binding.taskCategoryInfo = list
+
+                                if (list.modeOfTravel != null) {
+                                    selectMOTPos = list.modeOfTravel
+                                    binding.sModeOfTravel.setSelection(list.modeOfTravel)
+                                    if (!(list.modeOfTravel == "Train" || list.modeOfTravel == "Flight")) {
+                                        binding.llDistance.visibility = View.VISIBLE
+                                        binding.llAllottedExpenses.visibility = View.VISIBLE
+                                    } else {
+                                        binding.llDistance.visibility = View.GONE
+                                        binding.llAllottedExpenses.visibility = View.GONE
+                                    }
+                                }
+
+                                binding.priority.text = if (list.status == "Active")
+                                    "Active" else "InActive"
+                            }
+                        } else {
+                            Snackbar.make(
+                                binding.root,
+                                "No Data Found",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+
+                    RestApiStatus.LOADING -> {
+                        binding.progress.visibility = View.VISIBLE
+                    }
+
+                    RestApiStatus.ERROR -> {
+                        binding.progress.visibility = View.GONE
+                        Snackbar.make(
+                            binding.root,
+                            "Something went wrong",
+                            Snackbar.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+
+                    else -> {
+                        binding.progress.visibility = View.GONE
+                        Snackbar.make(
+                            binding.root,
+                            "Something went wrong",
+                            Snackbar.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+                }
+            })
+
         viewModel.resAddTravelExpence.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when (it.status) {
                 RestApiStatus.SUCCESS -> {
                     binding.progress.visibility = View.GONE
                     if (it.data != null)
                         it.data.let { res ->
+                            if(validated)
                             requireActivity().onBackPressed()
 //                            val intent = Intent(requireActivity(), MainActivity::class.java)
 //                            startActivity(intent)
@@ -269,169 +467,7 @@ class NewTravelExpensesFragment : Fragment() {
                 }
             }
         })
-        initAdapter()
 
-        binding.apply {
-            llTravelExpenses.setOnClickListener(View.OnClickListener {
-                if (clVistPurpose.isVisible) {
-                    clVistPurpose.visibility = View.GONE
-                    ivViewTravelExpenses.background = resources.getDrawable(R.drawable.ic_down_icon)
-                } else {
-                    clVistPurpose.visibility = View.VISIBLE
-                    ivViewTravelExpenses.background = resources.getDrawable(R.drawable.ic_up_icon)
-                }
-            })
-            ivViewTravelExpenses.setOnClickListener(View.OnClickListener {
-                if (clVistPurpose.isVisible) {
-                    clVistPurpose.visibility = View.GONE
-                    ivViewTravelExpenses.background = resources.getDrawable(R.drawable.ic_down_icon)
-                } else {
-                    clVistPurpose.visibility = View.VISIBLE
-                    ivViewTravelExpenses.background = resources.getDrawable(R.drawable.ic_up_icon)
-                }
-            })
-        }
-
-        binding.chkRoundTrip.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                binding.llRoundTripDetails.visibility = View.VISIBLE
-            } else {
-                binding.llRoundTripDetails.visibility = View.GONE
-            }
-        })
-
-        binding.btnSave.setOnClickListener {
-            if (isValidate()) {
-
-                Log.d("TAG", "onViewCreated: validated successfully")
-
-                if (binding.edtTravelExpenses.text.toString().toDouble() >
-                    binding.taskCategoryInfo!!.allowncesLimit.travelLimit.toString()
-                        .toDouble()
-                ) {
-                    Log.d("TAG", "onViewCreated: showing alert dialog exceeds")
-
-                    SmartDialogBuilder(requireContext())
-                        .setTitle("Note")
-                        .setSubTitle("Manager Approval Mandatory")
-                        .setCancalable(false)
-                        .setCustomIcon(R.drawable.icon2)
-                        .setTitleColor(resources.getColor(R.color.black))
-                        .setSubTitleColor(resources.getColor(R.color.black))
-                        .setNegativeButtonHide(true)
-                        .useNeutralButton(true)
-                        .setPositiveButton("Okay", object : SmartDialogClickListener {
-                            override fun onClick(smartDialog: SmartDialog?) {
-                                Log.d("TAG", "onViewCreated: okay for alert dialog exceeds")
-                                addTravelExpenseDetails()
-                                smartDialog!!.dismiss()
-                            }
-                        })
-                        .setNegativeButton("Cancel", object : SmartDialogClickListener {
-                            override fun onClick(smartDialog: SmartDialog?) {
-                                smartDialog!!.dismiss()
-                            }
-                        })
-                        .setNeutralButton("Cancel", object : SmartDialogClickListener {
-                            override fun onClick(smartDialog: SmartDialog?) {
-                                smartDialog!!.dismiss()
-                            }
-                        })
-                        .build().show()
-                } else {
-
-                    Log.d("TAG", "onViewCreated: not exceeds")
-                    addTravelExpenseDetails()
-//                    val travelExpense = AddTravelExpenceRequest(
-//                        purposeId = purposeID.toInt(),
-//                        travelFrom = binding.srcLoc.text.toString(),
-//                        travelTo = binding.desLoc.text.toString(),
-//                        travelDate = DateToString.convertDateStringToNormalFormat(
-//                            binding.clientName.text.toString()
-//                        ),
-//                        modeOfTravel = selectMOTPos,
-//                        amount = binding.edtTravelExpenses.text.toString().toDouble(),
-////                    noOfDays = binding.edtNoOfDays.text.toString(),
-//                        expensesUser = "Travel",
-//                    )
-//
-//                    viewModel.addTravelExpense(travelExpense, listImage)
-                }
-
-
-//                viewModel.addProject(
-//                    binding.edtFromLoc.text.toString(),
-//                    selectMOTPos.toString(),
-//                    binding.edtToLoc.text.toString(),
-//                    binding.tvTravelDate.text.toString(),
-//                    if (binding.chkRoundTrip.isChecked) "Active" else "InActive"
-//                )
-//                Toast.makeText(requireActivity(), "Added", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        binding.ivAddFile.setOnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-//                    putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*", "video/*"))
-                type = "*/*"
-            }
-            pdfLauncher.launch(intent)
-//            documentPick.launch(
-//                arrayOf(
-//                    "application/pdf",
-//                    "application/msword",
-//                    "application/ms-doc",
-//                    "application/doc",
-//                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-//                    "text/plain"
-//                )
-//            )
-        }
-    }
-
-    fun addTravelExpenseDetails() {
-        val travelExpense = AddTravelExpenceRequest(
-            purposeId = purposeID.toInt(),
-            travelFrom = binding.srcLoc.text.toString(),
-            travelTo = binding.desLoc.text.toString(),
-            travelDate = DateToString.convertDateStringToNormalFormat(
-                binding.clientName.text.toString()
-            ),
-            modeOfTravel = selectMOTPos,
-            amount = binding.edtTravelExpenses.text.toString()
-                .toDouble(),
-//                    noOfDays = binding.edtNoOfDays.text.toString(),
-            expensesUser = "Travel",
-        )
-        if (!binding.chkRoundTrip.isChecked) {
-            viewModel.addTravelExpense(travelExpense, null, listImage)
-        } else {
-            val returnTravelExpense = AddReturnTravelExpenceRequest(
-                returnFrom = binding.desLoc.text.toString(),
-                returnTo = binding.srcLoc.text.toString(),
-                returnTravelDate = DateToString.convertDateToString(travelDate),
-                returnModeOfTravel = selectMOTPos,
-            )
-            viewModel.addTravelExpense(travelExpense, returnTravelExpense, listImage)
-        }
-    }
-
-    private fun initAdapter() {
-        addImageAdapter = AddImageAdapter(listImage)
-        binding.rvImage.apply {
-            setHasFixedSize(true)
-            layoutManager =
-                LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
-            adapter = addImageAdapter
-
-            addImageAdapter.setOnCustomClickListener(object :
-                AddImageAdapter.OnCustomClickListener {
-                override fun onDeleteClicked(position: Int) {
-                    listImage.removeAt(position)
-                    addImageAdapter.notifyDataSetChanged()
-                }
-            })
-        }
     }
 
     private fun selectImage() {
@@ -441,7 +477,7 @@ class NewTravelExpensesFragment : Fragment() {
                 listSelectImage[item] == "Take Photo" -> {
                     selectedSelectImage = 0
 //                    if (checkPersmission()) {
-                        takePhoto()
+                    takePhoto()
 //                    } else {
 //                        requestPermission()
 //                    }
@@ -450,7 +486,7 @@ class NewTravelExpensesFragment : Fragment() {
                 listSelectImage[item] == "Choose from Gallery" -> {
                     selectedSelectImage = 1
 //                    if (checkPersmission()) {
-                        openGallery()
+                    openGallery()
 //                    } else {
 //                        requestPermission()
 //                    }
@@ -583,9 +619,12 @@ class NewTravelExpensesFragment : Fragment() {
 
     private fun isValidate(): Boolean =
         if (binding.chkRoundTrip.isChecked)
-            validateAttachment() && validateTravelAmount() && validateReturnTravelDate()
+            validateAttachment()
+//                    && validateTravelAmount()
+                    && validateReturnTravelDate()
         else
-            validateAttachment() && validateTravelAmount()
+            validateAttachment()
+//                    && validateTravelAmount()
 
     /**
      * field must not be empty
@@ -639,6 +678,41 @@ class NewTravelExpensesFragment : Fragment() {
 //        }
 //        return true
 //    }
+
+    private fun showDateTimePicker() {
+
+        val date = binding.taskCategoryInfo!!.visitDate
+//        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+//        val dateString = convertStringToDateformat(date)
+        val myCal: Calendar = GregorianCalendar()
+        try {
+            myCal.time = convertStringToDateformat(date)!!
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Select a Travel Date")
+            .setSelection(myCal.timeInMillis) // Default selection to today
+            .setCalendarConstraints(
+                CalendarConstraints.Builder()
+                    .setValidator(DateValidatorPointForward.now()) // Prevents selecting past dates
+                    .build()
+            )
+            .build()
+        datePicker.addOnPositiveButtonClickListener {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = it
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            travelDate = calendar.time
+//            binding.traved.setText(DateToString.convertDateToStringDateWise(travelDate))
+        }
+
+        datePicker.show(childFragmentManager, "TAG")
+    }
+
 
 
     private fun showToDatePicker() {

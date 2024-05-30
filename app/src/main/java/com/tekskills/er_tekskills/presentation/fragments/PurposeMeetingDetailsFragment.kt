@@ -1,7 +1,11 @@
 package com.tekskills.er_tekskills.presentation.fragments
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -11,19 +15,27 @@ import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.tekskills.er_tekskills.R
+import com.tekskills.er_tekskills.data.model.AddCheckInRequest
 import com.tekskills.er_tekskills.data.model.UserExpence
 import com.tekskills.er_tekskills.databinding.FragmentMeetingPurposeDetailsBinding
 import com.tekskills.er_tekskills.presentation.activities.MainActivity
 import com.tekskills.er_tekskills.presentation.adapter.AdvanceAmountAdapter
+import com.tekskills.er_tekskills.presentation.adapter.CommentsOpportunitysAdapter
+import com.tekskills.er_tekskills.presentation.adapter.ExpensesAdapter
 import com.tekskills.er_tekskills.presentation.adapter.FoodExpenseAdapter
 import com.tekskills.er_tekskills.presentation.adapter.HotelExpenseAdapter
+import com.tekskills.er_tekskills.presentation.adapter.MomActionItemsAdapter
 import com.tekskills.er_tekskills.presentation.adapter.TravelExpenseAdapter
 import com.tekskills.er_tekskills.presentation.viewmodel.MainActivityViewModel
 import com.tekskills.er_tekskills.utils.RestApiStatus
@@ -41,13 +53,12 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
     private var opportunityID: String = ""
 
     @Inject
-    @Named("advance_meeting_purpose_details_fragment")
-    lateinit var adapter: AdvanceAmountAdapter
-
-    @Inject
     @Named("food_meeting_purpose_details_fragment")
     lateinit var foodExpenseAdapter: FoodExpenseAdapter
 
+    @Inject
+    @Named("expenses_meeting_purpose_details_fragment")
+    lateinit var expensesAdapter: ExpensesAdapter
 
     @Inject
     @Named("travel_meeting_purpose_details_fragment")
@@ -57,13 +68,24 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
     @Named("hotel_meeting_purpose_details_fragment")
     lateinit var hotelExpenseAdapter: HotelExpenseAdapter
 
+    @Inject
+    @Named("mom_action_item_details_fragment")
+    lateinit var momActionItemsAdapter: MomActionItemsAdapter
+
+    @Inject
+    @Named("comments_opportunity_details_fragment")
+    lateinit var commentsItemListAdapter: CommentsOpportunitysAdapter
+
     private var recyclableTextView: TextView? = null
     val fixedColumnWidths = intArrayOf(5, 20, 20, 20, 20, 20, 20, 20)
     val scrollableColumnWidths = intArrayOf(20, 20, 20, 20, 20, 30, 30)
     val fixedRowHeight = 50
     val fixedHeaderHeight = 60
 
-    private lateinit var row :TableRow
+    private lateinit var row: TableRow
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
 
     val wrapWrapTableRowParams: TableRow.LayoutParams =
         TableRow.LayoutParams(
@@ -89,33 +111,39 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
         opportunityID = args.opportunityID
 
         row = TableRow(requireContext())
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        createTableData()
-
+//        createTableData()
 //        viewModel.getEscalationItemProjectID(opportunityID)
-//        viewModel.getCommentProjectID(opportunityID)
+        viewModel.getCommentProjectID(opportunityID)
 //        viewModel.getMOMProjects(opportunityID)
 //        viewModel.getActionItemProjectID(opportunityID)
         viewModel.getMeetingPurposeByID(opportunityID)
 //        viewModel._resMeetingPurposeIDItems.value = DummyData().createDummyDataBYID()
 
 
-        binding.ivAddAdvanceAmount.setOnClickListener {
-            if (binding.llAddAdvanceAmount.isVisible)
-                binding.llAddAdvanceAmount.visibility = GONE
+//        binding.ivAddComments.setOnClickListener {
+//            if (binding.llAddComments.isVisible)
+//                binding.llAddComments.visibility = GONE
+//            else
+//                binding.llAddComments.visibility = VISIBLE
+//        }
+
+        binding.tvAddComments.setOnClickListener {
+            if (binding.llAddComments.isVisible)
+                binding.llAddComments.visibility = GONE
             else
-                binding.llAddAdvanceAmount.visibility = VISIBLE
+                binding.llAddComments.visibility = VISIBLE
         }
 
-        binding.btnAddAdvanceAmount.setOnClickListener {
-//            if (isValidate())
-//                viewModel.addCommentOpportunity(
-//                    binding.taskCategoryInfo!!.id.toString(),
-//                    binding.taskCategoryInfo!!.AssignId.toString(),
-//                    binding.edtComment.text.toString()
-//                )
+        binding.btnAddComments.setOnClickListener {
+            if (isValidate())
+                viewModel.addCommentOpportunity(
+                    binding.taskCategoryInfo!!.id.toString(),
+                    "User",
+                    binding.edtComment.text.toString()
+                )
         }
-
 
 
 //
@@ -297,6 +325,47 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
                 }
             })
 
+            ivAllMomItems.setOnClickListener(View.OnClickListener {
+                if (clAllMomItems.isVisible) {
+                    clAllMomItems.visibility = GONE
+                    ivAllMomItems.background = resources.getDrawable(R.drawable.ic_down_icon)
+                } else {
+                    clAllMomItems.visibility = VISIBLE
+                    ivAllMomItems.background = resources.getDrawable(R.drawable.ic_up_icon)
+                }
+            })
+
+            ivAllComments.setOnClickListener(View.OnClickListener {
+                if (clAllComments.isVisible) {
+                    clAllComments.visibility = GONE
+                    ivAllComments.background = resources.getDrawable(R.drawable.ic_down_icon)
+                } else {
+                    clAllComments.visibility = VISIBLE
+                    ivAllComments.background = resources.getDrawable(R.drawable.ic_up_icon)
+                }
+            })
+
+            tvCheckIn.setOnClickListener {
+                val action =
+                    PurposeMeetingDetailsFragmentDirections.actionMeetingDetailsFragmentToNewcheckInFragment(
+                        opportunityID
+                    )
+                binding.root.findNavController().navigate(action)
+            }
+
+            tvCheckOut.setOnClickListener {
+                getCurrentLocation(opportunityID)
+            }
+
+            tvAddMom.setOnClickListener {
+                val action =
+                    PurposeMeetingDetailsFragmentDirections.actionMeetingDetailsFragmentToNewAddMOMFragment(
+                        opportunityID
+                    )
+                binding.root.findNavController().navigate(action)
+            }
+
+
 //            ivTravelExpenses.setOnClickListener(View.OnClickListener {
 //                if (clTravelExpenses.isVisible) {
 //                    clTravelExpenses.visibility = GONE
@@ -310,7 +379,7 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
         }
 
         initRecyclerView()
-//        hotelExpenseAdapter.differ.submitList(createDummyData())
+//        hotelExpenseAdapter.differ.submitList(createDummyData())F
 //        createDummyData()
 
         viewModel.resNewCommentResponse.observe(
@@ -321,7 +390,8 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
                         binding.progress.visibility = View.GONE
                         if (it.data != null) {
                             it.data.let { list ->
-                                binding.llAdvanceAmount.visibility = GONE
+                                binding.edtComment.setText("")
+                                binding.llAddComments.visibility = GONE
                                 viewModel.getCommentProjectID(opportunityID)
                             }
                         } else {
@@ -351,6 +421,52 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
                 }
             })
 
+
+        viewModel.resUserMeetingCheckOUT.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer {
+                when (it.status) {
+                    RestApiStatus.SUCCESS -> {
+                        binding.progress.visibility = View.GONE
+                        if (it.message != "success") {
+                            viewModel.getCommentProjectID(opportunityID)
+                            viewModel.getMeetingPurposeByID(opportunityID)
+                        } else {
+                            Snackbar.make(
+                                binding.root,
+                                "Something Went Wrong Check-OUT",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+
+                    RestApiStatus.LOADING -> {
+                        binding.progress.visibility = View.VISIBLE
+                    }
+
+                    RestApiStatus.ERROR -> {
+                        binding.progress.visibility = View.GONE
+                        Snackbar.make(
+                            binding.root,
+                            "Something Went Wrong Check-OUT",
+                            Snackbar.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+
+                    else -> {
+                        binding.progress.visibility = View.GONE
+                        Snackbar.make(
+                            binding.root,
+                            "Something Went Wrong Check-OUT",
+                            Snackbar.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+                }
+            })
+
+
         viewModel.resMeetingPurposeIDItems.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer {
@@ -361,33 +477,58 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
                             it.data.let { list ->
                                 binding.taskCategoryInfo = list
 
-                                expensesData(list.userExpences)
+//                                expensesData(list.userExpences)
 
-                                val travelExpenses = filterByExpenseUser(
-                                    list.userExpences,
-                                    "Travel"
-                                )
-                                val hotelExpenses = filterByExpenseUser(
-                                    list.userExpences,
-                                    "Hotel"
-                                )
-                                val foodExpenses = filterByExpenseUser(
-                                    list.userExpences,
-                                    "foodexpence"
-                                )
+                                if (!list.userExpences.isNullOrEmpty()) {
+                                    binding.llAllExpenses.visibility =
+                                        if (list.userExpences.size == 0)
+                                            GONE
+                                        else VISIBLE
 
-                                foodExpenseAdapter.submitList(foodExpenses)
-                                foodExpenseAdapter.notifyDataSetChanged()
+                                    val travelExpenses = filterByExpenseUser(
+                                        list.userExpences,
+                                        "Travel"
+                                    )
+                                    val hotelExpenses = filterByExpenseUser(
+                                        list.userExpences,
+                                        "Hotel"
+                                    )
+                                    val foodExpenses = filterByExpenseUser(
+                                        list.userExpences,
+                                        "foodexpence"
+                                    )
+
+                                    expensesAdapter.submitList(list.userExpences)
+                                    expensesAdapter.notifyDataSetChanged()
+
+                                    foodExpenseAdapter.submitList(foodExpenses)
+                                    foodExpenseAdapter.notifyDataSetChanged()
 //                                if (foodExpenses.isEmpty()) binding.avFoodExpenses.visibility =
 //                                    View.VISIBLE
 //                                else binding.avFoodExpenses.visibility = View.GONE
-                                travelExpenseAdapter.submitList(travelExpenses)
-                                travelExpenseAdapter.notifyDataSetChanged()
+                                    travelExpenseAdapter.submitList(travelExpenses)
+                                    travelExpenseAdapter.notifyDataSetChanged()
 //                                if (travelExpenses.isEmpty()) binding.avTravelExpenses.visibility =
 //                                    View.VISIBLE
 //                                else binding.avTravelExpenses.visibility = View.GONE
-                                hotelExpenseAdapter.submitList(hotelExpenses)
-                                hotelExpenseAdapter.notifyDataSetChanged()
+                                    hotelExpenseAdapter.submitList(hotelExpenses)
+                                    hotelExpenseAdapter.notifyDataSetChanged()
+
+                                } else
+                                    binding.llAllExpenses.visibility = GONE
+
+                                if (!list.momDetails.isNullOrEmpty()) {
+                                    list.momDetails.let { momItem ->
+                                        binding.llAllMomItems.visibility =
+                                            if (list.momDetails.size == 0)
+                                                GONE
+                                            else VISIBLE
+                                        momActionItemsAdapter.submitList(momItem)
+                                        momActionItemsAdapter.notifyDataSetChanged()
+                                    }
+                                } else
+                                    binding.llAllMomItems.visibility = GONE
+
 //                                if (hotelExpenses.isEmpty()) binding.avHotelExpenses.visibility =
 //                                    View.VISIBLE
 //                                else binding.avHotelExpenses.visibility = View.GONE
@@ -533,42 +674,47 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
 //            }
 //        })
 
-//        viewModel.resCommentsList.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-//            when (it.status) {
-//                RestApiStatus.SUCCESS -> {
-//                    binding.progress.visibility = View.GONE
-//                    if (it.data != null) {
-//                        it.data.let { list ->
-////                            if (list.isEmpty()) binding.avComments.visibility = View.VISIBLE
-////                            else binding.avComments.visibility = View.GONE
-//                            hotelExpenseAdapter.differ.submitList(list)
-//                        }
-//                    } else {
-//                        Snackbar.make(
-//                            binding.root,
-//                            "No Data Found",
-//                            Snackbar.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                }
-//
-//                RestApiStatus.LOADING -> {
-//                    binding.progress.visibility = View.VISIBLE
-//                }
-//
-//                RestApiStatus.ERROR -> {
-//                    binding.progress.visibility = View.GONE
-//                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-//                        .show()
-//                }
-//
-//                else -> {
-//                    binding.progress.visibility = View.GONE
-//                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-//                        .show()
-//                }
-//            }
-//        })
+        viewModel.resCommentResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            when (it.status) {
+                RestApiStatus.SUCCESS -> {
+                    binding.progress.visibility = View.GONE
+                    if (it.data != null) {
+                        it.data.let { list ->
+                            binding.llCommentsDetails.visibility =
+                                if (list.isEmpty()) View.GONE
+                                else View.VISIBLE
+//                                if (list.isEmpty()) binding.avComments.visibility = View.VISIBLE
+//                            else binding.avComments.visibility = View.GONE
+                            commentsItemListAdapter.differ.submitList(list)
+                        }
+                    } else {
+                        binding.llCommentsDetails.visibility =
+                            GONE
+                        Snackbar.make(
+                            binding.root,
+                            "No Data Found",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                RestApiStatus.LOADING -> {
+                    binding.progress.visibility = View.VISIBLE
+                }
+
+                RestApiStatus.ERROR -> {
+                    binding.progress.visibility = View.GONE
+                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+
+                else -> {
+                    binding.progress.visibility = View.GONE
+                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        })
 
         viewModel.resPendingActionGraphList.observe(
             viewLifecycleOwner,
@@ -652,6 +798,37 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
 //        })
     }
 
+    private fun getCurrentLocation(purposeID: String) {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        fusedLocationClient.lastLocation.addOnCompleteListener { task: Task<Location> ->
+            if (task.isSuccessful && task.result != null) {
+                val location: Location? = task.result
+                location?.let {
+                    val latitude = it.latitude
+                    val longitude = it.longitude
+
+                    val checkin = AddCheckInRequest(
+                        latitude = latitude.toString(),
+                        longitude = longitude.toString(),
+                    )
+                    viewModel.putUserMeetingCheckOUT(purposeID, checkin)
+                    Log.d("Location", "Lat: $latitude, Lon: $longitude")
+                }
+            } else {
+                Log.w("Location", "Failed to get location.")
+            }
+        }
+    }
+
 
     fun createTableData() {
         //header (fixed vertically)
@@ -683,7 +860,7 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
             row.setBackgroundColor(Color.WHITE)
             row.addView(
                 makeTableRowWithText(
-                    userExpences[i].expensesUser,
+                    userExpences[i].expensesUser.ordinal.toString(),
                     scrollableColumnWidths[1],
                     fixedRowHeight
                 )
@@ -712,7 +889,7 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
 
             row.addView(
                 makeTableRowWithText(
-                    userExpences[i].expensesUser,
+                    userExpences[i].expensesUser.ordinal.toString(),
                     scrollableColumnWidths[4],
                     fixedRowHeight
                 )
@@ -720,7 +897,7 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
 
             row.addView(
                 makeTableRowWithText(
-                    userExpences[i].expensesUser,
+                    userExpences[i].expensesUser.ordinal.toString(),
                     scrollableColumnWidths[4],
                     fixedRowHeight
                 )
@@ -728,7 +905,7 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
 
             row.addView(
                 makeTableRowWithText(
-                    userExpences[i].expensesUser,
+                    userExpences[i].expensesUser.ordinal.toString(),
                     scrollableColumnWidths[4],
                     fixedRowHeight
                 )
@@ -756,7 +933,7 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
         expenseList: List<UserExpence>,
         expenseUser: String
     ): List<UserExpence> {
-        return expenseList.filter { it.expensesUser == expenseUser }
+        return expenseList.filter { it.expensesUser.ordinal.toString() == expenseUser }
     }
 
     private fun isValidate(): Boolean =
@@ -766,20 +943,21 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
      * field must not be empty
      */
     private fun validateComments(): Boolean {
-//        if (binding.edtComment.text.toString().trim().isEmpty()) {
-//            binding.edtlComment.error = "Required Field!"
-//            binding.edtComment.requestFocus()
-//            return false
-//        } else {
-//            binding.edtlComment.isErrorEnabled = false
-//        }
+        if (binding.edtComment.text.toString().trim().isEmpty()) {
+            binding.edtlComment.error = "Required Field!"
+            binding.edtComment.requestFocus()
+            return false
+        } else {
+            binding.edtlComment.isErrorEnabled = false
+        }
         return true
     }
 
     private fun initRecyclerView() {
-        binding.rvAdvanceAmount.adapter = adapter
-        binding.rvAdvanceAmount.layoutManager = LinearLayoutManager(requireContext())
-//
+        binding.rvExpenses.adapter = expensesAdapter
+        binding.rvExpenses.layoutManager = LinearLayoutManager(requireContext())
+
+
         binding.rvHotelExpenses.adapter = hotelExpenseAdapter
         binding.rvHotelExpenses.layoutManager = LinearLayoutManager(requireContext())
 
@@ -788,6 +966,13 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
 
         binding.rvTravelExpenses.adapter = travelExpenseAdapter
         binding.rvTravelExpenses.layoutManager = LinearLayoutManager(requireContext())
+
+        binding.rvMomItems.adapter = momActionItemsAdapter
+        binding.rvMomItems.layoutManager = LinearLayoutManager(requireContext())
+
+        binding.rvComments.adapter = commentsItemListAdapter
+        binding.rvComments.layoutManager = LinearLayoutManager(requireContext())
+
 //        val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
 //        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }

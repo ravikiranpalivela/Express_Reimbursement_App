@@ -1,14 +1,16 @@
 package com.tekskills.er_tekskills.presentation.di
 
+import android.app.Activity
 import com.tekskills.er_tekskills.presentation.adapter.ActionItemsOpportunitysAdapter
 import com.tekskills.er_tekskills.presentation.adapter.AdvanceAmountAdapter
 import com.tekskills.er_tekskills.presentation.adapter.CategoryAdapter
 import com.tekskills.er_tekskills.presentation.adapter.ClientEscalationOpportunitysAdapter
 import com.tekskills.er_tekskills.presentation.adapter.ClientWiseEscalationAdapter
 import com.tekskills.er_tekskills.presentation.adapter.CommentsOpportunitysAdapter
+import com.tekskills.er_tekskills.presentation.adapter.ExpensesAdapter
 import com.tekskills.er_tekskills.presentation.adapter.FoodExpenseAdapter
 import com.tekskills.er_tekskills.presentation.adapter.HotelExpenseAdapter
-import com.tekskills.er_tekskills.presentation.adapter.MomActionItemsOpportunitysAdapter
+import com.tekskills.er_tekskills.presentation.adapter.MomActionItemsAdapter
 import com.tekskills.er_tekskills.presentation.adapter.ProjectWiseActionItemsAdapter
 import com.tekskills.er_tekskills.presentation.adapter.TasksAdapter
 import com.tekskills.er_tekskills.presentation.adapter.TravelExpenseAdapter
@@ -21,10 +23,15 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Named
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object SingletonAdapterModule {
+
+    @Provides
+    fun provideActivity(activity: Activity): Activity {
+        return activity
+    }
+
     @Provides
     @Singleton
     @Named("base_fragment")
@@ -72,6 +79,11 @@ object SingletonAdapterModule {
 
     @Provides
     @Singleton
+    @Named("expenses_meeting_purpose_details_fragment")
+    fun provideExpansesDetailsFragment() = ExpensesAdapter()
+
+    @Provides
+    @Singleton
     @Named("advance_meeting_purpose_details_fragment")
     fun provideAdvanceAmountDetailsFragment() = AdvanceAmountAdapter()
 
@@ -86,15 +98,22 @@ object SingletonAdapterModule {
     @Named("hotel_meeting_purpose_details_fragment")
     fun provideHotelExpansesDetailsFragment() = HotelExpenseAdapter()
 
+
+    @Provides
+    @Singleton
+    @Named("mom_action_item_details_fragment")
+    fun provideMomActionItemsDetailsFragment() = MomActionItemsAdapter()
+
+
     @Provides
     @Singleton
     @Named("action_item_opportunity_details_fragment")
     fun provideActionItemsOpportunityListToOpportunityDetailsFragment() = ActionItemsOpportunitysAdapter()
 
-    @Provides
-    @Singleton
-    @Named("mom_action_item_opportunity_details_fragment")
-    fun provideMomActionItemsOpportunityListToOpportunityDetailsFragment() = MomActionItemsOpportunitysAdapter()
+//    @Provides
+//    @Singleton
+//    @Named("mom_action_item_opportunity_details_fragment")
+//    fun provideMomActionItemsOpportunityListToOpportunityDetailsFragment() = MomActionItemsOpportunitysAdapter()
 
     @Provides
     @Singleton

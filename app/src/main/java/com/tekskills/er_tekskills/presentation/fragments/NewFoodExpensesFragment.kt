@@ -34,11 +34,13 @@ import com.tekskills.er_tekskills.databinding.FragmentNewFoodExpensesBinding
 import com.tekskills.er_tekskills.presentation.activities.MainActivity
 import com.tekskills.er_tekskills.presentation.adapter.AddImageAdapter
 import com.tekskills.er_tekskills.presentation.viewmodel.MainActivityViewModel
+import com.tekskills.er_tekskills.utils.AppUtil.showSnackBar
 import com.tekskills.er_tekskills.utils.FileCompressor
 import com.tekskills.er_tekskills.utils.RestApiStatus
 import com.tekskills.er_tekskills.utils.SmartDialog
 import com.tekskills.er_tekskills.utils.SmartDialogBuilder
 import com.tekskills.er_tekskills.utils.SmartDialogClickListener
+import com.tekskills.er_tekskills.utils.SuccessResource
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -62,6 +64,7 @@ class NewFoodExpensesFragment : Fragment() {
     private lateinit var fileCompressor: FileCompressor
     private lateinit var fileImage: File
     private lateinit var dialog: AlertDialog
+    private var validated:Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,9 +80,9 @@ class NewFoodExpensesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
         navController = findNavController()
-
+        showSnackBar(binding.root)
         purposeID = args.opportunityID
-
+        viewModel._resAddFoodExpence.postValue(SuccessResource.loading(null))
 
 //        viewModel.getClientNameList()
 
@@ -191,6 +194,7 @@ class NewFoodExpensesFragment : Fragment() {
                     binding.progress.visibility = View.GONE
                     if (it.data != null)
                         it.data.let { res ->
+                            if(validated)
                             requireActivity().onBackPressed()
 //                            val intent = Intent(requireActivity(), MainActivity::class.java)
 //                            startActivity(intent)
@@ -233,43 +237,43 @@ class NewFoodExpensesFragment : Fragment() {
 
                 Log.d("TAG", "onViewCreated: validated successfully")
 
-                if (binding.edtFoodAmt.text.toString().toDouble() >
-                    binding.taskCategoryInfo!!.allowncesLimit.foodLimit.toString()
-                        .toDouble()
-                ) {
-                    Log.d("TAG", "onViewCreated: showing alert dialog exceeds")
+//                if (binding.edtFoodAmt.text.toString().toDouble() >
+//                    binding.taskCategoryInfo!!.allowncesLimit.foodLimit.toString()
+//                        .toDouble()
+//                ) {
+//                    Log.d("TAG", "onViewCreated: showing alert dialog exceeds")
 
-                    SmartDialogBuilder(requireContext())
-                        .setTitle("Note")
-                        .setSubTitle("Manager Approval Mandatory")
-                        .setCancalable(false)
-                        .setCustomIcon(R.drawable.icon2)
-                        .setTitleColor(resources.getColor(R.color.black))
-                        .setSubTitleColor(resources.getColor(R.color.black))
-                        .setNegativeButtonHide(true)
-                        .useNeutralButton(true)
-                        .setPositiveButton("Okay", object : SmartDialogClickListener {
-                            override fun onClick(smartDialog: SmartDialog?) {
-                                Log.d("TAG", "onViewCreated: okay for alert dialog exceeds")
+//                    SmartDialogBuilder(requireContext())
+//                        .setTitle("Note")
+//                        .setSubTitle("Manager Approval Mandatory")
+//                        .setCancalable(false)
+//                        .setCustomIcon(R.drawable.icon2)
+//                        .setTitleColor(resources.getColor(R.color.black))
+//                        .setSubTitleColor(resources.getColor(R.color.black))
+//                        .setNegativeButtonHide(true)
+//                        .useNeutralButton(true)
+//                        .setPositiveButton("Okay", object : SmartDialogClickListener {
+//                            override fun onClick(smartDialog: SmartDialog?) {
+//                                Log.d("TAG", "onViewCreated: okay for alert dialog exceeds")
                                 addHotelExpenseDetails()
-                                smartDialog!!.dismiss()
-                            }
-                        })
-                        .setNegativeButton("Cancel", object : SmartDialogClickListener {
-                            override fun onClick(smartDialog: SmartDialog?) {
-                                smartDialog!!.dismiss()
-                            }
-                        })
-                        .setNeutralButton("Cancel", object : SmartDialogClickListener {
-                            override fun onClick(smartDialog: SmartDialog?) {
-                                smartDialog!!.dismiss()
-                            }
-                        })
-                        .build().show()
-                } else {
-
-                    Log.d("TAG", "onViewCreated: not exceeds")
-                    addHotelExpenseDetails()
+//                                smartDialog!!.dismiss()
+//                            }
+//                        })
+//                        .setNegativeButton("Cancel", object : SmartDialogClickListener {
+//                            override fun onClick(smartDialog: SmartDialog?) {
+//                                smartDialog!!.dismiss()
+//                            }
+//                        })
+//                        .setNeutralButton("Cancel", object : SmartDialogClickListener {
+//                            override fun onClick(smartDialog: SmartDialog?) {
+//                                smartDialog!!.dismiss()
+//                            }
+//                        })
+//                        .build().show()
+//                } else {
+//
+//                    Log.d("TAG", "onViewCreated: not exceeds")
+//                    addHotelExpenseDetails()
 //                    val hotelExpense = AddHotelExpenceRequest(
 //                        purposeId = purposeID.toInt(),
 //                        hotelFrom = binding.srcLoc.text.toString(),
@@ -284,7 +288,7 @@ class NewFoodExpensesFragment : Fragment() {
 //                    )
 //
 //                    viewModel.addHotelExpense(hotelExpense, listImage)
-                }
+//                }
 
 
 //                viewModel.addProject(
@@ -473,6 +477,7 @@ class NewFoodExpensesFragment : Fragment() {
 //                    noOfDays = binding.edtNoOfDays.text.toString(),
                 expensesUser = "foodexpence",
             )
+            validated = true
             viewModel.addFoodExpense(hotelExpense,listImage)
         } catch (e: Exception) {
             Log.d("TAG", "addHotelExpenseDetails: ${e.message}")

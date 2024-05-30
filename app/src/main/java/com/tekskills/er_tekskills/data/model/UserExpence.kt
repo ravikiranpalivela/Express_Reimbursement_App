@@ -65,7 +65,7 @@ data class UserExpence(
     @SerializedName("createdBy")
     val createdBy: Int,
     @SerializedName("expensesUser")
-    val expensesUser: String,
+    val expensesUser: ExpenseType,
     @SerializedName("file")
     val `file`: Any,
     @SerializedName("financeComments")
@@ -123,3 +123,9 @@ data class UserExpence(
     @SerializedName("updatedBy")
     val updatedBy: Int
 )
+
+enum class ExpenseType {
+    Travel,
+    Hotel,
+    foodexpence
+}

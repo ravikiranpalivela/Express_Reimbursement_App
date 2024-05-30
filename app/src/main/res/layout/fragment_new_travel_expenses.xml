@@ -245,7 +245,7 @@
                                 <com.google.android.material.textview.MaterialTextView
                                     android:id="@+id/tv_allotted_expenses"
                                     style="@style/stlTxtKey"
-                                    android:text="@string/allotted_expenses" />
+                                    android:text="@string/actual_amount" />
 
                                 <com.google.android.material.textview.MaterialTextView
                                     android:id="@+id/rs_allotted_expenses"
@@ -260,7 +260,7 @@
                                     android:textColor="@color/black"
                                     android:textSize="@dimen/_14sp"
                                     android:textStyle="bold"
-                                    tools:text="Rs." />
+                                    tools:text="₹" />
 
                                 <com.google.android.material.textview.MaterialTextView
                                     android:id="@+id/allotted_expenses"
@@ -268,6 +268,72 @@
                                     android:text="@{dateConvert.Companion.travelDistanceAmount(taskCategoryInfo.userCordinates.totalDistance)}"
                                     tools:text="Testing Answer" />
                             </LinearLayout>
+
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/cl_note_travel_info"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/ll_allotted_expenses">
+
+<!--                                <TextView-->
+<!--                                    android:id="@+id/tv_note_travel"-->
+<!--                                    android:layout_width="0dp"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_gravity="center_vertical"-->
+<!--                                    android:layout_margin="@dimen/widget_size_2"-->
+<!--                                    android:layout_weight="2"-->
+<!--                                    android:padding="@dimen/widget_size_2"-->
+<!--                                    android:text="@string/note"-->
+<!--                                    android:textColor="@color/dark_blue"-->
+<!--                                    android:textSize="@dimen/font_size_14"-->
+<!--                                    android:fontFamily="@font/poppins"-->
+<!--                                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                                    app:layout_constraintTop_toTopOf="parent" />-->
+
+                                <LinearLayout
+                                    android:id="@+id/ll_note_travel_allotted"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:weightSum="7"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent">
+
+                                    <TextView
+                                        android:id="@+id/tv_note_travel"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_margin="@dimen/widget_size_2"
+                                        android:layout_weight="1"
+                                        android:padding="@dimen/widget_size_2"
+                                        android:text="@string/note"
+                                        android:textColor="@color/dark_blue"
+                                        android:textSize="@dimen/font_size_14"
+                                        android:textStyle="bold"
+                                        android:fontFamily="@font/poppins"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                    <com.google.android.material.textview.MaterialTextView
+                                        android:id="@+id/tv_allotted_travel"
+                                        style="@style/stlTxtKey"
+                                        android:layout_weight="4"
+                                        android:text="@string/allotted_expenses" />
+
+                                    <com.google.android.material.textview.MaterialTextView
+                                        android:id="@+id/note_travel"
+                                        style="@style/stlTxtValue"
+                                        android:layout_weight="2"
+                                        android:text="@{dateConvert.Companion.amountConverter(taskCategoryInfo.allowncesLimit.travelLimit)}"
+                                        tools:text="Testing" />
+                                </LinearLayout>
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                             <com.google.android.material.chip.Chip
@@ -362,6 +428,7 @@
                             android:background="@drawable/edit_text_color_changer"
                             android:hint="@string/travel_expense_amount"
                             android:padding="5dp"
+                            android:visibility="gone"
                             android:inputType="numberDecimal"
                             android:textColor="@color/black"
                             android:textColorHint="@color/gray"
@@ -372,6 +439,7 @@
                             android:layout_height="wrap_content"
                             android:checked="false"
                             android:text="Round Trip"
+                            android:visibility="gone"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/s_journey_types" />
@@ -388,6 +456,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
+                                android:visibility="gone"
                                 android:weightSum="1">
                                 <EditText
                                     android:id="@+id/tv_return_travel_date"
@@ -401,7 +470,6 @@
                                     android:textColor="@color/black"
                                     android:textColorHint="@color/gray"
                                     android:textSize="@dimen/font_size_18" />
-
 
                                 <EditText
                                     android:id="@+id/edt_return_time"

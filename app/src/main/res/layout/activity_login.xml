@@ -14,7 +14,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/white">
 
             <View
                 android:id="@+id/topView"
@@ -36,12 +37,12 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/widget_size_50"
+                android:layout_height="@dimen/widget_size_50"
                 android:layout_margin="@dimen/widget_size_24"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@mipmap/ic_launcher" />
+                app:srcCompat="@drawable/pm_logo" />
 
             <TextView
                 android:id="@+id/topText"
@@ -71,7 +72,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/custom_bgd"
                     android:orientation="vertical"
                     android:padding="@dimen/_20dp">
 
@@ -108,7 +108,7 @@
                             style="@style/stlEdittext"
                             android:backgroundTint="@android:color/white"
                             android:inputType="textPersonName"
-                            android:text="sambit.l" />
+                            android:text="prasanth.s" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -132,7 +132,7 @@
                             style="@style/stlEdittext"
                             android:backgroundTint="@android:color/white"
                             android:inputType="textPassword"
-                            android:text="XhYXjllXGr" />
+                            android:text="asdASD123" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 

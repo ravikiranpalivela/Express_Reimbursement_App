@@ -425,7 +425,73 @@
                                     tools:text="Testing" />
                             </LinearLayout>
 
-<!--                            <LinearLayout-->
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/cl_note_hotel_info"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/ll_book_date">
+
+<!--                                <TextView-->
+<!--                                    android:id="@+id/tv_note_hotel"-->
+<!--                                    android:layout_width="0dp"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_gravity="center_vertical"-->
+<!--                                    android:layout_margin="@dimen/widget_size_2"-->
+<!--                                    android:layout_weight="2"-->
+<!--                                    android:padding="@dimen/widget_size_2"-->
+<!--                                    android:text="@string/note"-->
+<!--                                    android:textColor="@color/dark_blue"-->
+<!--                                    android:textSize="@dimen/font_size_14"-->
+<!--                                    android:fontFamily="@font/poppins"-->
+<!--                                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                                    app:layout_constraintTop_toTopOf="parent" />-->
+
+                                <LinearLayout
+                                    android:id="@+id/ll_note_hotel_allotted"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:weightSum="7"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent">
+
+                                    <TextView
+                                        android:id="@+id/tv_note_hotel"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_margin="@dimen/widget_size_2"
+                                        android:layout_weight="1"
+                                        android:padding="@dimen/widget_size_2"
+                                        android:text="@string/note"
+                                        android:textColor="@color/dark_blue"
+                                        android:textSize="@dimen/font_size_14"
+                                        android:textStyle="bold"
+                                        android:fontFamily="@font/poppins"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                    <com.google.android.material.textview.MaterialTextView
+                                        android:id="@+id/tv_allotted_hotel"
+                                        style="@style/stlTxtKey"
+                                        android:layout_weight="4"
+                                        android:text="@string/allotted_amount" />
+
+                                    <com.google.android.material.textview.MaterialTextView
+                                        android:id="@+id/note_hotel"
+                                        style="@style/stlTxtValue"
+                                        android:layout_weight="2"
+                                        android:text="@{dateConvert.Companion.amountConverter(taskCategoryInfo.allowncesLimit.hotelLimit)}"
+                                        tools:text="Testing" />
+                                </LinearLayout>
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                            <!--                            <LinearLayout-->
 <!--                                android:id="@+id/ll_distance"-->
 <!--                                android:layout_width="match_parent"-->
 <!--                                android:layout_height="wrap_content"-->
@@ -587,7 +653,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:checked="false"
-                            android:text="More than One Day"
+                            android:text="No Of Day's"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/s_journey_types" />

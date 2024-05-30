@@ -110,19 +110,20 @@
                     <LinearLayout
                         android:id="@+id/ll_meetings"
                         android:layout_width="match_parent"
-                        android:layout_height="80dp"
+                        android:layout_height="@dimen/widget_size_75"
                         android:layout_below="@+id/ll_opportunities"
-                        android:layout_margin="15dp"
+                        android:layout_margin="@dimen/widget_size_8"
                         android:background="@drawable/bg_blue_border"
                         android:elevation="5dp"
                         android:orientation="horizontal"
-                        android:weightSum="100">
+                        android:weightSum="100"
+                        android:visibility="gone">
 
                         <ImageView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="25"
-                            android:padding="15dp"
+                            android:padding="@dimen/widget_size_8"
                             android:src="@drawable/add_meeting"
                             app:tint="@color/white" />
 
@@ -132,9 +133,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_weight="60"
-                            android:text="View Meetings"
+                            android:text="View All Meetings"
                             android:textColor="@color/white"
-                            android:textSize="18dp"
+                            android:textSize="@dimen/font_size_18"
                             android:textStyle="bold" />
 
                         <ImageView
@@ -145,28 +146,50 @@
 
                     </LinearLayout>
 
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/chartWeeklyDistance"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/widget_size_180"
+                        android:layout_below="@+id/ll_meetings"
+                        android:layout_margin="@dimen/widget_size_5"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tv_meeting_status"
+                        style="@style/stlTxtKey"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/chartWeeklyDistance"
+                        android:layout_margin="@dimen/_4dp"
+                        android:textSize="@dimen/font_size_18"
+                        android:text="@string/meeting_status" />
+
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pie_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/widget_size_250"
+                        android:background="@color/white"
+                        android:layout_below="@+id/tv_meeting_status" />
 
                     <RelativeLayout
                         android:id="@+id/ll_upcoming"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/ll_meetings"
-                        android:layout_margin="15dp"
+                        android:layout_below="@+id/pie_chart"
+                        android:layout_margin="@dimen/widget_size_8"
                         android:background="@drawable/bg_blue_border"
-                        android:paddingBottom="5dp">
+                        android:paddingBottom="@dimen/widget_size_8">
 
                         <TextView
                             android:id="@+id/tv_upcoming"
+                            style="@style/stlTxtKey"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginBottom="10dp"
+                            android:layout_margin="@dimen/widget_size_4"
                             android:text="Upcoming meetings"
                             android:textColor="@color/white"
-                            android:textSize="18dp" />
+                            android:textSize="@dimen/font_size_18" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
@@ -178,6 +201,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="@dimen/_4dp"
+                                android:nestedScrollingEnabled="false"
                                 android:padding="@dimen/_4dp"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -242,10 +266,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="240dp"
                         android:layout_below="@+id/ll_upcoming"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginEnd="15dp"
-                        android:layout_marginBottom="15dp"
+                        android:layout_margin="15dp"
                         android:background="@drawable/bg_blue_border"
                         android:orientation="vertical"
                         android:visibility="gone">

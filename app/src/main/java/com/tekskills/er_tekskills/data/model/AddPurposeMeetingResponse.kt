@@ -13,21 +13,21 @@ data class AddPurposeMeetingResponse(
     @SerializedName("employeeId")
     val employeeId: Int,
     @SerializedName("expenceType")
-    val expenceType: Any,
+    val expenceType: String,
     @SerializedName("financeComments")
-    val financeComments: Any,
+    val financeComments: String,
     @SerializedName("financeId")
     val financeId: Int,
     @SerializedName("financeStatus")
-    val financeStatus: Any,
+    val financeStatus: String,
     @SerializedName("id")
     val id: Int,
     @SerializedName("managerComments")
-    val managerComments: Any,
+    val managerComments: String,
     @SerializedName("managerId")
     val managerId: Int,
     @SerializedName("managerStatus")
-    val managerStatus: Any,
+    val managerStatus: String,
     @SerializedName("noOfDays")
     val noOfDays: Int,
     @SerializedName("status")
@@ -35,11 +35,11 @@ data class AddPurposeMeetingResponse(
     @SerializedName("tenantId")
     val tenantId: Int,
     @SerializedName("travelDeskComments")
-    val travelDeskComments: Any,
+    val travelDeskComments: String,
     @SerializedName("travelDeskId")
     val travelDeskId: Int,
     @SerializedName("travelDeskStatus")
-    val travelDeskStatus: Any,
+    val travelDeskStatus: String,
     @SerializedName("updatedAt")
     val updatedAt: String,
     @SerializedName("updatedBy")

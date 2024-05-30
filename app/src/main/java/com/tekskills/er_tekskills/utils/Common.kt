@@ -76,7 +76,10 @@ class Common {
         const val INITIALIZE_CONFIG = "You must initialize the configuration"
 
 //        const val BASE_URL = "http://192.168.0.179:8070/"
-        const val  BASE_URL = "http://192.168.0.219:8099/"
+//const val  BASE_URL = "http://192.168.0.254:8099/"
+        const val  BASE_URL = "https://reimbursement.tekskillsinc.com/"
+
+//        const val  BASE_URL = "http://192.168.0.254:8099/"
         const val DUMMY_BASE_URL = "http://dummy.restapiexample.com/api/v1/"
         const val APP_JSON = "Content-Type: application/json"
         const val First_Name = "FirstName"

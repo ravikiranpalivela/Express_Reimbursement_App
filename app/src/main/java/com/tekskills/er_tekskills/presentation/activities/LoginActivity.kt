@@ -38,9 +38,9 @@ class LoginActivity : AppCompatActivity() {
 
         setupListeners()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            insertDummyContactWrapper()
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+////            insertDummyContactWrapper()
+//        }
 
         if (viewModel.checkIfUserLogin() != Common.PREF_DEFAULT) {
             val intent = Intent(this, MainActivity::class.java)
@@ -106,7 +106,7 @@ class LoginActivity : AppCompatActivity() {
                     binding.edtUsername.text.toString(),
                     binding.edtPassword.text.toString()
                 )
-                Toast.makeText(this, "validated", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this, "validated", Toast.LENGTH_SHORT).show()
             }
         }
     }

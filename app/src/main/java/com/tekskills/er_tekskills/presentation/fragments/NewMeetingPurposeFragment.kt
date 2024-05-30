@@ -13,6 +13,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -28,12 +29,20 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.tekskills.er_tekskills.R
 import com.tekskills.er_tekskills.data.model.AddMeetingRequest
+import com.tekskills.er_tekskills.data.model.ClientNamesResponseItem
+import com.tekskills.er_tekskills.data.model.LeadNamesResponseItem
 import com.tekskills.er_tekskills.data.model.UserCoordinates
 import com.tekskills.er_tekskills.data.util.Constants
 import com.tekskills.er_tekskills.data.util.DateToString
+import com.tekskills.er_tekskills.data.util.DateToString.Companion.convertDateTimeToString
 import com.tekskills.er_tekskills.data.util.DateToString.Companion.convertDateToString
 import com.tekskills.er_tekskills.databinding.FragmentPurposeMeetingBinding
 import com.tekskills.er_tekskills.presentation.activities.MainActivity
@@ -62,6 +71,13 @@ class NewMeetingPurposeFragment : Fragment()
     private var currentUserLocation: Location? = null
     private val currentRoute: ArrayList<Polyline> = ArrayList<Polyline>()
 
+
+    private var mClientNames = ArrayList<ClientNamesResponseItem>()
+    private var selectClientPos:Int = 0
+
+    private var mLeadNames = ArrayList<LeadNamesResponseItem>()
+    private var selectLeadPos:Int = 0
+
     //Booking info
     var customerDropOffPlace: Place? = null
     var customerPickupPlace: Place? = null
@@ -78,7 +94,7 @@ class NewMeetingPurposeFragment : Fragment()
 
     private var selectMOTPos = ""
 
-    private var mClientNames: ArrayList<String> = arrayListOf(
+    private var mModeType: ArrayList<String> = arrayListOf(
         "Bike", "Car", "Bus", "Train", "Flight"
     )
 
@@ -95,11 +111,14 @@ class NewMeetingPurposeFragment : Fragment()
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
         navController = findNavController()
 
+
+        viewModel.getClientNameList()
         viewModel.getEmployeeAllowences()
 
         initSourceGooglePlacesAutocomplete()
@@ -107,12 +126,174 @@ class NewMeetingPurposeFragment : Fragment()
         initDestinationGooglePlacesAutocomplete()
         setPlaceDestinationSelectedActionHandler()
 
-        binding.sModeOfTravel.setItems(mClientNames)
+//        binding.sClients.setOnItemSelectListener(object : SearchableSpinner.SearchableItemListener {
+//            override fun onItemSelected(view: View?, position: Int) {
+//                selectClientPos = mClientNames[position].clientName
+//            }
+//
+//            override fun onSelectionClear() {
+//
+//            }
+//        })
+
+        binding.ivCloseAddClient.setOnClickListener {
+            binding.llAddingNewClient.visibility = GONE
+            binding.edtClientName.setText("")
+            binding.edtContactName.setText("")
+            binding.edtContactNo.setText("")
+            binding.edtEmailId.setText("")
+        }
+
+        binding.ivCloseAddClient.setOnClickListener {
+            binding.llAddingNewClient.visibility = GONE
+        }
+
+        binding.ivAddNewClient.setOnClickListener {
+            val isClientNameVisible = binding.edtClientName.isVisible
+
+            if (!isClientNameVisible) {
+                binding.edtClientName.setText("")
+                binding.edtContactName.setText("")
+                binding.edtContactNo.setText("")
+                binding.edtEmailId.setText("")
+            }
+
+//            binding.sClients.isSelected = false
+            binding.sClients.setSelection(null)
+            selectClientPos = 0
+
+            binding.edtClientName.visibility = if (isClientNameVisible) GONE else VISIBLE
+            binding.llContactDetails.visibility =
+                if (isClientNameVisible) VISIBLE else GONE
+            binding.llAddContactDetails.visibility =
+                if (isClientNameVisible) GONE else VISIBLE
+
+            binding.ivAddNewClient.background = if (isClientNameVisible) {
+                resources.getDrawable(R.drawable.ic_baseline_add_24, null)
+            } else {
+                resources.getDrawable(R.drawable.ic_delete, null)
+            }
+
+//
+//            if (!binding.edtClientName.isVisible) {
+//                binding.edtClientName.setText("")
+//                binding.edtContactName.setText("")
+//                binding.edtContactNo.setText("")
+//                binding.edtEmailId.setText("")
+//            }
+//
+//            binding.edtClientName.visibility = if (binding.edtClientName.isVisible) GONE
+//            else
+//                VISIBLE
+//
+//            binding.llContactDetails.visibility = if (binding.edtClientName.isVisible) GONE
+//            else
+//                VISIBLE
+//
+//            binding.llAddContactDetails.visibility = if (binding.edtClientName.isVisible) VISIBLE
+//            else
+//                GONE
+//
+//            binding.ivAddNewClient.background =
+//                if (binding.edtClientName.isVisible) resources.getDrawable(R.drawable.ic_delete)
+//                else
+//                    resources.getDrawable(R.drawable.ic_baseline_add_24)
+        }
+
+        binding.ivAddNewContactPerson.setOnClickListener {
+
+            binding.sLeads.setSelection(null)
+            selectLeadPos = 0
+
+            binding.llAddContactDetails.visibility =
+                if (binding.llAddContactDetails.isVisible) GONE
+                else
+                    VISIBLE
+
+            binding.ivAddNewContactPerson.background =
+                if (binding.llAddContactDetails.isVisible) resources.getDrawable(R.drawable.ic_delete)
+                else
+                    resources.getDrawable(R.drawable.ic_baseline_add_24)
+        }
+
+        viewModel.resLeadNameList.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            when (it.status) {
+                RestApiStatus.SUCCESS -> {
+                    binding.progress.visibility = GONE
+                    if (it.data != null)
+                        it.data.let { res ->
+                            mLeadNames = res
+                            binding.sLeads.setItems(res)
+                        }
+                    else {
+                        Snackbar.make(
+                            binding.root,
+                            "Login Failed",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                RestApiStatus.LOADING -> {
+                    binding.progress.visibility = VISIBLE
+                }
+
+                RestApiStatus.ERROR -> {
+                    binding.progress.visibility = GONE
+                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+
+                else -> {
+                    binding.progress.visibility = GONE
+                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        })
+
+        viewModel.resClientNameList.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            when (it.status) {
+                RestApiStatus.SUCCESS -> {
+                    binding.progress.visibility = GONE
+                    if (it.data != null)
+                        it.data.let { res ->
+                            mClientNames = res
+                            binding.sClients.setItems(res)
+                        }
+                    else {
+                        Snackbar.make(
+                            binding.root,
+                            "Login Failed",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                RestApiStatus.LOADING -> {
+                    binding.progress.visibility = VISIBLE
+                }
+
+                RestApiStatus.ERROR -> {
+                    binding.progress.visibility = GONE
+                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+
+                else -> {
+                    binding.progress.visibility = GONE
+                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        })
+
+        binding.sModeOfTravel.setItems(mModeType)
 
         binding.sModeOfTravel.setOnItemSelectListener(object :
             SearchableSpinner.SearchableItemListener {
             override fun onItemSelected(view: View?, position: Int) {
-                selectMOTPos = mClientNames[position]
+                selectMOTPos = mModeType[position]
 
                 if (!(selectMOTPos == "Train" || selectMOTPos == "Flight")) {
                     binding.llDistance.visibility = VISIBLE
@@ -126,14 +307,45 @@ class NewMeetingPurposeFragment : Fragment()
             }
         })
 
+        binding.sLeads.setOnItemSelectListener(object :
+            SearchableSpinner.SearchableItemListener {
+            override fun onItemSelected(view: View?, position: Int) {
+                selectLeadPos = mLeadNames[position].leadID
+                binding.edtContactName.setText(mLeadNames[position].leadName)
+                binding.edtContactNo.setText(mLeadNames[position].leadContact)
+                binding.edtEmailId.setText(mLeadNames[position].leadEmail)
+            }
+
+            override fun onSelectionClear() {
+                selectLeadPos = 0
+                binding.edtContactName.setText("")
+                binding.edtContactNo.setText("")
+                binding.edtEmailId.setText("")
+            }
+        })
+
+        binding.sClients.setOnItemSelectListener(object :
+            SearchableSpinner.SearchableItemListener {
+            override fun onItemSelected(view: View?, position: Int) {
+                selectClientPos = mClientNames[position].clientId
+                binding.edtClientName.setText(mClientNames[position].clientName)
+                viewModel.getLeadsNameList(selectClientPos.toString())
+            }
+
+            override fun onSelectionClear() {
+                selectClientPos = 0
+                binding.edtClientName.setText("")
+            }
+        })
+
         viewModel.resEmployeeAllowence.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when (it.status) {
                 RestApiStatus.SUCCESS -> {
-                    binding.progress.visibility = View.GONE
+                    binding.progress.visibility = GONE
                     if (it.data != null)
                         it.data.let { res ->
-                            mClientNames = ArrayList(res.travelType.split(",").toMutableList())
-                            binding.sModeOfTravel.setItems(mClientNames)
+                            mModeType = ArrayList(res.travelType.split(",").toMutableList())
+                            binding.sModeOfTravel.setItems(mModeType)
                         }
                     else {
                         Snackbar.make(
@@ -145,17 +357,17 @@ class NewMeetingPurposeFragment : Fragment()
                 }
 
                 RestApiStatus.LOADING -> {
-                    binding.progress.visibility = View.VISIBLE
+                    binding.progress.visibility = VISIBLE
                 }
 
                 RestApiStatus.ERROR -> {
-                    binding.progress.visibility = View.GONE
+                    binding.progress.visibility = GONE
                     Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
                         .show()
                 }
 
                 else -> {
-                    binding.progress.visibility = View.GONE
+                    binding.progress.visibility = GONE
                     Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
                         .show()
                 }
@@ -166,7 +378,7 @@ class NewMeetingPurposeFragment : Fragment()
         viewModel.resNewMeetingPurpose.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when (it.status) {
                 RestApiStatus.SUCCESS -> {
-                    binding.progress.visibility = View.GONE
+                    binding.progress.visibility = GONE
                     if (it.data != null)
                         it.data.let { res ->
                             requireActivity().onBackPressed()
@@ -184,17 +396,17 @@ class NewMeetingPurposeFragment : Fragment()
                 }
 
                 RestApiStatus.LOADING -> {
-                    binding.progress.visibility = View.VISIBLE
+                    binding.progress.visibility = VISIBLE
                 }
 
                 RestApiStatus.ERROR -> {
-                    binding.progress.visibility = View.GONE
+                    binding.progress.visibility = GONE
                     Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
                         .show()
                 }
 
                 else -> {
-                    binding.progress.visibility = View.GONE
+                    binding.progress.visibility = GONE
                     Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
                         .show()
                 }
@@ -216,29 +428,20 @@ class NewMeetingPurposeFragment : Fragment()
 //        }
 
         binding.edtDate.setOnClickListener {
-            showDatePicker()
+            showDateTimePicker()
+//            showDatePicker()
         }
 
         binding.btnSave.setOnClickListener {
             if (isValidate()) {
+                saveMeeting()
+//                Toast.makeText(requireActivity(), "validated", Toast.LENGTH_SHORT).show()
+            }
+        }
 
-                val visitData = AddMeetingRequest(
-                    modeOfTravel = selectMOTPos,
-                    customerName = binding.edtClientName.text.toString(),
-                    visitPurpose = binding.edtVisitPurpose.text.toString(),
-                    visitDate = convertDateToString(meetingDate),
-//                    noOfDays = binding.edtNoOfDays.text.toString(),
-                    customerPhone = binding.edtContactNo.text.toString(),
-                    customerEmail = binding.edtEmailId.text.toString(),
-                    description = binding.edtDescription.text.toString(),
-                    employeeId = viewModel.getUserEmployeeID().toInt(),
-                    userCoordinates = userCoordinationData!!
-                )
-
-                Log.d("TAG", "onViewCreated: print response ${visitData.toString()}")
-
-                viewModel.addMeetingPurpose(visitData)
-                Toast.makeText(requireActivity(), "validated", Toast.LENGTH_SHORT).show()
+        binding.fab.setOnClickListener {
+            if (isValidate()) {
+                saveMeeting()
             }
         }
 
@@ -248,7 +451,7 @@ class NewMeetingPurposeFragment : Fragment()
             meetingDate = Date(Constants.MAX_TIMESTAMP)
             binding.edtContactNo.setText("")
             binding.edtEmailId.setText("")
-            binding.edtDescription.setText("")
+            binding.edtContactName.setText("")
             userCoordinationData = null
 
             val pickupFragment = BookingFragment()
@@ -256,9 +459,37 @@ class NewMeetingPurposeFragment : Fragment()
             transaction.replace(R.id.booking_info_data, pickupFragment).commit()
         }
 
-
-
         loadBookingFragment()
+    }
+
+    private fun saveMeeting() {
+        try {
+
+            val visitData = AddMeetingRequest(
+                modeOfTravel = selectMOTPos,
+                customerName = binding.edtClientName.text.toString(),
+                visitPurpose = binding.edtVisitPurpose.text.toString(),
+                visitDate = convertDateToString(meetingDate),
+                visitTime = convertDateTimeToString(meetingDate),
+                leadId = selectLeadPos,
+                clientId = selectClientPos,
+//                    noOfDays = binding.edtNoOfDays.text.toString(),
+                customerPhone = binding.edtContactNo.text.toString(),
+                customerEmail = binding.edtEmailId.text.toString(),
+                customerContactName = binding.edtContactName.text.toString(),
+
+                opportunity = binding.edtOpportunity.text.toString(),
+                employeeId = viewModel.getUserEmployeeID().toInt(),
+                userCoordinates = userCoordinationData!!
+            )
+
+            Log.d("TAG", "saveMeeting: response ${visitData.toString()}")
+
+            viewModel.addMeetingPurpose(visitData)
+        } catch (e: Exception) {
+            Log.d("TAG", "saveMeeting: response ${e.message.toString()}")
+
+        }
     }
 
     /**
@@ -287,9 +518,7 @@ class NewMeetingPurposeFragment : Fragment()
                 Place.Field.PLUS_CODE
             )
         )
-
         sourceAutocompleteFragment!!.setHint("Add source location")
-
     }
 
     private fun setPlaceSourceSelectedActionHandler() {
@@ -370,7 +599,6 @@ class NewMeetingPurposeFragment : Fragment()
         })
     }
 
-
     private fun loadBookingFragment() {
         val pickupFragment = BookingFragment()
         val transaction = childFragmentManager.beginTransaction()
@@ -402,7 +630,7 @@ class NewMeetingPurposeFragment : Fragment()
                 .observe(viewLifecycleOwner, Observer<Any?> { place ->
                     if (place == null) return@Observer
                     customerDropOffPlace = place as Place?
-//                binding.fragmentMapsBackBtn.visibility = View.VISIBLE //Show back button
+//                binding.fragmentMapsBackBtn.visibility = VISIBLE //Show back button
 //                binding.edtDestination.text = (place?.toString() ?: "") as Editable?
 
 //                    //TODO Move to customerPickUpPlace fragment
@@ -457,7 +685,12 @@ class NewMeetingPurposeFragment : Fragment()
             destinationLatitude = customerDropOffPlace!!.latLng!!.latitude.toString(),
             destinationLongitude = customerDropOffPlace!!.latLng!!.longitude.toString(),
             destination = "${customerDropOffPlace!!.name!!}\n${customerDropOffPlace!!.address!!}",
-            totalDistance = distanceInKm!!
+            totalDistance = distanceInKm!!,
+            checkInTime = "",
+            checkOutTime = "",
+            checkInCordinates = "",
+            checkOutCordinates = "",
+            mapTime = distanceInKm.toString()
         )
 
 //       userCoordinationData["userCordinates"] = mapOf(
@@ -501,6 +734,82 @@ class NewMeetingPurposeFragment : Fragment()
 //                }
 //            })
     }
+
+
+    private fun showDateTimePicker() {
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Select a Visit Date")
+            .setSelection(MaterialDatePicker.todayInUtcMilliseconds()) // Default selection to today
+            .setCalendarConstraints(
+                CalendarConstraints.Builder()
+                    .setValidator(DateValidatorPointForward.now()) // Prevents selecting past dates
+                    .build()
+            )
+            .build()
+
+        val timePicker = MaterialTimePicker.Builder()
+            .setTimeFormat(TimeFormat.CLOCK_12H)
+            .setTitleText("Select a Visit Time")
+            .build()
+
+        datePicker.addOnPositiveButtonClickListener {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = it
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            meetingDate = calendar.time
+            binding.edtDate.setText(DateToString.convertDateToStringDateWise(meetingDate))
+            timePicker.show(childFragmentManager, "TAG")
+        }
+
+        timePicker.addOnPositiveButtonClickListener {
+            val cal = Calendar.getInstance()
+            cal.time = meetingDate
+            cal.set(Calendar.HOUR_OF_DAY, timePicker.hour)
+            cal.set(Calendar.MINUTE, timePicker.minute)
+            cal.set(Calendar.SECOND, 5)
+            meetingDate = cal.time
+            binding.edtDate.setText(DateToString.convertDateToStringDateTimeWise(meetingDate))
+        }
+
+        datePicker.show(childFragmentManager, "TAG")
+    }
+
+    private fun showDateTimePickerData() {
+        val today = MaterialDatePicker.todayInUtcMilliseconds()
+
+        val constraintsBuilder = CalendarConstraints.Builder()
+            .setValidator(DateValidatorPointForward.from(today))
+
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Select a Visit Date")
+            .setCalendarConstraints(constraintsBuilder.build()).build()
+        val timePicker = MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_24H)
+            .build()
+        datePicker.addOnPositiveButtonClickListener {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = it
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            meetingDate = calendar.time
+            binding.edtDate.setText(DateToString.convertDateToStringDateWise(meetingDate))
+            timePicker.show(childFragmentManager, "TAG")
+        }
+
+        timePicker.addOnPositiveButtonClickListener {
+            val cal = Calendar.getInstance()
+            cal.time = meetingDate
+            cal.set(Calendar.HOUR_OF_DAY, timePicker.hour)
+            cal.set(Calendar.MINUTE, timePicker.minute)
+            cal.set(Calendar.SECOND, 5)
+            meetingDate = cal.time
+            binding.edtDate.setText(DateToString.convertDateToStringDateWise(meetingDate))
+        }
+        datePicker.show(childFragmentManager, "TAG")
+    }
+
 
     private fun showDatePicker() {
         val date = System.currentTimeMillis()
@@ -576,8 +885,9 @@ class NewMeetingPurposeFragment : Fragment()
 
     private fun isValidate(): Boolean =
         validateClientName() && validateMeetingTitle() && validateMeetingDate()
+                && validateOpportunity()
 //                && validateNoOfDays()
-                && validateContactEmail() && validateContact() && validateDescription()
+                && validateContactEmail() && validateContact() && validateContactName()
                 && validateUserCordinates()
 
     private fun validateUserCordinates(): Boolean {
@@ -587,6 +897,8 @@ class NewMeetingPurposeFragment : Fragment()
             return false
         } else {
             binding.distanceLocation.error = null
+            Snackbar.make(binding.root, "Source And Destination Missing", Snackbar.LENGTH_SHORT)
+                .show()
         }
         return true
     }
@@ -601,6 +913,20 @@ class NewMeetingPurposeFragment : Fragment()
             return false
         } else {
             binding.edtVisitPurpose.error = null
+        }
+        return true
+    }
+
+    /**
+     * field must not be empty
+     */
+    private fun validateOpportunity(): Boolean {
+        if (binding.edtOpportunity.text.toString().trim().isEmpty()) {
+            binding.edtOpportunity.error = "Required Field!"
+            binding.edtOpportunity.requestFocus()
+            return false
+        } else {
+            binding.edtOpportunity.error = null
         }
         return true
     }
@@ -627,6 +953,15 @@ class NewMeetingPurposeFragment : Fragment()
         } else {
             binding.edtDate.error = null
 //            binding.dateEscalatedMeetingDate.isErrorEnabled = false
+        }
+        return true
+    }
+
+    private fun validateClientPos(): Boolean {
+        if (selectClientPos == 0) {
+            return false
+        } else {
+
         }
         return true
     }
@@ -697,13 +1032,13 @@ class NewMeetingPurposeFragment : Fragment()
         return true
     }
 
-    private fun validateDescription(): Boolean {
-        if (binding.edtDescription.text.toString().trim().isEmpty()) {
-            binding.edtDescription.error = "Required Field!"
-            binding.edtDescription.requestFocus()
+    private fun validateContactName(): Boolean {
+        if (binding.edtContactName.text.toString().trim().isEmpty()) {
+            binding.edtContactName.error = "Required Field!"
+            binding.edtContactName.requestFocus()
             return false
         } else {
-            binding.edtDescription.error = null
+            binding.edtContactName.error = null
 //            binding.dateEscalatedMeetingDate.isErrorEnabled = false
         }
         return true

@@ -51,10 +51,10 @@
             android:id="@+id/fragmentMapsFindMyLocationBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="@dimen/widget_size_250"
+            android:layout_marginTop="@dimen/widget_size_50"
             android:backgroundTint="@color/white"
             app:fabSize="mini"
             app:srcCompat="@drawable/ic_find_my_location" />

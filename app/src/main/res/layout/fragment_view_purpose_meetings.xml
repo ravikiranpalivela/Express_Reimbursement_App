@@ -14,6 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_4dp"
             android:padding="@dimen/_4dp"
+            android:nestedScrollingEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -41,17 +42,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <ImageButton
             android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/widget_size_50"
+            android:layout_height="@dimen/widget_size_50"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/_4dp"
-            android:backgroundTint="@color/light_blue"
+            android:padding="@dimen/widget_size_4"
+            android:layout_margin="@dimen/widget_size_4"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_baseline_add_24" />
+            android:src="@drawable/ic_baseline_add_24"
+            android:background="@drawable/btn_background" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

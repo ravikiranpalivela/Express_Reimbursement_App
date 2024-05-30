@@ -2,6 +2,8 @@ package com.tekskills.er_tekskills.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.view.View
+import com.google.android.material.snackbar.Snackbar
 
 object AppUtil {
 
@@ -13,6 +15,16 @@ object AppUtil {
 
         val activeNetworkInfo = connectivityManager?.activeNetworkInfo
         return activeNetworkInfo != null && activeNetworkInfo.isConnected
+    }
+
+    fun showSnackBar(view: View)
+    {
+        Snackbar.make(
+            view,
+            "Manager Approval Mandatory",
+            Snackbar.LENGTH_SHORT
+        )
+            .show()
     }
 
 //    fun hideStatusBar() {

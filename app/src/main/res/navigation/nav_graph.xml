@@ -24,14 +24,31 @@
         android:name="com.tekskills.er_tekskills.presentation.fragments.ViewMeetingPurposeFragment"
         android:label="@string/view_meetings"
         tools:layout="@layout/fragment_view_purpose_meetings">
+
+        <argument
+            android:name="opportunityID"
+            app:argType="string"
+            app:nullable="true"/>
+
         <action
-            android:id="@+id/action_view_opportunityFragment_to_viewMeetingDetailsFragment"
+            android:id="@+id/action_view_meetings_to_viewMeetingDetailsFragment"
             app:destination="@id/view_meeting_purpose_details_fragment" />
 
         <action
-            android:id="@+id/action_view_opportunityFragment_to_newMeetingPurpose"
+            android:id="@+id/action_view_meetings_to_newMeetingPurpose"
             app:destination="@id/new_purpose_meeting"
             app:enterAnim="@anim/slide_up" />
+
+        <action
+            android:id="@+id/action_view_meetings_to_newAddMOMFragment"
+            app:destination="@id/new_add_mom_meeting" />
+
+        <action
+            android:id="@+id/action_view_meetings_to_newCheckInFragment"
+            app:destination="@id/new_check_in" />
+        <action
+            android:id="@+id/action_view_meetings_to_home_fragment"
+            app:destination="@id/home_fragment" />
     </fragment>
 
     <fragment
@@ -51,6 +68,17 @@
         <action
             android:id="@+id/action_meetingDetailsFragment_to_newFoodExpensesFragment"
             app:destination="@id/new_food_expenses" />
+
+        <action
+            android:id="@+id/action_meetingDetailsFragment_to_newAddMOMFragment"
+            app:destination="@id/new_add_mom_meeting" />
+
+        <action
+            android:id="@+id/action_meetingDetailsFragment_to_newcheckInFragment"
+            app:destination="@id/new_check_in" />
+        <action
+            android:id="@+id/action_view_meeting_purpose_details_fragment_to_home_fragment"
+            app:destination="@id/home_fragment" />
     </fragment>
 
     <fragment
@@ -85,6 +113,28 @@
     </fragment>
 
     <fragment
+        android:id="@+id/new_add_mom_meeting"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.NewAddMOMFragment"
+        android:label="Add MOM"
+        tools:layout="@layout/fragment_new_add_mom" >
+        <argument
+            android:name="opportunityID"
+            app:argType="string" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/new_check_in"
+        android:name="com.tekskills.er_tekskills.presentation.fragments.CheckINFragment"
+        android:label="Upload Attachment"
+        tools:layout="@layout/fragment_checkin" >
+        <argument
+            android:name="opportunityID"
+            app:argType="string" />
+
+    </fragment>
+
+    <fragment
         android:id="@+id/settings_fragment"
         android:name="com.tekskills.er_tekskills.presentation.fragments.SettingsFragment"
         android:label=""
@@ -108,11 +158,13 @@
         <action
             android:id="@+id/action_homeFragment_to_viewMeetingDetailsFragment"
             app:destination="@id/view_meeting_purpose_details_fragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/view_opportunity_fragment"
-        android:name="com.tekskills.er_tekskills.presentation.fragments.ViewOpportunityFragment"
-        android:label="@string/view_opportunity"
-        tools:layout="@layout/fragment_view_opportunity" />
 
+        <action
+            android:id="@+id/action_homeFragment_to_newAddMOMFragment"
+            app:destination="@id/new_add_mom_meeting" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_newCheckInFragment"
+            app:destination="@id/new_check_in" />
+    </fragment>
 </navigation>

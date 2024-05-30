@@ -6,9 +6,10 @@
     <color name="grey">#808080</color>
     <color name="light_grey">#ececec</color>
     <color name="dark_blue">#1D59B3</color>
-    <color name="light_blue">#42A4EB</color>
+    <color name="Light_blue">#42A4EB</color>
+    <color name="light_blue">#1c2977</color>
     <color name="blue">#18315D</color>
-    <color name="colorPrimary">@color/blue</color>
+    <color name="colorPrimary">@color/light_blue</color>
 
     <color name="red">#ffff0000</color>
     <color name="light_white">#bcbcbc</color>

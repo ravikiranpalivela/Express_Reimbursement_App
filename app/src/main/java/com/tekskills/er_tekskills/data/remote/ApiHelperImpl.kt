@@ -7,7 +7,9 @@ import com.tekskills.er_tekskills.data.model.ActionItemProjectIDResponseItem
 import com.tekskills.er_tekskills.data.model.AddActionItemOpportunityRequest
 import com.tekskills.er_tekskills.data.model.AddCommentOpportunity
 import com.tekskills.er_tekskills.data.model.AddEscalationRequest
+import com.tekskills.er_tekskills.data.model.AddLocationCoordinates
 import com.tekskills.er_tekskills.data.model.AddMOMOpportunityRequest
+import com.tekskills.er_tekskills.data.model.AddMOMResponse
 import com.tekskills.er_tekskills.data.model.AddOpportunityRequest
 import com.tekskills.er_tekskills.data.model.AddMeetingRequest
 import com.tekskills.er_tekskills.data.model.AddPurposeMeetingResponse
@@ -18,10 +20,13 @@ import com.tekskills.er_tekskills.data.model.PendingActionGraphResponse
 import com.tekskills.er_tekskills.data.model.ClientNamesResponse
 import com.tekskills.er_tekskills.data.model.ClientsEscalationResponse
 import com.tekskills.er_tekskills.data.model.CommentsListResponse
+import com.tekskills.er_tekskills.data.model.LeadNamesResponse
+import com.tekskills.er_tekskills.data.model.LocationResponse
 import com.tekskills.er_tekskills.data.model.LoginResponse
 import com.tekskills.er_tekskills.data.model.ManagementResponse
 import com.tekskills.er_tekskills.data.model.MeetingPurposeResponse
 import com.tekskills.er_tekskills.data.model.MeetingPurposeResponseData
+import com.tekskills.er_tekskills.data.model.MeetingStatusRequest
 import com.tekskills.er_tekskills.data.model.MomProjectResponse
 import com.tekskills.er_tekskills.data.model.MomProjectResponseItem
 import com.tekskills.er_tekskills.data.model.NewClientResponse
@@ -34,8 +39,12 @@ import com.tekskills.er_tekskills.data.model.ProjectManagerResponse
 import com.tekskills.er_tekskills.data.model.ProjectOpportunityResponse
 import com.tekskills.er_tekskills.data.model.UserAllowenceResponse
 import com.tekskills.er_tekskills.data.model.UserMeResponse
+import com.tekskills.er_tekskills.utils.Common.Companion.AUTHORIZATION
 import okhttp3.MultipartBody
 import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.Header
+import retrofit2.http.Path
 import javax.inject.Inject
 
 class ApiHelperImpl @Inject constructor(
@@ -61,7 +70,14 @@ class ApiHelperImpl @Inject constructor(
     override suspend fun getMeetingPurposeByID(authorization: String, itemID:String): Response<MeetingPurposeResponseData>
     = apiService.getMeetingPurposeByID(authorization, itemID)
 
-   override suspend fun addTravelExpense(
+    override suspend fun getMeetingPurposeByStatus(authorization: String,itemID:String): Response<MeetingPurposeResponse>
+    = apiService.getMeetingPurposeByStatus(authorization, itemID)
+
+    override suspend fun getMeetingPurposeStatus(authorization: String,): Response<MeetingStatusRequest>
+    = apiService.getMeetingPurposeStatus(authorization)
+
+
+    override suspend fun addTravelExpense(
        authorization: String, purposeID: RequestBody, amount: Long,
        file: MutableList<MultipartBody.Part>?, user: Map<String, RequestBody>
     ): Response<AddTravelExpenceResponse>
@@ -77,10 +93,20 @@ class ApiHelperImpl @Inject constructor(
     ): Response<AddTravelExpenceResponse>
             = apiService.addFoodExpense(authorization, purposeID, user)
 
+
+    override suspend fun addMOMToMeeting(authorization: String,
+                                purposeID: RequestBody, file: MutableList<MultipartBody.Part>?,
+                                user: Map<String, RequestBody>
+    ): Response<AddMOMResponse> = apiService.addMOMToMeeting(authorization, purposeID, file, user)
+
     override suspend fun addMeetingPurpose(
         authorization: String, user: AddMeetingRequest
     ): Response<AddPurposeMeetingResponse> = apiService.addMeetingPurpose(authorization, user)
 
+    override suspend fun addUserCoordinates(
+       authorization: String,
+       user: AddLocationCoordinates
+    ): Response<LocationResponse> = apiService.addUserCoordinates(authorization, user)
 
     /**
      * Dashboard Graph items
@@ -114,6 +140,17 @@ class ApiHelperImpl @Inject constructor(
 
     override suspend fun getClients(authorization: String): Response<ClientNamesResponse> =
         apiService.getClients(authorization)
+
+    override suspend fun getLeads(authorization: String, itemID:String): Response<LeadNamesResponse> =
+        apiService.getLeads(authorization,itemID)
+
+    override suspend fun putUserMeetingCheckIN(authorization: String, itemID:String,
+                                               requestBody: MutableMap<String, RequestBody>,
+                                               listMultipartImage: MultipartBody.Part): Response<LocationResponse> =
+        apiService.putUserMeetingCheckIN(authorization, itemID,requestBody,listMultipartImage)
+
+    override suspend fun putUserMeetingCheckOUT(authorization: String, itemID:String,requestBody: MutableMap<String, RequestBody>): Response<LocationResponse> =
+        apiService.putUserMeetingCheckOUT(authorization, itemID,requestBody)
 
     override suspend fun getProjects(authorization: String): Response<ProjectListResponse> =
         apiService.getProjects(authorization)

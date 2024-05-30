@@ -16,11 +16,11 @@
 <!--            android:id="@+id/new_project"-->
 <!--            android:title="@string/create_project"-->
 <!--            />-->
-        <item
-            android:id="@+id/new_assign_project"
-            android:title="@string/add_opportunity"
-            android:visible="false"
-            />
+<!--        <item-->
+<!--            android:id="@+id/new_assign_project"-->
+<!--            android:title="@string/add_opportunity"-->
+<!--            android:visible="false"-->
+<!--            />-->
         <item
             android:id="@+id/new_purpose_meeting"
             android:title="@string/add_meeting"
@@ -30,6 +30,7 @@
             android:id="@+id/view_meetings"
             android:title="@string/view_meeting"
             android:visible="true"
+            android:defaultValue=""
             />
         <item
             android:id="@+id/view_opportunity_fragment"

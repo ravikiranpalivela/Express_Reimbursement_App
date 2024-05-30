@@ -15,8 +15,8 @@ android {
         applicationId "com.tekskills.er_tekskills"
         minSdk 26
         targetSdk 33
-        versionCode 240504007
-        versionName "1.0.2"//previos 1.0.4 updated by ravi on 11th Oct '23
+        versionCode 240530005
+        versionName "1.0.0"//previos 1.0.4 updated by ravi on 11th Oct '23
         vectorDrawables {
             useSupportLibrary true
         }
@@ -29,7 +29,7 @@ android {
             versionCode env['VERSION_NUMBER'].toInteger()
         } else {
             // Build number not available. Build number should be entered manually.
-            versionCode 240504007
+            versionCode 240530005
         }
 
         print "versionName ::: " + env['VERSION_NAME']
@@ -39,7 +39,7 @@ android {
             versionName "1.0." + env['VERSION_NAME']
         } else {
             // Build number not available. Build number should be entered manually.
-            versionName "1.0.2"
+            versionName "1.0.0"
         }
     }
 
@@ -69,7 +69,7 @@ android {
             applicationIdSuffix '.debug'
             debuggable true
             minifyEnabled false
-            resValue "string", "serverUrl", "http://192.168.0.219:8099/"
+            resValue "string", "serverUrl", "https://reimbursement.tekskillsinc.com/"
 
             manifestPlaceholders = [
                     appIcon  : "@mipmap/ic_launcher",
@@ -82,7 +82,7 @@ android {
             applicationIdSuffix '.staging'
             debuggable false
             minifyEnabled false
-            resValue "string", "serverUrl", "http://192.168.0.219:8099/"
+            resValue "string", "serverUrl", "https://reimbursement.tekskillsinc.com/"
 
             manifestPlaceholders = [
                     appIcon  : "@mipmap/ic_launcher",
@@ -95,7 +95,7 @@ android {
         release {
             debuggable false
             minifyEnabled false
-            resValue "string", "serverUrl", "http://192.168.0.219:8099/"
+            resValue "string", "serverUrl", "https://reimbursement.tekskillsinc.com/"
 
             manifestPlaceholders = [
                     appIcon  : "@mipmap/ic_launcher",
@@ -198,6 +198,8 @@ dependencies {
 
     implementation files('libs/socketio.jar')
     implementation files('libs/httpclient-4.4.1.jar')
+    implementation 'androidx.work:work-runtime-ktx:2.8.1'
+
 //    implementation project(":android-pickers")
 
 }

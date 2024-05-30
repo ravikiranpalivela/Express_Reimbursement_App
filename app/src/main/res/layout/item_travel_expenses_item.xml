@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="dateConvert"
             type="com.tekskills.er_tekskills.data.util.DateToString" />
@@ -39,8 +38,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
             <LinearLayout
-                android:id="@+id/ll_from_addr"
+                android:id="@+id/ll_expense_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -50,15 +50,55 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_from_addr"
+                    android:id="@+id/tv_projectName"
                     style="@style/stlTxtKey"
-                    android:text="@string/from_loc" />
+                    android:text="@string/expense_type"
+                    />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/from_addr"
+                    android:id="@+id/projectName"
                     style="@style/stlTxtValue"
-                    android:text="@{taskCategoryInfo.travelFrom}"
+                    android:text="Travel"
                     tools:text="Testing" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_from_addr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_expense_type">
+
+                <ImageView
+                    android:id="@+id/tv_from_addr"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="@dimen/widget_size_2"
+                    android:padding="@dimen/widget_size_4"
+                    android:src="@drawable/ic_location_blue" />
+
+                <TextView
+                    android:id="@+id/from_addr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/widget_size_2"
+                    android:text="@{taskCategoryInfo.travelFrom}"
+                    android:textSize="14sp" />
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/tv_from_addr"-->
+<!--                    style="@style/stlTxtKey"-->
+<!--                    android:text="@string/from_loc" />-->
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/from_addr"-->
+<!--                    style="@style/stlTxtValue"-->
+<!--                    android:text="@{taskCategoryInfo.travelFrom}"-->
+<!--                    tools:text="Testing" />-->
 
             </LinearLayout>
 
@@ -73,16 +113,32 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ll_from_addr">
 
-                <com.google.android.material.textview.MaterialTextView
+                <ImageView
                     android:id="@+id/tv_to_addr"
-                    style="@style/stlTxtKey"
-                    android:text="@string/to_loc" />
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="@dimen/widget_size_2"
+                    android:padding="@dimen/widget_size_4"
+                    android:src="@drawable/ic_location_red" />
 
-                <com.google.android.material.textview.MaterialTextView
+                <TextView
                     android:id="@+id/to_addr"
-                    style="@style/stlTxtValue"
-                    android:text="@{taskCategoryInfo.travelTo.toString()}"
-                    tools:text="Testing" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/widget_size_2"
+                    android:text="@{taskCategoryInfo.travelTo}"
+                    android:textSize="14sp" />
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/tv_to_addr"-->
+<!--                    style="@style/stlTxtKey"-->
+<!--                    android:text="@string/to_loc" />-->
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/to_addr"-->
+<!--                    style="@style/stlTxtValue"-->
+<!--                    android:text="@{taskCategoryInfo.travelTo.toString()}"-->
+<!--                    tools:text="Testing" />-->
             </LinearLayout>
 
             <LinearLayout
@@ -96,15 +152,31 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ll_to_addr">
 
-                <com.google.android.material.textview.MaterialTextView
+                <ImageView
                     android:id="@+id/tv_book_date"
-                    style="@style/stlTxtKey"
-                    android:text="@string/book_date" />
-                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="@dimen/widget_size_2"
+                    android:padding="@dimen/widget_size_4"
+                    android:src="@drawable/ic_baseline_date_range_24" />
+
+                <TextView
                     android:id="@+id/book_date"
-                    style="@style/stlTxtValue"
-                    android:text="@{taskCategoryInfo.travelDate}"
-                    tools:text="Testing" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/widget_size_2"
+                    android:text="@{dateConvert.Companion.convertDateStringToCustomFormat(taskCategoryInfo.travelDate)}"
+                    android:textSize="14sp" />
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/tv_book_date"-->
+<!--                    style="@style/stlTxtKey"-->
+<!--                    android:text="@string/book_date" />-->
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/book_date"-->
+<!--                    style="@style/stlTxtValue"-->
+<!--                    android:text="@{dateConvert.Companion.convertDateStringToCustomFormat(taskCategoryInfo.travelDate)}"-->
+<!--                    tools:text="Testing" />-->
 
 <!--                <com.google.android.material.textview.MaterialTextView-->
 <!--                    android:id="@+id/book_date"-->
@@ -123,15 +195,39 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ll_book_date">
 
-                <com.google.android.material.textview.MaterialTextView
+
+                <TextView
                     android:id="@+id/tv_book_amount"
-                    style="@style/stlTxtKey"
-                    android:text="@string/book_amount" />
-                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="@dimen/widget_size_2"
+                    android:padding="@dimen/widget_size_4"
+                    android:text="@string/rupee"
+                    android:textSize="@dimen/font_size_20"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/poppins"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    />
+
+                <TextView
                     android:id="@+id/book_amount"
-                    style="@style/stlTxtValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/widget_size_2"
                     android:text="@{dateConvert.Companion.amountConverter(taskCategoryInfo.amount)}"
-                    tools:text="Testing" />
+                    android:textSize="14sp" />
+
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/tv_book_amount"-->
+<!--                    style="@style/stlTxtKey"-->
+<!--                    android:text="@string/book_amount" />-->
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/book_amount"-->
+<!--                    style="@style/stlTxtValue"-->
+<!--                    android:text="@{dateConvert.Companion.amountConverter(taskCategoryInfo.amount)}"-->
+<!--                    tools:text="Testing" />-->
 
                 <!--                <com.google.android.material.textview.MaterialTextView-->
                 <!--                    android:id="@+id/book_date"-->
@@ -152,22 +248,38 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ll_book_amount">
 
-                <com.google.android.material.textview.MaterialTextView
+                <ImageView
                     android:id="@+id/tv_travel_mode"
-                    style="@style/stlTxtKey"
-                    android:text="@string/mode_type" />
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="@dimen/widget_size_2"
+                    android:padding="@dimen/widget_size_4"
+                    android:src="@drawable/ic_car"  />
 
-                <com.google.android.material.textview.MaterialTextView
+                <TextView
                     android:id="@+id/travel_mode"
-                    style="@style/stlTxtValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/widget_size_2"
                     android:text="@{taskCategoryInfo.modeOfTravel}"
-                    tools:text="Testing" />
+                    android:textSize="14sp" />
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/tv_travel_mode"-->
+<!--                    style="@style/stlTxtKey"-->
+<!--                    android:text="@string/mode_type" />-->
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/travel_mode"-->
+<!--                    style="@style/stlTxtValue"-->
+<!--                    android:text="@{taskCategoryInfo.modeOfTravel}"-->
+<!--                    tools:text="Testing" />-->
             </LinearLayout>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/priority"
                 style="@style/stlTxtValue"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ll_travel_mode" />
 
@@ -178,6 +290,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/_8dp"
                 android:background="@drawable/ic_edit"
+                android:visibility="gone"
                 android:contentDescription="@string/travel_expenses"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -189,6 +302,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/_8dp"
                 android:background="@drawable/ic_view"
+                android:visibility="gone"
                 android:contentDescription="@string/travel_expenses"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/iv_edit_travel" />

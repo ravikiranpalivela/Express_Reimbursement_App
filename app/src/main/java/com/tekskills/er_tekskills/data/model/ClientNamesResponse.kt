@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName
 class ClientNamesResponse : ArrayList<ClientNamesResponseItem>()
 
 data class ClientNamesResponseItem(
-    @SerializedName("clientId")
+    @SerializedName("id")
     val clientId: Int,
-    @SerializedName("clientName")
+    @SerializedName("name")
     val clientName: String
 ) {
     override fun toString(): String {

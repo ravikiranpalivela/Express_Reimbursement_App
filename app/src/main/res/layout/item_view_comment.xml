@@ -52,7 +52,7 @@
                     android:id="@+id/tv_comment"
                     style="@style/stlTxtValue"
                     android:text="@{taskCategoryInfo.comment}"
-                    android:textSize="@dimen/_16sp"
+                    android:textSize="@dimen/font_size_16"
                     tools:text="Testing" />
 
             </LinearLayout>
@@ -71,13 +71,19 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_comment_send"
                     style="@style/stlTxtValue"
+                    android:padding="@dimen/widget_size_1"
+                    android:layout_margin="@dimen/widget_size_1"
                     android:text="@{taskCategoryInfo.employeeName}"
+                    android:textSize="@dimen/font_size_12"
                     tools:text="Testing" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_comment_date"
                     style="@style/stlTxtValue"
+                    android:padding="@dimen/widget_size_1"
+                    android:layout_margin="@dimen/widget_size_1"
                     android:text="@{taskCategoryInfo.commentDate}"
+                    android:textSize="@dimen/font_size_12"
                     tools:text="Testing" />
             </LinearLayout>
 

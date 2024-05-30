@@ -7,7 +7,7 @@ import android.content.Intent
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.tekskills.er_tekskills.presentation.viewmodel.MainActivityViewModel
-import com.tekskills.er_tekskills.presentation.br.AlarmReceiver
+//import com.tekskills.er_tekskills.presentation.br.AlarmReceiver
 import com.tekskills.er_tekskills.data.model.CategoryInfo
 import com.tekskills.er_tekskills.data.model.TaskInfo
 import com.tekskills.er_tekskills.presentation.activities.MainActivity
@@ -18,20 +18,20 @@ import java.util.*
 
 open class ParentFragment : Fragment() {
 
-    fun deleteTask(viewModel: MainActivityViewModel, taskInfo: TaskInfo, categoryInfo : CategoryInfo){
-        CoroutineScope(Dispatchers.Main).launch {
-            if(viewModel.getCountOfCategory(categoryInfo.categoryInformation)==1) {
-                viewModel.deleteTaskAndCategory(taskInfo, categoryInfo)
-            }else {
-                viewModel.deleteTask(taskInfo)
-            }
-            val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val intent = Intent(requireContext(), AlarmReceiver::class.java)
-            intent.putExtra("task_info", taskInfo)
-            val pendingIntent = PendingIntent.getBroadcast(requireContext(), taskInfo.id, intent, PendingIntent.FLAG_IMMUTABLE)
-            alarmManager.cancel(pendingIntent)
-        }
-    }
+//    fun deleteTask(viewModel: MainActivityViewModel, taskInfo: TaskInfo, categoryInfo : CategoryInfo){
+//        CoroutineScope(Dispatchers.Main).launch {
+//            if(viewModel.getCountOfCategory(categoryInfo.categoryInformation)==1) {
+//                viewModel.deleteTaskAndCategory(taskInfo, categoryInfo)
+//            }else {
+//                viewModel.deleteTask(taskInfo)
+//            }
+//            val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//            val intent = Intent(requireContext(), AlarmReceiver::class.java)
+//            intent.putExtra("task_info", taskInfo)
+//            val pendingIntent = PendingIntent.getBroadcast(requireContext(), taskInfo.id, intent, PendingIntent.FLAG_IMMUTABLE)
+//            alarmManager.cancel(pendingIntent)
+//        }
+//    }
 
 //    fun updateTaskStatus(viewModel: MainActivityViewModel, taskInfo: TaskInfo) {
 //        viewModel.updateTaskStatus(taskInfo)

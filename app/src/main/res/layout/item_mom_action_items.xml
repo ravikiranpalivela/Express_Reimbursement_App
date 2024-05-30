@@ -10,9 +10,14 @@
             type="com.tekskills.er_tekskills.data.util.DateToString" />
 
         <variable
+            name="viewElement"
+            type="com.tekskills.er_tekskills.utils.TextViewHtmlString" />
+
+        <variable
             name="taskCategoryInfo"
-            type="com.tekskills.er_tekskills.data.model.MomProjectResponseItem" />
+            type="com.tekskills.er_tekskills.data.model.MomResponseItem" />
     </data>
+
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardView"
@@ -40,7 +45,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
-                android:id="@+id/ll_meeting_title"
+                android:id="@+id/ll_meeting_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -50,90 +55,67 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_meeting_title"
-                    style="@style/stlTxtKey"
-                    android:text="@string/meeting_title" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/meeting_title"
-                    style="@style/stlTxtValue"
-                    android:text="@{taskCategoryInfo.meetingTitle}"
-                    tools:text="Testing" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_meeting_date_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ll_meeting_title"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ll_meeting_title">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_meeting_date"
-                    style="@style/stlTxtKey"
-                    android:text="@string/meeting_date" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/meeting_date"
-                    style="@style/stlTxtValue"
-                    android:text="@{taskCategoryInfo.meetingTime.toString()}"
-                    tools:text="Testing" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_meeting_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ll_meeting_date_name"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ll_meeting_date_name">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_meeting_time"
-                    style="@style/stlTxtKey"
-                    android:text="@string/meeting_time" />
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/meeting_time"
-                    style="@style/stlTxtValue"
-                    android:text="@{taskCategoryInfo.meetingTime}"
-                    tools:text="Testing" />
-
-<!--                <com.google.android.material.textview.MaterialTextView-->
-<!--                    android:id="@+id/meeting_time"-->
-<!--                    style="@style/stlTxtValue"-->
-<!--                    android:text="@{dateConvert.Companion.getTimeAgo(taskCategoryInfo.meetingTime)}"-->
-<!--                    tools:text="Testing" />-->
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_meeting_notes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ll_meeting_time"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ll_meeting_time">
-
-                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_meeting_notes"
                     style="@style/stlTxtKey"
-                    android:text="@string/meeting_notes" />
+                    android:text="@string/edt_meeting_notes" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/meeting_notes"
                     style="@style/stlTxtValue"
                     android:text="@{taskCategoryInfo.meetingNotes}"
                     tools:text="Testing" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_action_item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_meeting_notes"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_meeting_notes">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_action_item"
+                    style="@style/stlTxtKey"
+                    android:text="@string/action_item" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/action_item"
+                    style="@style/stlTxtValue"
+                    android:text="@{taskCategoryInfo.infoFromClient}"
+                    tools:text="Testing" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_target_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_action_item_name"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_action_item_name">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_target_date"
+                    style="@style/stlTxtKey"
+                    android:text="@string/target_date" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/target_date"
+                    style="@style/stlTxtValue"
+                    android:text="@{dateConvert.Companion.convertDateStringToCustomFormat(taskCategoryInfo.targetDate)}"
+                    tools:text="Testing" />
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/target_date"-->
+<!--                    style="@style/stlTxtValue"-->
+<!--                    android:text="@{dateConvert.Companion.getTimeAgo(taskCategoryInfo.meetingTime)}"-->
+<!--                    tools:text="Testing" />-->
             </LinearLayout>
 
             <com.google.android.material.chip.Chip
@@ -163,8 +145,10 @@
                 android:layout_margin="@dimen/_8dp"
                 android:background="@drawable/ic_view"
                 android:contentDescription="@string/edit_mom"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/iv_edit_mom" />
+                app:layout_constraintEnd_toStartOf="@+id/iv_edit_mom"
+                app:layout_constraintTop_toBottomOf="@+id/ll_target_date" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"

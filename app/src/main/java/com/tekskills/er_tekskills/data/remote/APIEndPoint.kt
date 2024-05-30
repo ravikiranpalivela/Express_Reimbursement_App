@@ -16,10 +16,8 @@ class APIEndPoint {
         const val POST_ADD_PROJECT = "api/projects/add-project"
         const val POST_ADD_MOM = "/api/action/mom"
         const val POST_ADD_Action_Item = "/api/action"
-        const val POST_ADD_COMMENT = "api/comment"
-
-        const val GET_CLIENTS = "api/projects/findallclients"
-
+        const val GET_CLIENTS = "api/customer/clients"
+        const val GET_LEADS = "api/customer/leads"
         const val GET_PROJECTS = "api/projects/findallproject"
         const val GET_ASSIGN_PROJECTS = "api/projects/get-assign-project"
         const val GET_CLIENT_EXIST = "api/projects/find-clientname/"
@@ -35,18 +33,25 @@ class APIEndPoint {
         const val GET_MOM_ACTION_ITEM_BY_ID = "/pi/action/mom"
         const val GET_CLIENT_ESCALATION = "api/action/clientescalationa"
         const val GET_CLIENT_ESCALATION_BY_ID = "api/action/clientescalationa"
-        const val GET_COMMENT_BY_ID = "api/comment"
+        const val GET_COMMENT_BY_ID = "api/crm/get-comments"
         const val GET_OPPORTUNITY_BY_PROJECT_ID = "api/projects/get-projectbyId"
-
         const val MULTI_PART = "Content-Type: multipart/form-data; boundary=<calculated when request is sent>"
-
         const val POST_USER_LOGIN = "api/public/authenticate"
         const val GET_ME = "api/me"
         const val GET_USER_ALLOWENCE = "api/allowences"
         const val POST_ADD_MEETING_PURPOSE = "api/purpose"
+        const val POST_ADD_LOCATION = "api/location"
+        const val GET_MEETING_PURPOSE_BY_ID = "api/purpose"
+        const val GET_MEETING_PURPOSE_VISIT_DETAILS = "api/purpose/visit-details"
+        const val GET_MEETING_PURPOSE_BY_STATUS = "api/purpose/visit-details"
         const val GET_MEETING_PURPOSE = "api/purpose"
+        const val GET_MEETING_PURPOSE_STATUS = "api/purpose/meeting-status-count"
 
         const val POST_TRAVEL_EXPENSES="api/expence"
+        const val POST_ADD_MOM_MEETING="api/mom"
+        const val PUT_CHECK_IN = "api/purpose/check-in"
+        const val PUT_CHECK_OUT = "api/purpose/check-out"
+        const val POST_ADD_COMMENT = "api/crm/save-comment"
 
 
     }

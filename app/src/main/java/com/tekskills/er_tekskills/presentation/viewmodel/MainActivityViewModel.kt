@@ -13,11 +13,16 @@ import com.tekskills.er_tekskills.data.model.AccountHeadResponse
 import com.tekskills.er_tekskills.data.model.ActionItemProjectIDResponse
 import com.tekskills.er_tekskills.data.model.ActionItemProjectIDResponseItem
 import com.tekskills.er_tekskills.data.model.AddActionItemOpportunityRequest
+import com.tekskills.er_tekskills.data.model.AddCheckInRequest
+import com.tekskills.er_tekskills.data.model.AddComment
 import com.tekskills.er_tekskills.data.model.AddCommentOpportunity
 import com.tekskills.er_tekskills.data.model.AddEscalationRequest
 import com.tekskills.er_tekskills.data.model.AddFoodExpenceRequest
 import com.tekskills.er_tekskills.data.model.AddHotelExpenceRequest
+import com.tekskills.er_tekskills.data.model.AddLocationCoordinates
 import com.tekskills.er_tekskills.data.model.AddMOMOpportunityRequest
+import com.tekskills.er_tekskills.data.model.AddMOMRequest
+import com.tekskills.er_tekskills.data.model.AddMOMResponse
 import com.tekskills.er_tekskills.data.model.AddMeetingRequest
 import com.tekskills.er_tekskills.data.model.AddOpportunityRequest
 import com.tekskills.er_tekskills.data.model.AddPurposeMeetingResponse
@@ -25,19 +30,20 @@ import com.tekskills.er_tekskills.data.model.AddReturnTravelExpenceRequest
 import com.tekskills.er_tekskills.data.model.AddTravelExpenceRequest
 import com.tekskills.er_tekskills.data.model.AddTravelExpenceResponse
 import com.tekskills.er_tekskills.data.model.AssignProjectListResponse
-import com.tekskills.er_tekskills.data.model.CategoryInfo
 import com.tekskills.er_tekskills.data.model.ClientEscalationGraphByIDResponse
 import com.tekskills.er_tekskills.data.model.ClientNamesResponse
 import com.tekskills.er_tekskills.data.model.ClientsEscalationResponse
 import com.tekskills.er_tekskills.data.model.CommentsListResponse
+import com.tekskills.er_tekskills.data.model.LeadNamesResponse
+import com.tekskills.er_tekskills.data.model.LocationResponse
 import com.tekskills.er_tekskills.data.model.LoginResponse
 import com.tekskills.er_tekskills.data.model.ManagementResponse
 import com.tekskills.er_tekskills.data.model.MeetingPurposeResponse
 import com.tekskills.er_tekskills.data.model.MeetingPurposeResponseData
+import com.tekskills.er_tekskills.data.model.MeetingStatusRequest
 import com.tekskills.er_tekskills.data.model.MomProjectResponse
 import com.tekskills.er_tekskills.data.model.MomProjectResponseItem
 import com.tekskills.er_tekskills.data.model.NewClientResponse
-import com.tekskills.er_tekskills.data.model.NoOfTaskForEachCategory
 import com.tekskills.er_tekskills.data.model.OpportunityByProjectIDResponse
 import com.tekskills.er_tekskills.data.model.PendingActionGraphResponse
 import com.tekskills.er_tekskills.data.model.PendingActionItemGraphByIDResponse
@@ -48,13 +54,10 @@ import com.tekskills.er_tekskills.data.model.ProjectListResponse
 import com.tekskills.er_tekskills.data.model.ProjectManagerResponse
 import com.tekskills.er_tekskills.data.model.ProjectOpportunityResponse
 import com.tekskills.er_tekskills.data.model.ProjectsAssignVO
-import com.tekskills.er_tekskills.data.model.TaskCategoryInfo
-import com.tekskills.er_tekskills.data.model.TaskInfo
 import com.tekskills.er_tekskills.data.model.UserAllowenceResponse
 import com.tekskills.er_tekskills.data.model.UserMeResponse
 import com.tekskills.er_tekskills.data.repository.MainRepository
 import com.tekskills.er_tekskills.data.util.Constants
-import com.tekskills.er_tekskills.domain.TaskCategoryRepository
 import com.tekskills.er_tekskills.utils.AppUtil.utlIsNetworkAvailable
 import com.tekskills.er_tekskills.utils.Common
 import com.tekskills.er_tekskills.utils.Common.Companion.MANAGER
@@ -67,7 +70,6 @@ import com.tekskills.er_tekskills.utils.Common.Companion.PREF_TOKEN
 import com.tekskills.er_tekskills.utils.SuccessResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -82,7 +84,7 @@ import kotlin.random.Random
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val sharedPreferences: SharedPreferences,
-    private val repository: TaskCategoryRepository,
+//    private val repository: TaskCategoryRepository,
     private val mainRepository: MainRepository
 ) : ViewModel() {
 
@@ -106,6 +108,11 @@ class MainActivityViewModel @Inject constructor(
 
     val resClientNameList: LiveData<SuccessResource<ClientNamesResponse>>
         get() = _resClientNameList
+
+    private val _resLeadNameList = MutableLiveData<SuccessResource<LeadNamesResponse>>()
+
+    val resLeadNameList: LiveData<SuccessResource<LeadNamesResponse>>
+        get() = _resLeadNameList
 
     private val _resProjectList = MutableLiveData<SuccessResource<ProjectListResponse>>()
 
@@ -164,10 +171,10 @@ class MainActivityViewModel @Inject constructor(
         get() = _resActionItemBYID
 
 
-    private val _resCommentsList = MutableLiveData<SuccessResource<CommentsListResponse>>()
+    private val _resCommentResponse = MutableLiveData<SuccessResource<CommentsListResponse>>()
 
-    val resCommentsList: LiveData<SuccessResource<CommentsListResponse>>
-        get() = _resCommentsList
+    val resCommentResponse: LiveData<SuccessResource<CommentsListResponse>>
+        get() = _resCommentResponse
 
     private val _resAssignedProjectList =
         MutableLiveData<SuccessResource<AssignProjectListResponse>>()
@@ -226,6 +233,18 @@ class MainActivityViewModel @Inject constructor(
     val resMeetingPurposeIDItems: LiveData<SuccessResource<MeetingPurposeResponseData>>
         get() = _resMeetingPurposeIDItems
 
+    var _resMeetingPurposeStatusItems =
+        MutableLiveData<SuccessResource<MeetingPurposeResponse>>()
+
+    val resMeetingPurposeStatusItems: LiveData<SuccessResource<MeetingPurposeResponse>>
+        get() = _resMeetingPurposeStatusItems
+
+
+    var _resMeetingPurposeStatusDetails =
+        MutableLiveData<SuccessResource<MeetingStatusRequest>>()
+
+    val resMeetingPurposeStatusDetails: LiveData<SuccessResource<MeetingStatusRequest>>
+        get() = _resMeetingPurposeStatusDetails
 
     var _resAddTravelExpence =
         MutableLiveData<SuccessResource<AddTravelExpenceResponse>>()
@@ -244,6 +263,12 @@ class MainActivityViewModel @Inject constructor(
 
     val resAddFoodExpence: LiveData<SuccessResource<AddTravelExpenceResponse>>
         get() = _resAddFoodExpence
+
+    var _resAddMOMToMeetingExpence =
+        MutableLiveData<SuccessResource<AddMOMResponse>>()
+
+    val resAddMOMToMeetingExpence: LiveData<SuccessResource<AddMOMResponse>>
+        get() = _resAddMOMToMeetingExpence
 
     private var dropOffPlaceAddress: MutableLiveData<String>? = MutableLiveData()
     private var pickupPlaceAddress: MutableLiveData<String>? = MutableLiveData()
@@ -335,6 +360,24 @@ class MainActivityViewModel @Inject constructor(
         get() = _resNewMeetingPurpose
 
 
+    private val _resAddUserCoordinates =
+        MutableLiveData<SuccessResource<LocationResponse>>()
+
+    val resAddUserCoordinates: LiveData<SuccessResource<LocationResponse>>
+        get() = _resAddUserCoordinates
+
+    private val _resUserMeetingCheckIN =
+        MutableLiveData<SuccessResource<LocationResponse>>()
+
+    val resUserMeetingCheckIN: LiveData<SuccessResource<LocationResponse>>
+        get() = _resUserMeetingCheckIN
+
+    private val _resUserMeetingCheckOUT =
+        MutableLiveData<SuccessResource<LocationResponse>>()
+
+    val resUserMeetingCheckOUT: LiveData<SuccessResource<LocationResponse>>
+        get() = _resUserMeetingCheckOUT
+
 //    fun setCustomerSelectedDropOffPlace(customerSelectedDropOffPlace: Place?) {
 //        this.customerSelectedDropOffPlace.value = customerSelectedDropOffPlace
 //    }
@@ -371,236 +414,384 @@ class MainActivityViewModel @Inject constructor(
         get() = _resEscalationGraphByIDList
 
     fun getPendingActionGraph() = viewModelScope.launch {
-        _resPendingActionGraphList.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getPendingActionGraph("Bearer ${checkIfUserLogin()}").let {
-                if (it.isSuccessful) {
-                    _resPendingActionGraphList.postValue(SuccessResource.success(it.body()))
-                } else {
-                    _resPendingActionGraphList.postValue(
-                        SuccessResource.error(
-                            it.errorBody().toString(), null
-                        )
-                    )
-                }
-            }
-    }
-
-    fun getPendingActionGraphByID(projectId: String) = viewModelScope.launch {
-        _resPendingActionGraphByIDList.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getPendingActionGraphByID("Bearer ${checkIfUserLogin()}", projectId)
-                .let {
+        try {
+            _resPendingActionGraphList.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getPendingActionGraph("Bearer ${checkIfUserLogin()}").let {
                     if (it.isSuccessful) {
-                        _resPendingActionGraphByIDList.postValue(SuccessResource.success(it.body()))
+                        _resPendingActionGraphList.postValue(SuccessResource.success(it.body()))
                     } else {
-                        _resPendingActionGraphByIDList.postValue(
+                        _resPendingActionGraphList.postValue(
                             SuccessResource.error(
                                 it.errorBody().toString(), null
                             )
                         )
                     }
                 }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
+    }
+
+    fun getPendingActionGraphByID(projectId: String) = viewModelScope.launch {
+        try {
+            _resPendingActionGraphByIDList.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getPendingActionGraphByID("Bearer ${checkIfUserLogin()}", projectId)
+                    .let {
+                        if (it.isSuccessful) {
+                            _resPendingActionGraphByIDList.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resPendingActionGraphByIDList.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(), null
+                                )
+                            )
+                        }
+                    }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
     }
 
     fun getClientEscalationGraphByID(clientId: String) = viewModelScope.launch {
-        _resEscalationGraphByIDList.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getEscalationGraphByID("Bearer ${checkIfUserLogin()}", clientId).let {
-                if (it.isSuccessful) {
-                    _resEscalationGraphByIDList.postValue(SuccessResource.success(it.body()))
-                } else {
-                    _resEscalationGraphByIDList.postValue(
-                        SuccessResource.error(
-                            it.errorBody().toString(),
-                            null
-                        )
-                    )
-                }
-            }
+        try {
+            _resEscalationGraphByIDList.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getEscalationGraphByID("Bearer ${checkIfUserLogin()}", clientId)
+                    .let {
+                        if (it.isSuccessful) {
+                            _resEscalationGraphByIDList.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resEscalationGraphByIDList.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(),
+                                    null
+                                )
+                            )
+                        }
+                    }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
     }
 
 
     @SuppressLint("SuspiciousIndentation")
     fun getEscalationGraph() = viewModelScope.launch {
-        _resEscalationGraphList.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getEscalationGraph("Bearer ${checkIfUserLogin()}").let {
-                if (it.isSuccessful) {
-                    _resEscalationGraphList.postValue(SuccessResource.success(it.body()))
-                } else {
-                    _resEscalationGraphList.postValue(
-                        SuccessResource.error(
-                            it.errorBody().toString(),
-                            null
+        try {
+            _resEscalationGraphList.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getEscalationGraph("Bearer ${checkIfUserLogin()}").let {
+                    if (it.isSuccessful) {
+                        _resEscalationGraphList.postValue(SuccessResource.success(it.body()))
+                    } else {
+                        _resEscalationGraphList.postValue(
+                            SuccessResource.error(
+                                it.errorBody().toString(),
+                                null
+                            )
                         )
-                    )
+                    }
                 }
-            }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
     }
 
     fun getClientNameList() = viewModelScope.launch {
-        _resClientNameList.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getClients("Bearer ${checkIfUserLogin()}").let {
-                if (it.isSuccessful) {
-                    _resClientNameList.postValue(SuccessResource.success(it.body()))
-                } else {
-                    _resClientNameList.postValue(
-                        SuccessResource.error(
-                            it.errorBody().toString(),
-                            null
+        try {
+            _resClientNameList.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getClients("Bearer ${checkIfUserLogin()}").let {
+                    if (it.isSuccessful) {
+                        _resClientNameList.postValue(SuccessResource.success(it.body()))
+                    } else {
+                        _resClientNameList.postValue(
+                            SuccessResource.error(
+                                it.errorBody().toString(),
+                                null
+                            )
                         )
-                    )
+                    }
                 }
-            }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
     }
 
-    fun getProjectList() = viewModelScope.launch {
-        _resProjectList.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getProjects("Bearer ${checkIfUserLogin()}").let {
-                if (it.isSuccessful) {
-                    _resProjectList.postValue(SuccessResource.success(it.body()))
-                } else {
-                    _resProjectList.postValue(
-                        SuccessResource.error(
-                            it.errorBody().toString(),
-                            null
+    fun getLeadsNameList(clientName: String) = viewModelScope.launch {
+        try {
+            _resLeadNameList.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getLeads("Bearer ${checkIfUserLogin()}", clientName).let {
+                    if (it.isSuccessful) {
+                        _resLeadNameList.postValue(SuccessResource.success(it.body()))
+                    } else {
+                        _resLeadNameList.postValue(
+                            SuccessResource.error(
+                                it.errorBody().toString(),
+                                null
+                            )
                         )
-                    )
+                    }
                 }
-            }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
+    }
+
+
+    fun getProjectList() = viewModelScope.launch {
+        try {
+            _resProjectList.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getProjects("Bearer ${checkIfUserLogin()}").let {
+                    if (it.isSuccessful) {
+                        _resProjectList.postValue(SuccessResource.success(it.body()))
+                    } else {
+                        _resProjectList.postValue(
+                            SuccessResource.error(
+                                it.errorBody().toString(),
+                                null
+                            )
+                        )
+                    }
+                }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
     }
 
     fun getAssignedProjectList() = viewModelScope.launch {
-        _resAssignedProjectList.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getAssignProjects("Bearer ${checkIfUserLogin()}").let {
-                if (it.isSuccessful) {
-                    _resAssignedProjectList.postValue(SuccessResource.success(it.body()))
-                } else {
-                    _resAssignedProjectList.postValue(
-                        SuccessResource.error(
-                            it.errorBody().toString(),
-                            null
+        try {
+            _resAssignedProjectList.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getAssignProjects("Bearer ${checkIfUserLogin()}").let {
+                    if (it.isSuccessful) {
+                        _resAssignedProjectList.postValue(SuccessResource.success(it.body()))
+                    } else {
+                        _resAssignedProjectList.postValue(
+                            SuccessResource.error(
+                                it.errorBody().toString(),
+                                null
+                            )
                         )
-                    )
+                    }
                 }
-            }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
     }
 
 
     fun getManagementList(authorization: String) =
         viewModelScope.launch {
-            _resManagementList.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getManagementList("Bearer ${checkIfUserLogin()}").let {
-                    if (it.isSuccessful) {
-                        _resManagementList.postValue(SuccessResource.success(it.body()))
-                    } else {
-                        _resManagementList.postValue(
-                            SuccessResource.error(
-                                it.errorBody().toString(),
-                                null
+            try {
+                _resManagementList.postValue(SuccessResource.loading(null))
+                if (utlIsNetworkAvailable())
+                    mainRepository.getManagementList("Bearer ${checkIfUserLogin()}").let {
+                        if (it.isSuccessful) {
+                            _resManagementList.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resManagementList.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(),
+                                    null
+                                )
                             )
-                        )
+                        }
                     }
-                }
+            } catch (e: Exception) {
+                Log.e("TAG", "Exception occur at getClients ${e.message}")
+                _loading.value = View.GONE
+            } finally {
+            }
         }
 
     fun getAccountManagerList(authorization: String) =
         viewModelScope.launch {
-            _resAccountHeadList.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getAccountManagerList("Bearer ${checkIfUserLogin()}").let {
-                    if (it.isSuccessful) {
-                        _resAccountHeadList.postValue(SuccessResource.success(it.body()))
-                    } else {
-                        _resAccountHeadList.postValue(
-                            SuccessResource.error(
-                                it.errorBody().toString(),
-                                null
+            try {
+                _resAccountHeadList.postValue(SuccessResource.loading(null))
+                if (utlIsNetworkAvailable())
+                    mainRepository.getAccountManagerList("Bearer ${checkIfUserLogin()}").let {
+                        if (it.isSuccessful) {
+                            _resAccountHeadList.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resAccountHeadList.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(),
+                                    null
+                                )
                             )
-                        )
+                        }
                     }
-                }
+            } catch (e: Exception) {
+                Log.e("TAG", "Exception occur at getClients ${e.message}")
+                _loading.value = View.GONE
+            } finally {
+            }
         }
 
 
     fun getProjectManagerList(authorization: String) =
         viewModelScope.launch {
-            _resProjectManagerList.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getProjectManagerList("Bearer ${checkIfUserLogin()}").let {
-                    if (it.isSuccessful) {
-                        _resProjectManagerList.postValue(SuccessResource.success(it.body()))
-                    } else {
-                        _resProjectManagerList.postValue(
-                            SuccessResource.error(
-                                it.errorBody().toString(),
-                                null
+            try {
+                _resProjectManagerList.postValue(SuccessResource.loading(null))
+                if (utlIsNetworkAvailable())
+                    mainRepository.getProjectManagerList("Bearer ${checkIfUserLogin()}").let {
+                        if (it.isSuccessful) {
+                            _resProjectManagerList.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resProjectManagerList.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(),
+                                    null
+                                )
                             )
-                        )
+                        }
                     }
-                }
+            } catch (e: Exception) {
+                Log.e("TAG", "Exception occur at getClients ${e.message}")
+                _loading.value = View.GONE
+            } finally {
+            }
         }
 
     fun getPracticeHeadList(authorization: String) =
         viewModelScope.launch {
-            _resPracticeHeadList.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getPracticeHeadList("Bearer ${checkIfUserLogin()}").let {
-                    if (it.isSuccessful) {
-                        _resPracticeHeadList.postValue(SuccessResource.success(it.body()))
-                    } else {
-                        _resPracticeHeadList.postValue(
-                            SuccessResource.error(
-                                it.errorBody().toString(),
-                                null
+            try {
+                _resPracticeHeadList.postValue(SuccessResource.loading(null))
+                if (utlIsNetworkAvailable())
+                    mainRepository.getPracticeHeadList("Bearer ${checkIfUserLogin()}").let {
+                        if (it.isSuccessful) {
+                            _resPracticeHeadList.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resPracticeHeadList.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(),
+                                    null
+                                )
                             )
-                        )
+                        }
                     }
-                }
+            } catch (e: Exception) {
+                Log.e("TAG", "Exception occur at getClients ${e.message}")
+                _loading.value = View.GONE
+            } finally {
+            }
         }
 
 
     fun getMeetingPurpose(authorization: String) =
         viewModelScope.launch {
-            _resMeetingPurposeList.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getMeetingPurpose("Bearer ${checkIfUserLogin()}").let {
-                    if (it.isSuccessful) {
-                        _resMeetingPurposeList.postValue(SuccessResource.success(it.body()))
-                    } else {
-                        _resMeetingPurposeList.postValue(
-                            SuccessResource.error(
-                                it.errorBody().toString(),
-                                null
+            try {
+                _resMeetingPurposeList.postValue(SuccessResource.loading(null))
+                if (utlIsNetworkAvailable())
+                    mainRepository.getMeetingPurpose("Bearer ${checkIfUserLogin()}").let {
+                        if (it.isSuccessful) {
+                            _resMeetingPurposeList.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resMeetingPurposeList.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(),
+                                    null
+                                )
                             )
-                        )
+                        }
                     }
-                }
+            } catch (e: Exception) {
+                Log.e("TAG", "Exception occur at getClients ${e.message}")
+                _loading.value = View.GONE
+            } finally {
+            }
         }
 
 
     fun getMeetingPurposeByID(opportunityID: String) = viewModelScope.launch {
-        _resMeetingPurposeIDItems.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getMeetingPurposeByID("Bearer ${checkIfUserLogin()}", opportunityID)
-                .let {
-                    if (it.isSuccessful) {
-                        _resMeetingPurposeIDItems.postValue(SuccessResource.success(it.body()))
-                    } else {
-                        _resMeetingPurposeIDItems.postValue(
-                            SuccessResource.error(
-                                it.errorBody().toString(), null
+        try {
+            _resMeetingPurposeIDItems.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getMeetingPurposeByID("Bearer ${checkIfUserLogin()}", opportunityID)
+                    .let {
+                        if (it.isSuccessful) {
+                            _resMeetingPurposeIDItems.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resMeetingPurposeIDItems.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(), null
+                                )
                             )
-                        )
+                        }
                     }
-                }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
     }
 
+    fun getMeetingPurposeByStatus(opportunityID: String) = viewModelScope.launch {
+        try {
+            _resMeetingPurposeList.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getMeetingPurposeByStatus("Bearer ${checkIfUserLogin()}", opportunityID)
+                    .let {
+                        if (it.isSuccessful) {
+                            _resMeetingPurposeList.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resMeetingPurposeList.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(), null
+                                )
+                            )
+                        }
+                    }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getMeetingPurposeByStatus ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
+    }
+
+    fun getMeetingPurposeStatus() = viewModelScope.launch {
+        try {
+            _resMeetingPurposeStatusDetails.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getMeetingPurposeStatus("Bearer ${checkIfUserLogin()}")
+                    .let {
+                        if (it.isSuccessful) {
+                            _resMeetingPurposeStatusDetails.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resMeetingPurposeStatusDetails.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(), null
+                                )
+                            )
+                        }
+                    }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getMeetingPurposeStatus ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
+    }
 
     fun addTravelExpense(
         travelExpence: AddTravelExpenceRequest,
@@ -685,6 +876,198 @@ class MainActivityViewModel @Inject constructor(
             } finally {
             }
         }
+
+
+    fun addMOMExpense(
+        travelExpence: AddMOMRequest,
+        listImage: MutableList<File>
+    ) =
+        viewModelScope.launch {
+            try {
+                _loading.value = View.VISIBLE
+                Log.d("TAG", "uploadGenresFile: ${travelExpence.toString()}")
+//                if (file == null) {
+//                    _eventChannel.send(MainEvent.Error("File is empty"))
+//                    return@launch
+//                }
+
+
+//                val reqBody =
+//                    file!!.toRequestBody(
+//                        "multipart/form-data".toMediaTypeOrNull(),
+//                        0,
+//                    )
+//                val formData = MultipartBody.Part.createFormData(
+//                    "file",
+//                    "expensesFile-${Random.nextInt(1, 10)}",
+//                    reqBody
+//                )
+
+                val requestBody: MutableMap<String, RequestBody> = HashMap()
+                requestBody["meetingNotes"] =
+                    travelExpence.meetingNotes.toRequestBody("text/plain".toMediaTypeOrNull())
+                requestBody["infoFromClient"] =
+                    travelExpence.infoFromClient.toRequestBody("text/plain".toMediaTypeOrNull())
+                requestBody["targetDate"] =
+                    travelExpence.targetDate.toRequestBody("text/plain".toMediaTypeOrNull())
+
+                val listMultipartImage: MutableList<MultipartBody.Part> = ArrayList()
+                for (i in 0 until listImage.size) {
+                    listMultipartImage.add(
+                        MultipartBody.Part.createFormData(
+                            "files",
+                            listImage[i].name,
+//                        RequestBody.create(MediaType.parse("image/*")!!,
+                            listImage[i].readBytes().toRequestBody(
+                                "multipart/form-data".toMediaTypeOrNull(), 0,
+                            )
+                        )
+//                    )
+                    )
+                }
+
+//                val amountPart = MultipartBody.Part.createFormData("amount", travelExpence.hotelAmount.toString())
+
+                _resAddMOMToMeetingExpence.postValue(SuccessResource.loading(null))
+                if (utlIsNetworkAvailable()) {
+                    Log.d("TAG", "addFoodExpense: ${travelExpence.toString()}")
+
+                    mainRepository.addMOMToMeeting(
+                        "Bearer ${checkIfUserLogin()}",
+                        travelExpence.purposeId.toString()
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+//                    RequestBody.create(MediaType.parse("text/plain"), travelExpence.purposeId.toString()),
+                        listMultipartImage, requestBody
+                    )
+                        .let {
+                            if (it.isSuccessful) {
+                                _resAddMOMToMeetingExpence.postValue(SuccessResource.success(it.body()))
+                            } else {
+                                _resAddMOMToMeetingExpence.postValue(
+                                    SuccessResource.error(
+                                        it.errorBody().toString(), null
+                                    )
+                                )
+                            }
+                        }
+                }
+            } catch (e: Exception) {
+                Log.e("TAG", "Exception occur at add travel expenses ${e.message}")
+                _loading.value = View.GONE
+            } finally {
+            }
+        }
+
+
+    fun putUserMeetingCheckIN(
+        clientName: String,
+        checkin: AddCheckInRequest,
+        listImage: MutableList<File>
+    ) = viewModelScope.launch {
+
+        try {
+            _loading.value = View.VISIBLE
+            Log.d("TAG", "uploadGenresFile: ${checkin.toString()}")
+            val requestBody: MutableMap<String, RequestBody> = HashMap()
+            requestBody["latitude"] =
+                checkin.latitude.toRequestBody("text/plain".toMediaTypeOrNull())
+            requestBody["longitude"] =
+                checkin.longitude.toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val listMultipartImage: MultipartBody.Part =
+                MultipartBody.Part.createFormData(
+                    "file",
+                    listImage[0].name,
+//                        RequestBody.create(MediaType.parse("image/*")!!,
+                    listImage[0].readBytes().toRequestBody(
+                        "multipart/form-data".toMediaTypeOrNull(), 0,
+                    )
+                )
+
+            _resUserMeetingCheckIN.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.putUserMeetingCheckIN(
+                    "Bearer ${checkIfUserLogin()}",
+                    clientName,
+                    requestBody,
+                    listMultipartImage
+                ).let {
+                    if (it.isSuccessful) {
+                        _resUserMeetingCheckIN.postValue(SuccessResource.success(it.body()))
+                    } else {
+                        _resUserMeetingCheckIN.postValue(
+                            SuccessResource.error(
+                                it.errorBody().toString(),
+                                null
+                            )
+                        )
+                    }
+                }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at add travel expenses ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
+
+
+    }
+
+    fun putUserMeetingCheckOUT(
+        clientName: String, checkin: AddCheckInRequest
+    ) = viewModelScope.launch {
+
+        try {
+            _loading.value = View.VISIBLE
+            Log.d("TAG", "uploadGenresFile: ${checkin.toString()}")
+//                if (file == null) {
+//                    _eventChannel.send(MainEvent.Error("File is empty"))
+//                    return@launch
+//                }
+
+
+//                val reqBody =
+//                    file!!.toRequestBody(
+//                        "multipart/form-data".toMediaTypeOrNull(),
+//                        0,
+//                    )
+//                val formData = MultipartBody.Part.createFormData(
+//                    "file",
+//                    "expensesFile-${Random.nextInt(1, 10)}",
+//                    reqBody
+//                )
+
+            val requestBody: MutableMap<String, RequestBody> = HashMap()
+            requestBody["latitude"] =
+                checkin.latitude.toRequestBody("text/plain".toMediaTypeOrNull())
+            requestBody["longitude"] =
+                checkin.longitude.toRequestBody("text/plain".toMediaTypeOrNull())
+
+            _resUserMeetingCheckOUT.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.putUserMeetingCheckOUT(
+                    "Bearer ${checkIfUserLogin()}",
+                    clientName,
+                    requestBody
+                )
+                    .let {
+                        if (it.isSuccessful) {
+                            _resUserMeetingCheckOUT.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resUserMeetingCheckOUT.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(),
+                                    null
+                                )
+                            )
+                        }
+                    }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at add travel expenses ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+
+        }
+    }
 
     fun addFoodExpense(
         travelExpence: AddFoodExpenceRequest,
@@ -829,7 +1212,10 @@ class MainActivityViewModel @Inject constructor(
                     )
                 }
 
-                val amountPart = MultipartBody.Part.createFormData("amount", travelExpence.hotelAmount.toString())
+                val amountPart = MultipartBody.Part.createFormData(
+                    "amount",
+                    travelExpence.hotelAmount.toString()
+                )
 
                 _resAddHotelExpence.postValue(SuccessResource.loading(null))
                 if (utlIsNetworkAvailable()) {
@@ -1027,13 +1413,38 @@ class MainActivityViewModel @Inject constructor(
 
     fun getProjectOpportunity(authorization: String) =
         viewModelScope.launch {
-            _resProjectOpportunityList.postValue(SuccessResource.loading(null))
+            try {
+                _resProjectOpportunityList.postValue(SuccessResource.loading(null))
+                if (utlIsNetworkAvailable())
+                    mainRepository.getProjectOpportunity("Bearer ${checkIfUserLogin()}").let {
+                        if (it.isSuccessful) {
+                            _resProjectOpportunityList.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resProjectOpportunityList.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(),
+                                    null
+                                )
+                            )
+                        }
+                    }
+            } catch (e: Exception) {
+                Log.e("TAG", "Exception occur at getClients ${e.message}")
+                _loading.value = View.GONE
+            } finally {
+            }
+        }
+
+    @SuppressLint("SuspiciousIndentation")
+    fun getEmployeeMe() = viewModelScope.launch {
+        try {
+            _resEmployeeMe.postValue(SuccessResource.loading(null))
             if (utlIsNetworkAvailable())
-                mainRepository.getProjectOpportunity("Bearer ${checkIfUserLogin()}").let {
+                mainRepository.getEmployeeMe("Bearer ${checkIfUserLogin()}").let {
                     if (it.isSuccessful) {
-                        _resProjectOpportunityList.postValue(SuccessResource.success(it.body()))
+                        _resEmployeeMe.postValue(SuccessResource.success(it.body()))
                     } else {
-                        _resProjectOpportunityList.postValue(
+                        _resEmployeeMe.postValue(
                             SuccessResource.error(
                                 it.errorBody().toString(),
                                 null
@@ -1041,40 +1452,65 @@ class MainActivityViewModel @Inject constructor(
                         )
                     }
                 }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
         }
-
-    @SuppressLint("SuspiciousIndentation")
-    fun getEmployeeMe() = viewModelScope.launch {
-        _resEmployeeMe.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getEmployeeMe("Bearer ${checkIfUserLogin()}").let {
-                if (it.isSuccessful) {
-                    _resEmployeeMe.postValue(SuccessResource.success(it.body()))
-                } else {
-                    _resEmployeeMe.postValue(SuccessResource.error(it.errorBody().toString(), null))
-                }
-            }
     }
 
     @SuppressLint("SuspiciousIndentation")
     fun getEmployeeAllowences() = viewModelScope.launch {
-        _resEmployeeAllowence.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getEmployeeAllowences(
-                "Bearer ${checkIfUserLogin()}",
-                getUserEmployeeID()
-            ).let {
-                if (it.isSuccessful) {
-                    _resEmployeeAllowence.postValue(SuccessResource.success(it.body()))
-                } else {
-                    _resEmployeeAllowence.postValue(
-                        SuccessResource.error(
-                            it.errorBody().toString(),
-                            null
+        try {
+            _resEmployeeAllowence.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getEmployeeAllowences(
+                    "Bearer ${checkIfUserLogin()}",
+                    getUserEmployeeID()
+                ).let {
+                    if (it.isSuccessful) {
+                        _resEmployeeAllowence.postValue(SuccessResource.success(it.body()))
+                    } else {
+                        _resEmployeeAllowence.postValue(
+                            SuccessResource.error(
+                                it.errorBody().toString(),
+                                null
+                            )
                         )
-                    )
+                    }
                 }
-            }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
+    }
+
+
+    @SuppressLint("SuspiciousIndentation")
+    fun addUserCoordinates(
+        visitDate: AddLocationCoordinates
+    ) = viewModelScope.launch {
+        try {
+            _resAddUserCoordinates.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.addUserCoordinates("Bearer ${checkIfUserLogin()}", visitDate).let {
+                    if (it.isSuccessful) {
+                        _resAddUserCoordinates.postValue(SuccessResource.success(it.body()))
+                    } else {
+                        _resAddUserCoordinates.postValue(
+                            SuccessResource.error(
+                                it.errorBody().toString(),
+                                null
+                            )
+                        )
+                    }
+                }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
     }
 
     @SuppressLint("SuspiciousIndentation")
@@ -1095,102 +1531,14 @@ class MainActivityViewModel @Inject constructor(
 //            visitPurpose = visitPurpose
 //        )
 
-        _resNewMeetingPurpose.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.addMeetingPurpose("Bearer ${checkIfUserLogin()}", visitDate).let {
-                if (it.isSuccessful) {
-                    _resNewMeetingPurpose.postValue(SuccessResource.success(it.body()))
-                } else {
-                    _resNewMeetingPurpose.postValue(
-                        SuccessResource.error(
-                            it.errorBody().toString(),
-                            null
-                        )
-                    )
-                }
-            }
-    }
-
-    fun getEscalationItemProjectID(itemID: String) = viewModelScope.launch {
-        _resEscalationList.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getEscalationItemProjectID("Bearer ${checkIfUserLogin()}", itemID).let {
-                if (it.isSuccessful) {
-                    _resEscalationList.postValue(SuccessResource.success(it.body()))
-                } else {
-                    _resEscalationList.postValue(
-                        SuccessResource.error(
-                            it.errorBody().toString(),
-                            null
-                        )
-                    )
-                }
-            }
-    }
-
-    fun getMOMProjects(opportunityID: String) = viewModelScope.launch {
-        _resMomActionItemsList.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getMOMProjects("Bearer ${checkIfUserLogin()}", opportunityID).let {
-                if (it.isSuccessful) {
-                    _resMomActionItemsList.postValue(SuccessResource.success(it.body()))
-                } else {
-                    _resMomActionItemsList.postValue(
-                        SuccessResource.error(
-                            it.errorBody().toString(),
-                            null
-                        )
-                    )
-                }
-            }
-    }
-
-    fun getMOMActionItemDetailsBYId(opportunityID: String) = viewModelScope.launch {
-        _resMomActionItemBYID.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getMOMActionItemDetailsBYId(
-                "Bearer ${checkIfUserLogin()}",
-                opportunityID
-            ).let {
-                if (it.isSuccessful) {
-                    _resMomActionItemBYID.postValue(SuccessResource.success(it.body()))
-                } else {
-                    _resMomActionItemBYID.postValue(
-                        SuccessResource.error(
-                            it.errorBody().toString(),
-                            null
-                        )
-                    )
-                }
-            }
-    }
-
-    fun getOpportunityByProductID(opportunityID: String) = viewModelScope.launch {
-        _resOpportunityByProjectIDItems.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getOpportunityByProductID("Bearer ${checkIfUserLogin()}", opportunityID)
-                .let {
+        try {
+            _resNewMeetingPurpose.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.addMeetingPurpose("Bearer ${checkIfUserLogin()}", visitDate).let {
                     if (it.isSuccessful) {
-                        _resOpportunityByProjectIDItems.postValue(SuccessResource.success(it.body()))
+                        _resNewMeetingPurpose.postValue(SuccessResource.success(it.body()))
                     } else {
-                        _resOpportunityByProjectIDItems.postValue(
-                            SuccessResource.error(
-                                it.errorBody().toString(), null
-                            )
-                        )
-                    }
-                }
-    }
-
-    fun getActionItemProjectID(opportunityID: String) = viewModelScope.launch {
-        _resActionItemsList.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getActionItemProjectID("Bearer ${checkIfUserLogin()}", opportunityID)
-                .let {
-                    if (it.isSuccessful) {
-                        _resActionItemsList.postValue(SuccessResource.success(it.body()))
-                    } else {
-                        _resActionItemsList.postValue(
+                        _resNewMeetingPurpose.postValue(
                             SuccessResource.error(
                                 it.errorBody().toString(),
                                 null
@@ -1198,77 +1546,197 @@ class MainActivityViewModel @Inject constructor(
                         )
                     }
                 }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
+    }
+
+    fun getEscalationItemProjectID(itemID: String) = viewModelScope.launch {
+        try {
+            _resEscalationList.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getEscalationItemProjectID("Bearer ${checkIfUserLogin()}", itemID)
+                    .let {
+                        if (it.isSuccessful) {
+                            _resEscalationList.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resEscalationList.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(),
+                                    null
+                                )
+                            )
+                        }
+                    }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
+    }
+
+    fun getMOMProjects(opportunityID: String) = viewModelScope.launch {
+        try {
+            _resMomActionItemsList.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getMOMProjects("Bearer ${checkIfUserLogin()}", opportunityID).let {
+                    if (it.isSuccessful) {
+                        _resMomActionItemsList.postValue(SuccessResource.success(it.body()))
+                    } else {
+                        _resMomActionItemsList.postValue(
+                            SuccessResource.error(
+                                it.errorBody().toString(),
+                                null
+                            )
+                        )
+                    }
+                }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
+    }
+
+    fun getMOMActionItemDetailsBYId(opportunityID: String) = viewModelScope.launch {
+        try {
+            _resMomActionItemBYID.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getMOMActionItemDetailsBYId(
+                    "Bearer ${checkIfUserLogin()}",
+                    opportunityID
+                ).let {
+                    if (it.isSuccessful) {
+                        _resMomActionItemBYID.postValue(SuccessResource.success(it.body()))
+                    } else {
+                        _resMomActionItemBYID.postValue(
+                            SuccessResource.error(
+                                it.errorBody().toString(),
+                                null
+                            )
+                        )
+                    }
+                }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
+    }
+
+    fun getOpportunityByProductID(opportunityID: String) = viewModelScope.launch {
+        try {
+            _resOpportunityByProjectIDItems.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getOpportunityByProductID(
+                    "Bearer ${checkIfUserLogin()}",
+                    opportunityID
+                )
+                    .let {
+                        if (it.isSuccessful) {
+                            _resOpportunityByProjectIDItems.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resOpportunityByProjectIDItems.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(), null
+                                )
+                            )
+                        }
+                    }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
+    }
+
+    fun getActionItemProjectID(opportunityID: String) = viewModelScope.launch {
+        try {
+            _resActionItemsList.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getActionItemProjectID("Bearer ${checkIfUserLogin()}", opportunityID)
+                    .let {
+                        if (it.isSuccessful) {
+                            _resActionItemsList.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resActionItemsList.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(),
+                                    null
+                                )
+                            )
+                        }
+                    }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
     }
 
     fun getActionItemBYID(opportunityID: String) = viewModelScope.launch {
-        _resActionItemBYID.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getActionItemBYID("Bearer ${checkIfUserLogin()}", opportunityID).let {
-                if (it.isSuccessful) {
-                    _resActionItemBYID.postValue(SuccessResource.success(it.body()))
-                } else {
-                    _resActionItemBYID.postValue(
-                        SuccessResource.error(
-                            it.errorBody().toString(),
-                            null
-                        )
-                    )
-                }
-            }
+        try {
+            _resActionItemBYID.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getActionItemBYID("Bearer ${checkIfUserLogin()}", opportunityID)
+                    .let {
+                        if (it.isSuccessful) {
+                            _resActionItemBYID.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resActionItemBYID.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(),
+                                    null
+                                )
+                            )
+                        }
+                    }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
     }
 
     fun getCommentProjectID(opportunityID: String) = viewModelScope.launch {
-        _resCommentsList.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.getCommentProjectID("Bearer ${checkIfUserLogin()}", opportunityID).let {
-                if (it.isSuccessful) {
-                    _resCommentsList.postValue(SuccessResource.success(it.body()))
-                } else {
-                    _resCommentsList.postValue(
-                        SuccessResource.error(
-                            it.errorBody().toString(),
-                            null
-                        )
-                    )
-                }
-            }
+        try {
+            _resCommentResponse.postValue(SuccessResource.loading(null))
+            if (utlIsNetworkAvailable())
+                mainRepository.getCommentProjectID("Bearer ${checkIfUserLogin()}", opportunityID)
+                    .let {
+                        if (it.isSuccessful) {
+                            _resCommentResponse.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resCommentResponse.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(),
+                                    null
+                                )
+                            )
+                        }
+                    }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
     }
 
 
     fun userLogin(userId: String, password: String) = viewModelScope.launch {
-        val requestBody: MutableMap<String, String> = HashMap()
-        requestBody[Common.User_Id] = userId
-        requestBody[Common.Password] = password
-        _resLoginResponse.postValue(SuccessResource.loading(null))
-        if (utlIsNetworkAvailable())
-            mainRepository.userLogin(requestBody).let {
-                if (it.isSuccessful) {
-                    _resLoginResponse.postValue(SuccessResource.success(it.body()))
-                } else {
-                    _resLoginResponse.postValue(
-                        SuccessResource.error(
-                            it.errorBody().toString(),
-                            null
-                        )
-                    )
-                }
-            }
-    }
-
-    fun addClient(clientName: String, clientContactName: String, clientContactPos: String) =
-        viewModelScope.launch {
+        try {
             val requestBody: MutableMap<String, String> = HashMap()
-            requestBody[Common.CLIENT_NAME] = clientName
-            requestBody[Common.CLIENT_CONTACT_NAME] = clientContactName
-            requestBody[Common.CLIENT_CONTACT_POS] = clientContactPos
-
-            _resNewClientResponse.postValue(SuccessResource.loading(null))
+            requestBody[Common.User_Id] = userId
+            requestBody[Common.Password] = password
+            _resLoginResponse.postValue(SuccessResource.loading(null))
             if (utlIsNetworkAvailable())
-                mainRepository.addClient("Bearer ${checkIfUserLogin()}", requestBody).let {
+                mainRepository.userLogin(requestBody).let {
                     if (it.isSuccessful) {
-                        _resNewClientResponse.postValue(SuccessResource.success(it.body()))
+                        _resLoginResponse.postValue(SuccessResource.success(it.body()))
                     } else {
-                        _resNewClientResponse.postValue(
+                        _resLoginResponse.postValue(
                             SuccessResource.error(
                                 it.errorBody().toString(),
                                 null
@@ -1276,6 +1744,40 @@ class MainActivityViewModel @Inject constructor(
                         )
                     }
                 }
+        } catch (e: Exception) {
+            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            _loading.value = View.GONE
+        } finally {
+        }
+    }
+
+    fun addClient(clientName: String, clientContactName: String, clientContactPos: String) =
+        viewModelScope.launch {
+            try {
+                val requestBody: MutableMap<String, String> = HashMap()
+                requestBody[Common.CLIENT_NAME] = clientName
+                requestBody[Common.CLIENT_CONTACT_NAME] = clientContactName
+                requestBody[Common.CLIENT_CONTACT_POS] = clientContactPos
+
+                _resNewClientResponse.postValue(SuccessResource.loading(null))
+                if (utlIsNetworkAvailable())
+                    mainRepository.addClient("Bearer ${checkIfUserLogin()}", requestBody).let {
+                        if (it.isSuccessful) {
+                            _resNewClientResponse.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resNewClientResponse.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(),
+                                    null
+                                )
+                            )
+                        }
+                    }
+            } catch (e: Exception) {
+                Log.e("TAG", "Exception occur at getClients ${e.message}")
+                _loading.value = View.GONE
+            } finally {
+            }
         }
 
 
@@ -1307,31 +1809,37 @@ class MainActivityViewModel @Inject constructor(
         reportingManagerId: String, contactNoOne: String, email: String, status: String
     ) =
         viewModelScope.launch {
-            val requestBody: MutableMap<String, String> = HashMap()
-            requestBody[Common.USER_NAME] = userName
-            requestBody[Common.PASSWORD] = pwd
-            requestBody[Common.EMPLOYEE_NUM] = employeeNumber
-            requestBody[Common.ROLE_ID] = roleId
-            requestBody[Common.DEPT_ID] = departmentId
-            requestBody[Common.REPORTMANAGER_ID] = reportingManagerId
-            requestBody[Common.CONTACT_NUM] = contactNoOne
-            requestBody[Common.EMAIL_ID] = email
-            requestBody[Common.STATUS] = status
+            try {
+                val requestBody: MutableMap<String, String> = HashMap()
+                requestBody[Common.USER_NAME] = userName
+                requestBody[Common.PASSWORD] = pwd
+                requestBody[Common.EMPLOYEE_NUM] = employeeNumber
+                requestBody[Common.ROLE_ID] = roleId
+                requestBody[Common.DEPT_ID] = departmentId
+                requestBody[Common.REPORTMANAGER_ID] = reportingManagerId
+                requestBody[Common.CONTACT_NUM] = contactNoOne
+                requestBody[Common.EMAIL_ID] = email
+                requestBody[Common.STATUS] = status
 
-            _resNewClientResponse.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.addEmployee("Bearer ${checkIfUserLogin()}", requestBody).let {
-                    if (it.isSuccessful) {
-                        _resNewClientResponse.postValue(SuccessResource.success(it.body()))
-                    } else {
-                        _resNewClientResponse.postValue(
-                            SuccessResource.error(
-                                it.errorBody().toString(),
-                                null
+                _resNewClientResponse.postValue(SuccessResource.loading(null))
+                if (utlIsNetworkAvailable())
+                    mainRepository.addEmployee("Bearer ${checkIfUserLogin()}", requestBody).let {
+                        if (it.isSuccessful) {
+                            _resNewClientResponse.postValue(SuccessResource.success(it.body()))
+                        } else {
+                            _resNewClientResponse.postValue(
+                                SuccessResource.error(
+                                    it.errorBody().toString(),
+                                    null
+                                )
                             )
-                        )
+                        }
                     }
-                }
+            } catch (e: Exception) {
+                Log.e("TAG", "Exception occur at getClients ${e.message}")
+                _loading.value = View.GONE
+            } finally {
+            }
         }
 
     fun addClientEscalation(
@@ -1340,16 +1848,17 @@ class MainActivityViewModel @Inject constructor(
         escalationResolvedDate: String, escalationStatus: String
     ) =
         viewModelScope.launch {
+            try {
+                val requestBody = AddEscalationRequest(
+                    clientId = clientId,
+                    projectId = projectId,
+                    escalationRaisedDate = escalationRaisedDate,
+                    escalationResolvedDate = escalationResolvedDate,
+                    escalationDescription = escalationDescription,
+                    clientEscalations = clientEscalations == "NO",
+                    escalationStatus = escalationStatus
 
-            val requestBody = AddEscalationRequest(
-                clientId = clientId,
-                projectId = projectId,
-                escalationRaisedDate = escalationRaisedDate,
-                escalationResolvedDate = escalationResolvedDate,
-                escalationDescription = escalationDescription,
-                clientEscalations = clientEscalations == "NO", escalationStatus = escalationStatus
-
-            )
+                )
 //            val requestBody: MutableMap<String, String> = HashMap()
 //            requestBody[Common.PROJECT_ID] = projectId
 //            requestBody[Common.CLIENT_ID] = clientId
@@ -1359,21 +1868,26 @@ class MainActivityViewModel @Inject constructor(
 //            requestBody[Common.ESCALATION_RESOLVE_DATE] = escalationResolvedDate
 //            requestBody[Common.ESCALATION_STATUS] = escalationStatus
 
-            _resNewClientResponse.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.addClientEscalation("Bearer ${checkIfUserLogin()}", requestBody)
-                    .let {
-                        if (it.isSuccessful) {
-                            _resNewClientResponse.postValue(SuccessResource.success(it.body()))
-                        } else {
-                            _resNewClientResponse.postValue(
-                                SuccessResource.error(
-                                    it.errorBody().toString(),
-                                    null
+                _resNewClientResponse.postValue(SuccessResource.loading(null))
+                if (utlIsNetworkAvailable())
+                    mainRepository.addClientEscalation("Bearer ${checkIfUserLogin()}", requestBody)
+                        .let {
+                            if (it.isSuccessful) {
+                                _resNewClientResponse.postValue(SuccessResource.success(it.body()))
+                            } else {
+                                _resNewClientResponse.postValue(
+                                    SuccessResource.error(
+                                        it.errorBody().toString(),
+                                        null
+                                    )
                                 )
-                            )
+                            }
                         }
-                    }
+            } catch (e: Exception) {
+                Log.e("TAG", "Exception occur at getClients ${e.message}")
+                _loading.value = View.GONE
+            } finally {
+            }
         }
 
     fun addMOMActionItem(
@@ -1382,31 +1896,37 @@ class MainActivityViewModel @Inject constructor(
         meetingTime: String, meetingNotes: String
     ) =
         viewModelScope.launch {
+            try {
+                val requestBody = AddMOMOpportunityRequest(
+                    meetingNotes = meetingNotes,
+                    meetingTitle = meetingTitle,
+                    clientId = clientId,
+                    projectId = projectId,
+                    assignedId = assignedId,
+                    meetingDate = meetingDate,
+                    meetingTime = meetingTime,
+                )
 
-            val requestBody = AddMOMOpportunityRequest(
-                meetingNotes = meetingNotes,
-                meetingTitle = meetingTitle,
-                clientId = clientId,
-                projectId = projectId,
-                assignedId = assignedId,
-                meetingDate = meetingDate,
-                meetingTime = meetingTime,
-            )
-
-            _resNewClientResponse.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.addMOMActionItem("Bearer ${checkIfUserLogin()}", requestBody).let {
-                    if (it.isSuccessful) {
-                        _resNewClientResponse.postValue(SuccessResource.success(it.body()))
-                    } else {
-                        _resNewClientResponse.postValue(
-                            SuccessResource.error(
-                                it.errorBody().toString(),
-                                null
-                            )
-                        )
-                    }
-                }
+                _resNewClientResponse.postValue(SuccessResource.loading(null))
+                if (utlIsNetworkAvailable())
+                    mainRepository.addMOMActionItem("Bearer ${checkIfUserLogin()}", requestBody)
+                        .let {
+                            if (it.isSuccessful) {
+                                _resNewClientResponse.postValue(SuccessResource.success(it.body()))
+                            } else {
+                                _resNewClientResponse.postValue(
+                                    SuccessResource.error(
+                                        it.errorBody().toString(),
+                                        null
+                                    )
+                                )
+                            }
+                        }
+            } catch (e: Exception) {
+                Log.e("TAG", "Exception occur at getClients ${e.message}")
+                _loading.value = View.GONE
+            } finally {
+            }
         }
 
     fun addCommentOpportunity(
@@ -1414,29 +1934,43 @@ class MainActivityViewModel @Inject constructor(
         comment: String,
     ) =
         viewModelScope.launch {
+            try {
+//                val requestBody = AddCommentOpportunity(
+//                    comments = comment,
+//                    projectId = projectId,
+//                    assignedId = assignedId,
+//                    employeeId = getUserEmployeeID(),
+//                )
 
-            val requestBody = AddCommentOpportunity(
-                comments = comment,
-                projectId = projectId,
-                assignedId = assignedId,
-                employeeId = getUserEmployeeID(),
-            )
+                val requestBody = AddCommentOpportunity(
+                    comment = comment,
+                    purposeId = projectId,
+                    empType = assignedId,
+                )
 
-            _resNewCommentResponse.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.addCommentOpportunity("Bearer ${checkIfUserLogin()}", requestBody)
-                    .let {
-                        if (it.isSuccessful) {
-                            _resNewCommentResponse.postValue(SuccessResource.success(it.body()))
-                        } else {
-                            _resNewCommentResponse.postValue(
-                                SuccessResource.error(
-                                    it.errorBody().toString(),
-                                    null
+                _resNewCommentResponse.postValue(SuccessResource.loading(null))
+                if (utlIsNetworkAvailable())
+                    mainRepository.addCommentOpportunity(
+                        "Bearer ${checkIfUserLogin()}",
+                        requestBody
+                    )
+                        .let {
+                            if (it.isSuccessful) {
+                                _resNewCommentResponse.postValue(SuccessResource.success(it.body()))
+                            } else {
+                                _resNewCommentResponse.postValue(
+                                    SuccessResource.error(
+                                        it.errorBody().toString(),
+                                        null
+                                    )
                                 )
-                            )
+                            }
                         }
-                    }
+            } catch (e: Exception) {
+                Log.e("TAG", "Exception occur at getClients ${e.message}")
+                _loading.value = View.GONE
+            } finally {
+            }
         }
 
     fun addActionItemOpportunity(
@@ -1445,34 +1979,42 @@ class MainActivityViewModel @Inject constructor(
         expectedInfoFromTekskills: String, tekskillsActionItesm: String, actionStatus: String
     ) =
         viewModelScope.launch {
+            try {
+                val requestBody = AddActionItemOpportunityRequest(
+                    projectId = projectId,
+                    assignedId = assignedId,
+                    momId = momId,
+                    expectedInfoFromClient = expectedInfoFromClient,
+                    expectedInfoFromTekskills = expectedInfoFromTekskills,
+                    tekskillsActionItesm = tekskillsActionItesm,
+                    actionItemCompletionDate = actionItemCompletionDate,
+                    actionStatus = actionStatus,
+                    date = Date(Constants.MAX_TIMESTAMP)
+                )
 
-            val requestBody = AddActionItemOpportunityRequest(
-                projectId = projectId,
-                assignedId = assignedId,
-                momId = momId,
-                expectedInfoFromClient = expectedInfoFromClient,
-                expectedInfoFromTekskills = expectedInfoFromTekskills,
-                tekskillsActionItesm = tekskillsActionItesm,
-                actionItemCompletionDate = actionItemCompletionDate,
-                actionStatus = actionStatus,
-                date = Date(Constants.MAX_TIMESTAMP)
-            )
-
-            _resNewClientResponse.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.addActionItemOpportunity("Bearer ${checkIfUserLogin()}", requestBody)
-                    .let {
-                        if (it.isSuccessful) {
-                            _resNewClientResponse.postValue(SuccessResource.success(it.body()))
-                        } else {
-                            _resNewClientResponse.postValue(
-                                SuccessResource.error(
-                                    it.errorBody().toString(),
-                                    null
+                _resNewClientResponse.postValue(SuccessResource.loading(null))
+                if (utlIsNetworkAvailable())
+                    mainRepository.addActionItemOpportunity(
+                        "Bearer ${checkIfUserLogin()}",
+                        requestBody
+                    )
+                        .let {
+                            if (it.isSuccessful) {
+                                _resNewClientResponse.postValue(SuccessResource.success(it.body()))
+                            } else {
+                                _resNewClientResponse.postValue(
+                                    SuccessResource.error(
+                                        it.errorBody().toString(),
+                                        null
+                                    )
                                 )
-                            )
+                            }
                         }
-                    }
+            } catch (e: Exception) {
+                Log.e("TAG", "Exception occur at getClients ${e.message}")
+                _loading.value = View.GONE
+            } finally {
+            }
         }
 
     /**
@@ -1492,7 +2034,7 @@ class MainActivityViewModel @Inject constructor(
         opportunityDesc: String,
         status: String
     ) = viewModelScope.launch {
-        _resAddOpportunity.postValue(SuccessResource.loading(null))
+       try{ _resAddOpportunity.postValue(SuccessResource.loading(null))
         val requestBody = AddOpportunityRequest(
             clientId = clientId,
             projectDetailsVO = ProjectDetailsVO(
@@ -1520,7 +2062,11 @@ class MainActivityViewModel @Inject constructor(
                         )
                     )
                 }
-            }
+            }} catch (e: Exception) {
+           Log.e("TAG", "Exception occur at getClients ${e.message}")
+           _loading.value = View.GONE
+       } finally {
+       }
     }
 
 
@@ -1529,7 +2075,7 @@ class MainActivityViewModel @Inject constructor(
         practiceHeadId: String, projectManagerId: String
     ) =
         viewModelScope.launch {
-            val requestBody: MutableMap<String, String> = HashMap()
+           try{ val requestBody: MutableMap<String, String> = HashMap()
             requestBody[Common.PROJECT_ID] = projectId
             requestBody[Common.MANAGEMENT_ID] = managementId
             requestBody[Common.ACCOUNTHEAD_ID] = accountHeadId
@@ -1549,7 +2095,11 @@ class MainActivityViewModel @Inject constructor(
                             )
                         )
                     }
-                }
+                }} catch (e: Exception) {
+               Log.e("TAG", "Exception occur at getClients ${e.message}")
+               _loading.value = View.GONE
+           } finally {
+           }
         }
 
 
@@ -1560,7 +2110,7 @@ class MainActivityViewModel @Inject constructor(
         opportunityDesc: String,
         status: String
     ) = viewModelScope.launch {
-        val requestBody: MutableMap<String, String> = HashMap()
+       try{ val requestBody: MutableMap<String, String> = HashMap()
         requestBody[Common.PROJECT_NAME] = projectName
         requestBody[Common.CLIENT_ID] = clientId
         requestBody[Common.OPPORTUNITY_TYPE] = opportunityType
@@ -1580,7 +2130,11 @@ class MainActivityViewModel @Inject constructor(
                         )
                     )
                 }
-            }
+            }} catch (e: Exception) {
+           Log.e("TAG", "Exception occur at getClients ${e.message}")
+           _loading.value = View.GONE
+       } finally {
+       }
     }
 
     var file: ByteArray? = null
@@ -1682,84 +2236,84 @@ class MainActivityViewModel @Inject constructor(
         }
 
 
-    fun updateTaskStatus(task: TaskInfo) {
-        viewModelScope.launch(IO) {
-            repository.updateTaskStatus(task)
-        }
-    }
-
-    fun deleteTask(task: TaskInfo) {
-        viewModelScope.launch(IO) {
-            repository.deleteTask(task)
-        }
-    }
-
-    fun insertTaskAndCategory(taskInfo: TaskInfo, categoryInfo: CategoryInfo) {
-        viewModelScope.launch(IO) {
-            repository.insertTaskAndCategory(taskInfo, categoryInfo)
-        }
-    }
-
-    fun updateTaskAndAddCategory(taskInfo: TaskInfo, categoryInfo: CategoryInfo) {
-        viewModelScope.launch(IO) {
-            repository.updateTaskAndAddCategory(taskInfo, categoryInfo)
-        }
-    }
-
-    fun updateTaskAndAddDeleteCategory(
-        taskInfo: TaskInfo,
-        categoryInfoAdd: CategoryInfo,
-        categoryInfoDelete: CategoryInfo
-    ) {
-        viewModelScope.launch(IO) {
-            repository.updateTaskAndAddDeleteCategory(taskInfo, categoryInfoAdd, categoryInfoDelete)
-        }
-    }
-
-    fun deleteTaskAndCategory(taskInfo: TaskInfo, categoryInfo: CategoryInfo) {
-        viewModelScope.launch(IO) {
-            repository.deleteTaskAndCategory(taskInfo, categoryInfo)
-        }
-    }
-
-    fun getUncompletedTask(): LiveData<List<TaskCategoryInfo>> {
-        return repository.getUncompletedTask()
-    }
-
-    fun getCompletedTask(): LiveData<List<TaskCategoryInfo>> {
-        return repository.getCompletedTask()
-    }
-
-    fun getUncompletedTaskOfCategory(category: String): LiveData<List<TaskCategoryInfo>> {
-        return repository.getUncompletedTaskOfCategory(category)
-    }
-
-    fun getCompletedTaskOfCategory(category: String): LiveData<List<TaskCategoryInfo>> {
-        return repository.getCompletedTaskOfCategory(category)
-    }
-
-    fun getNoOfTaskForEachCategory(): LiveData<List<NoOfTaskForEachCategory>> {
-        return repository.getNoOfTaskForEachCategory()
-    }
-
-    fun getCategories(): LiveData<List<CategoryInfo>> {
-        return repository.getCategories()
-    }
-
-    suspend fun getCountOfCategory(category: String): Int {
-        var count: Int
-        coroutineScope() {
-            count = withContext(IO) { repository.getCountOfCategory(category) }
-        }
-        return count
-    }
-
-    fun getAlarms(currentTime: Date) {
-        CoroutineScope(Dispatchers.Main).launch {
-            val list = repository.getActiveAlarms(currentTime)
-            Log.d("DATA", list.toString())
-        }
-    }
+//    fun updateTaskStatus(task: TaskInfo) {
+//        viewModelScope.launch(IO) {
+//            repository.updateTaskStatus(task)
+//        }
+//    }
+//
+//    fun deleteTask(task: TaskInfo) {
+//        viewModelScope.launch(IO) {
+//            repository.deleteTask(task)
+//        }
+//    }
+//
+//    fun insertTaskAndCategory(taskInfo: TaskInfo, categoryInfo: CategoryInfo) {
+//        viewModelScope.launch(IO) {
+//            repository.insertTaskAndCategory(taskInfo, categoryInfo)
+//        }
+//    }
+//
+//    fun updateTaskAndAddCategory(taskInfo: TaskInfo, categoryInfo: CategoryInfo) {
+//        viewModelScope.launch(IO) {
+//            repository.updateTaskAndAddCategory(taskInfo, categoryInfo)
+//        }
+//    }
+//
+//    fun updateTaskAndAddDeleteCategory(
+//        taskInfo: TaskInfo,
+//        categoryInfoAdd: CategoryInfo,
+//        categoryInfoDelete: CategoryInfo
+//    ) {
+//        viewModelScope.launch(IO) {
+//            repository.updateTaskAndAddDeleteCategory(taskInfo, categoryInfoAdd, categoryInfoDelete)
+//        }
+//    }
+//
+//    fun deleteTaskAndCategory(taskInfo: TaskInfo, categoryInfo: CategoryInfo) {
+//        viewModelScope.launch(IO) {
+//            repository.deleteTaskAndCategory(taskInfo, categoryInfo)
+//        }
+//    }
+//
+//    fun getUncompletedTask(): LiveData<List<TaskCategoryInfo>> {
+//        return repository.getUncompletedTask()
+//    }
+//
+//    fun getCompletedTask(): LiveData<List<TaskCategoryInfo>> {
+//        return repository.getCompletedTask()
+//    }
+//
+//    fun getUncompletedTaskOfCategory(category: String): LiveData<List<TaskCategoryInfo>> {
+//        return repository.getUncompletedTaskOfCategory(category)
+//    }
+//
+//    fun getCompletedTaskOfCategory(category: String): LiveData<List<TaskCategoryInfo>> {
+//        return repository.getCompletedTaskOfCategory(category)
+//    }
+//
+//    fun getNoOfTaskForEachCategory(): LiveData<List<NoOfTaskForEachCategory>> {
+//        return repository.getNoOfTaskForEachCategory()
+//    }
+//
+//    fun getCategories(): LiveData<List<CategoryInfo>> {
+//        return repository.getCategories()
+//    }
+//
+//    suspend fun getCountOfCategory(category: String): Int {
+//        var count: Int
+//        coroutineScope() {
+//            count = withContext(IO) { repository.getCountOfCategory(category) }
+//        }
+//        return count
+//    }
+//
+//    fun getAlarms(currentTime: Date) {
+//        CoroutineScope(Dispatchers.Main).launch {
+//            val list = repository.getActiveAlarms(currentTime)
+//            Log.d("DATA", list.toString())
+//        }
+//    }
 
 
     fun checkIfUserLogin(): String {

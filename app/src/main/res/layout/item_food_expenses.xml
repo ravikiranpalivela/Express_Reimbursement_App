@@ -32,9 +32,8 @@
             android:orientation="horizontal"
             android:padding="@dimen/_4dp">
 
-            <!-- Food Amount Field -->
             <LinearLayout
-                android:id="@+id/ll_food_amount"
+                android:id="@+id/ll_expense_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -44,15 +43,62 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_food_amount"
+                    android:id="@+id/tv_projectName"
                     style="@style/stlTxtKey"
-                    android:text="@string/food_amount" />
+                    android:text="@string/expense_type"
+                    />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/food_amount"
+                    android:id="@+id/projectName"
                     style="@style/stlTxtValue"
-                    android:text="@{dateConvert.Companion.amountConverter(foodExpense.amount)}"
+                    android:text="Food"
                     tools:text="Testing" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_food_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_expense_type">
+
+
+                <TextView
+                    android:id="@+id/tv_food_amount"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="@dimen/widget_size_2"
+                    android:padding="@dimen/widget_size_4"
+                    android:text="@string/rupee"
+                    android:textSize="@dimen/font_size_20"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/poppins"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    />
+
+                <TextView
+                    android:id="@+id/food_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/widget_size_2"
+                    android:text="@{dateConvert.Companion.amountConverter(foodExpense.amount)}"
+                    android:textSize="14sp" />
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/tv_food_amount"-->
+<!--                    style="@style/stlTxtKey"-->
+<!--                    android:text="@string/food_amount" />-->
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/food_amount"-->
+<!--                    style="@style/stlTxtValue"-->
+<!--                    android:text="@{dateConvert.Companion.amountConverter(foodExpense.amount)}"-->
+<!--                    tools:text="Testing" />-->
 
             </LinearLayout>
 
@@ -68,16 +114,33 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ll_food_amount">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_comment"
-                    style="@style/stlTxtKey"
-                    android:text="@string/comment" />
 
-                <com.google.android.material.textview.MaterialTextView
+                <ImageView
+                    android:id="@+id/tv_comment"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="@dimen/widget_size_2"
+                    android:padding="@dimen/widget_size_4"
+                    android:src="@drawable/ic_comment"  />
+
+                <TextView
                     android:id="@+id/comment"
-                    style="@style/stlTxtValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/widget_size_2"
                     android:text="@{foodExpense.foodComments}"
-                    tools:text="Testing" />
+                    android:textSize="14sp" />
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/tv_comment"-->
+<!--                    style="@style/stlTxtKey"-->
+<!--                    android:text="@string/comment" />-->
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/comment"-->
+<!--                    style="@style/stlTxtValue"-->
+<!--                    android:text="@{foodExpense.foodComments}"-->
+<!--                    tools:text="Testing" />-->
 
             </LinearLayout>
 
@@ -95,6 +158,7 @@
                 android:layout_height="@dimen/_36dp"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/_8dp"
+                android:visibility="gone"
                 android:background="@drawable/ic_edit"
                 android:contentDescription="@string/edit_mom"
                 app:layout_constraintBottom_toBottomOf="parent"

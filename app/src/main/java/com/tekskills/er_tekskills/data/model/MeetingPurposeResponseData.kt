@@ -13,13 +13,13 @@ data class MeetingPurposeResponseData(
     @SerializedName("employeeId")
     val employeeId: Int,
     @SerializedName("expenceType")
-    val expenceType: Any?,
+    val expenceType: String?,
     @SerializedName("financeComments")
-    val financeComments: Any?,
+    val financeComments: String?,
     @SerializedName("financeId")
     val financeId: Int,
     @SerializedName("financeStatus")
-    val financeStatus: Any,
+    val financeStatus: String,
     @SerializedName("id")
     val id: Int,
     @SerializedName("customerName")
@@ -30,14 +30,16 @@ data class MeetingPurposeResponseData(
     val modeOfTravel: String,
     @SerializedName("description")
     val description: String,
+    @SerializedName("customerContactName")
+    val customerContactName: String,
     @SerializedName("customerPhone")
     val customerPhone: String,
     @SerializedName("managerComments")
-    val managerComments: Any,
+    val managerComments: String,
     @SerializedName("managerId")
     val managerId: Int,
     @SerializedName("managerStatus")
-    val managerStatus: Any,
+    val managerStatus: String,
     @SerializedName("noOfDays")
     val noOfDays: String,
     @SerializedName("status")
@@ -45,15 +47,21 @@ data class MeetingPurposeResponseData(
     @SerializedName("tenantId")
     val tenantId: Int,
     @SerializedName("travelDeskComments")
-    val travelDeskComments: Any?,
+    val travelDeskComments: String?,
     @SerializedName("travelDeskId")
     val travelDeskId: Int,
     @SerializedName("travelDeskStatus")
-    val travelDeskStatus: Any?,
+    val travelDeskStatus: String?,
     @SerializedName("updatedAt")
     val updatedAt: String,
     @SerializedName("updatedBy")
     val updatedBy: Int,
+//    @SerializedName("checkIn")
+//    val checkIn: String,
+//    @SerializedName("checkOut")
+//    val checkOut: String,
+    @SerializedName("momDetails")
+    val momDetails: MomResponse,
     @SerializedName("userCordinates")
     val userCordinates: UserCoordinates,
     @SerializedName("userExpences")
@@ -62,6 +70,8 @@ data class MeetingPurposeResponseData(
     val allowncesLimit: UserAllowenceResponse,
     @SerializedName("visitDate")
     val visitDate: String,
+    @SerializedName("visitTime")
+    val visitTime: String,
     @SerializedName("visitPurpose")
     val visitPurpose: String
 )

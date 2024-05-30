@@ -1,7 +1,11 @@
 package com.tekskills.er_tekskills.presentation.di
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import com.tekskills.er_tekskills.R
 import com.tekskills.er_tekskills.utils.CTConfig
@@ -26,5 +30,17 @@ class PSVTekskillsApplication : Application(){
                 getString(R.string.serverUrl)
             )
         )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("default", "default", importance).apply {
+                description = "default"
+            }
+            val notificationManager: NotificationManager = applicationContext.getSystemService(
+                Context.NOTIFICATION_SERVICE
+            ) as NotificationManager
+
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }

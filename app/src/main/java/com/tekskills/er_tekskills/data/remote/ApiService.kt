@@ -6,7 +6,9 @@ import com.tekskills.er_tekskills.data.model.ActionItemProjectIDResponseItem
 import com.tekskills.er_tekskills.data.model.AddActionItemOpportunityRequest
 import com.tekskills.er_tekskills.data.model.AddCommentOpportunity
 import com.tekskills.er_tekskills.data.model.AddEscalationRequest
+import com.tekskills.er_tekskills.data.model.AddLocationCoordinates
 import com.tekskills.er_tekskills.data.model.AddMOMOpportunityRequest
+import com.tekskills.er_tekskills.data.model.AddMOMResponse
 import com.tekskills.er_tekskills.data.model.AddOpportunityRequest
 import com.tekskills.er_tekskills.data.model.AddMeetingRequest
 import com.tekskills.er_tekskills.data.model.AddPurposeMeetingResponse
@@ -17,6 +19,8 @@ import com.tekskills.er_tekskills.data.model.PendingActionGraphResponse
 import com.tekskills.er_tekskills.data.model.ClientNamesResponse
 import com.tekskills.er_tekskills.data.model.ClientsEscalationResponse
 import com.tekskills.er_tekskills.data.model.CommentsListResponse
+import com.tekskills.er_tekskills.data.model.LeadNamesResponse
+import com.tekskills.er_tekskills.data.model.LocationResponse
 import com.tekskills.er_tekskills.data.model.LoginResponse
 import com.tekskills.er_tekskills.data.model.MomProjectResponse
 import com.tekskills.er_tekskills.data.model.NewClientResponse
@@ -24,6 +28,7 @@ import com.tekskills.er_tekskills.data.model.ProjectListResponse
 import com.tekskills.er_tekskills.data.model.ManagementResponse
 import com.tekskills.er_tekskills.data.model.MeetingPurposeResponse
 import com.tekskills.er_tekskills.data.model.MeetingPurposeResponseData
+import com.tekskills.er_tekskills.data.model.MeetingStatusRequest
 import com.tekskills.er_tekskills.data.model.MomProjectResponseItem
 import com.tekskills.er_tekskills.data.model.OpportunityByProjectIDResponse
 import com.tekskills.er_tekskills.data.model.PendingActionItemGraphByIDResponse
@@ -43,8 +48,13 @@ import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_CLIENT_E
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_CLIENT_ESCALATION_GRAPH_BY_ID
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_CLIENT_EXIST
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_COMMENT_BY_ID
+import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_LEADS
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_ME
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_MEETING_PURPOSE
+import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_MEETING_PURPOSE_BY_ID
+import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_MEETING_PURPOSE_BY_STATUS
+import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_MEETING_PURPOSE_STATUS
+import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_MEETING_PURPOSE_VISIT_DETAILS
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_MOM_ACTION_ITEM_BY_ID
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_PENDING_ACTION_GRAPH
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_MOM_PROJECT
@@ -57,8 +67,12 @@ import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_PROJECT_
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_PROJECT_MANAGER
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_SRMANAGEMENT
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.GET_USER_ALLOWENCE
+import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.MULTI_PART
+import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.POST_ADD_MOM_MEETING
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.POST_ADD_OPPORTUNITY
 import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.POST_TRAVEL_EXPENSES
+import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.PUT_CHECK_IN
+import com.tekskills.er_tekskills.data.remote.APIEndPoint.Companion.PUT_CHECK_OUT
 import com.tekskills.er_tekskills.utils.Common.Companion.APP_JSON
 import com.tekskills.er_tekskills.utils.Common.Companion.AUTHORIZATION
 import okhttp3.MultipartBody
@@ -70,9 +84,11 @@ import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.PartMap
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
 
@@ -86,8 +102,10 @@ interface ApiService {
     suspend fun getEmployeeMe(@Header(AUTHORIZATION) authorization: String): Response<UserMeResponse>
 
     @GET("${GET_USER_ALLOWENCE}/{id}")
-    suspend fun getEmployeeAllowences(@Header(AUTHORIZATION) authorization: String,@Path("id") itemID:String): Response<UserAllowenceResponse>
-
+    suspend fun getEmployeeAllowences(
+        @Header(AUTHORIZATION) authorization: String,
+        @Path("id") itemID: String
+    ): Response<UserAllowenceResponse>
 
     @Headers(APP_JSON)
     @POST(APIEndPoint.POST_ADD_MEETING_PURPOSE)
@@ -96,41 +114,104 @@ interface ApiService {
         @Body user: AddMeetingRequest
     ): Response<AddPurposeMeetingResponse>
 
-    @GET(GET_MEETING_PURPOSE)
+    @Headers(APP_JSON)
+    @POST(APIEndPoint.POST_ADD_LOCATION)
+    suspend fun addUserCoordinates(
+        @Header(AUTHORIZATION) authorization: String,
+        @Body user: AddLocationCoordinates
+    ): Response<LocationResponse>
+
+    @GET(GET_MEETING_PURPOSE_VISIT_DETAILS)
     suspend fun getMeetingPurpose(@Header(AUTHORIZATION) authorization: String): Response<MeetingPurposeResponse>
 
-    @GET("${GET_MEETING_PURPOSE}/{id}")
-    suspend fun getMeetingPurposeByID(@Header(AUTHORIZATION) authorization: String,@Path("id") itemID:String): Response<MeetingPurposeResponseData>
+    @GET("${GET_MEETING_PURPOSE_BY_STATUS}")
+    suspend fun getMeetingPurposeByStatus(
+        @Header(AUTHORIZATION) authorization: String,
+        @Query("status") itemID: String
+    ): Response<MeetingPurposeResponse>
 
-//    @Headers(MULTI_PART)
+    @GET("${GET_MEETING_PURPOSE_BY_ID}/{id}")
+    suspend fun getMeetingPurposeByID(
+        @Header(AUTHORIZATION) authorization: String,
+        @Path("id") itemID: String
+    ): Response<MeetingPurposeResponseData>
+
+    @GET(GET_MEETING_PURPOSE_STATUS)
+    suspend fun getMeetingPurposeStatus(@Header(AUTHORIZATION) authorization: String): Response<MeetingStatusRequest>
+
+
+    //    @Headers(MULTI_PART)
     @Multipart
     @POST(POST_TRAVEL_EXPENSES)
     suspend fun addTravelExpense(
-    @Header(AUTHORIZATION) authorization: String,
-    @Part("purposeId") purposeID: RequestBody,
-    @Part("amount") amount: Long,
-    @Part file: MutableList<MultipartBody.Part>?,
-    @PartMap user: Map<String,@JvmSuppressWildcards RequestBody>
+        @Header(AUTHORIZATION) authorization: String,
+        @Part("purposeId") purposeID: RequestBody,
+        @Part("amount") amount: Long,
+        @Part file: MutableList<MultipartBody.Part>?,
+        @PartMap user: Map<String, @JvmSuppressWildcards RequestBody>
     ): Response<AddTravelExpenceResponse>
 
-//    @Headers(MULTI_PART)
+    //    @Headers(MULTI_PART)
     @Multipart
     @POST(POST_TRAVEL_EXPENSES)
     suspend fun addHotelExpense(
         @Header(AUTHORIZATION) authorization: String,
         @Part("purposeId") purposeID: RequestBody,
         @Part file: MultipartBody.Part,
-        @PartMap user: Map<String,@JvmSuppressWildcards RequestBody>
+        @PartMap user: Map<String, @JvmSuppressWildcards RequestBody>
     ): Response<AddTravelExpenceResponse>
 
-//    @Headers(MULTI_PART)
+    //    @Headers(MULTI_PART)
     @Multipart
     @POST(POST_TRAVEL_EXPENSES)
     suspend fun addFoodExpense(
         @Header(AUTHORIZATION) authorization: String,
         @Part("purposeId") purposeID: RequestBody,
-        @PartMap user: Map<String,@JvmSuppressWildcards RequestBody>
+        @PartMap user: Map<String, @JvmSuppressWildcards RequestBody>
     ): Response<AddTravelExpenceResponse>
+
+
+    @Multipart
+    @POST(POST_ADD_MOM_MEETING)
+    suspend fun addMOMToMeeting(
+        @Header(AUTHORIZATION) authorization: String,
+        @Part("purposeId") purposeID: RequestBody,
+        @Part file: MutableList<MultipartBody.Part>?,
+        @PartMap user: Map<String, @JvmSuppressWildcards RequestBody>
+    ): Response<AddMOMResponse>
+
+    @GET(GET_CLIENTS)
+    suspend fun getClients(@Header(AUTHORIZATION) authorization: String): Response<ClientNamesResponse>
+
+    @GET("${GET_LEADS}/{id}")
+    suspend fun getLeads(
+        @Header(AUTHORIZATION) authorization: String,
+        @Path("id") itemID: String
+    ): Response<LeadNamesResponse>
+
+    @Multipart
+    @PUT("${PUT_CHECK_IN}/{id}")
+    suspend fun putUserMeetingCheckIN(
+        @Header(AUTHORIZATION) authorization: String, @Path("id") itemID: String,
+        @PartMap requestBody: MutableMap<String, RequestBody>,
+        @Part listMultipartImage: MultipartBody.Part
+    ): Response<LocationResponse>
+
+    @Multipart
+    @PUT("${PUT_CHECK_OUT}/{id}")
+    suspend fun putUserMeetingCheckOUT(
+        @Header(AUTHORIZATION) authorization: String,
+        @Path("id") itemID: String,
+        @PartMap requestBody: MutableMap<String, RequestBody>
+    ): Response<LocationResponse>
+
+
+    @Headers(APP_JSON)
+    @POST(APIEndPoint.POST_ADD_COMMENT)
+    suspend fun addCommentOpportunity(
+        @Header(AUTHORIZATION) authorization: String,
+        @Body user: AddCommentOpportunity
+    ): Response<NewClientResponse>
 
     /**
      * Dashboard Graph items
@@ -142,19 +223,25 @@ interface ApiService {
     suspend fun getEscalationGraph(@Header(AUTHORIZATION) authorization: String): Response<PendingEscalationGraphResponse>
 
     @GET("${GET_PENDING_ACTION_GRAPH_BY_ID}/{id}")
-    suspend fun getPendingActionGraphByID(@Header(AUTHORIZATION) authorization: String,@Path("id") itemID:String): Response<PendingActionItemGraphByIDResponse>
+    suspend fun getPendingActionGraphByID(
+        @Header(AUTHORIZATION) authorization: String,
+        @Path("id") itemID: String
+    ): Response<PendingActionItemGraphByIDResponse>
 
     @GET("${GET_CLIENT_ESCALATION_GRAPH_BY_ID}/{id}")
-    suspend fun getEscalationGraphByID(@Header(AUTHORIZATION) authorization: String,@Path("id") itemID:String): Response<ClientEscalationGraphByIDResponse>
+    suspend fun getEscalationGraphByID(
+        @Header(AUTHORIZATION) authorization: String,
+        @Path("id") itemID: String
+    ): Response<ClientEscalationGraphByIDResponse>
 
     /**
      * ADD Opportunity
      */
     @POST(POST_ADD_OPPORTUNITY)
-    suspend fun addOpportunity(@Header(AUTHORIZATION) authorization: String,@Body requestBody: AddOpportunityRequest): Response<NewClientResponse>
-
-    @GET(GET_CLIENTS)
-    suspend fun getClients(@Header(AUTHORIZATION) authorization: String): Response<ClientNamesResponse>
+    suspend fun addOpportunity(
+        @Header(AUTHORIZATION) authorization: String,
+        @Body requestBody: AddOpportunityRequest
+    ): Response<NewClientResponse>
 
     @GET(GET_PROJECTS)
     suspend fun getProjects(@Header(AUTHORIZATION) authorization: String): Response<ProjectListResponse>
@@ -175,10 +262,16 @@ interface ApiService {
     suspend fun getPracticeHeadList(@Header(AUTHORIZATION) authorization: String): Response<PracticeHeadResponse>
 
     @GET("${GET_MOM_PROJECT}/{id}")
-    suspend fun getMOMProjects(@Header(AUTHORIZATION) authorization: String,@Path("id") itemID:String): Response<MomProjectResponse>
+    suspend fun getMOMProjects(
+        @Header(AUTHORIZATION) authorization: String,
+        @Path("id") itemID: String
+    ): Response<MomProjectResponse>
 
     @GET("${GET_MOM_ACTION_ITEM_BY_ID}/{id}")
-    suspend fun getMOMActionItemDetailsBYId(@Header(AUTHORIZATION) authorization: String,@Path("id") itemID:String): Response<MomProjectResponseItem>
+    suspend fun getMOMActionItemDetailsBYId(
+        @Header(AUTHORIZATION) authorization: String,
+        @Path("id") itemID: String
+    ): Response<MomProjectResponseItem>
 
     @GET(GET_CLIENT_EXIST)
     suspend fun getClientExist(@Header(AUTHORIZATION) authorization: String): Response<NewClientResponse>
@@ -187,27 +280,40 @@ interface ApiService {
     suspend fun getActionItemProjects(@Header(AUTHORIZATION) authorization: String): Response<NewClientResponse>
 
     @GET("${GET_ACTION_ITEM_PROJECT_ID}/{id}")
-    suspend fun getActionItemProjectID(@Header(AUTHORIZATION) authorization: String,@Path("id") itemID:String): Response<ActionItemProjectIDResponse>
+    suspend fun getActionItemProjectID(
+        @Header(AUTHORIZATION) authorization: String,
+        @Path("id") itemID: String
+    ): Response<ActionItemProjectIDResponse>
 
     @GET("${GET_ACTION_ITEM_BY_ID}/{id}")
-    suspend fun getActionItemBYID(@Header(AUTHORIZATION) authorization: String,@Path("id") itemID:String): Response<ActionItemProjectIDResponseItem>
+    suspend fun getActionItemBYID(
+        @Header(AUTHORIZATION) authorization: String,
+        @Path("id") itemID: String
+    ): Response<ActionItemProjectIDResponseItem>
 
     @GET("${GET_CLIENT_ESCALATION_BY_ID}/{id}")
-    suspend fun getEscalationItemProjectID(@Header(AUTHORIZATION) authorization: String,@Path("id") itemID:String): Response<ClientsEscalationResponse>
+    suspend fun getEscalationItemProjectID(
+        @Header(AUTHORIZATION) authorization: String,
+        @Path("id") itemID: String
+    ): Response<ClientsEscalationResponse>
 
     @GET("${GET_COMMENT_BY_ID}/{id}")
-    suspend fun getCommentProjectID(@Header(AUTHORIZATION) authorization: String,@Path("id") itemID:String): Response<CommentsListResponse>
+    suspend fun getCommentProjectID(
+        @Header(AUTHORIZATION) authorization: String,
+        @Path("id") itemID: String
+    ): Response<CommentsListResponse>
 
     @GET("${GET_OPPORTUNITY_BY_PROJECT_ID}/{id}")
-    suspend fun getOpportunityByProductID(@Header(AUTHORIZATION) authorization: String,@Path("id") itemID:String): Response<OpportunityByProjectIDResponse>
+    suspend fun getOpportunityByProductID(
+        @Header(AUTHORIZATION) authorization: String,
+        @Path("id") itemID: String
+    ): Response<OpportunityByProjectIDResponse>
 
     @GET(GET_PROJECT_ID)
     suspend fun getProjectID(@Header(AUTHORIZATION) authorization: String): Response<ProjectListResponse>
 
     @GET(GET_PROJECT_ID)
     suspend fun getProjectOpportunity(@Header(AUTHORIZATION) authorization: String): Response<ProjectOpportunityResponse>
-
-
 
     @Headers(APP_JSON)
     @POST(APIEndPoint.POST_ADD_CLIENT)
@@ -256,13 +362,6 @@ interface ApiService {
     suspend fun addActionItemOpportunity(
         @Header(AUTHORIZATION) authorization: String,
         @Body user: AddActionItemOpportunityRequest
-    ): Response<NewClientResponse>
-
-    @Headers(APP_JSON)
-    @POST(APIEndPoint.POST_ADD_COMMENT)
-    suspend fun addCommentOpportunity(
-        @Header(AUTHORIZATION) authorization: String,
-        @Body user: AddCommentOpportunity
     ): Response<NewClientResponse>
 
 }

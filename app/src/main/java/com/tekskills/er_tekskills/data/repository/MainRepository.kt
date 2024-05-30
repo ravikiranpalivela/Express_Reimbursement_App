@@ -5,7 +5,9 @@ import com.tekskills.er_tekskills.data.model.ActionItemProjectIDResponseItem
 import com.tekskills.er_tekskills.data.model.AddActionItemOpportunityRequest
 import com.tekskills.er_tekskills.data.model.AddCommentOpportunity
 import com.tekskills.er_tekskills.data.model.AddEscalationRequest
+import com.tekskills.er_tekskills.data.model.AddLocationCoordinates
 import com.tekskills.er_tekskills.data.model.AddMOMOpportunityRequest
+import com.tekskills.er_tekskills.data.model.AddMOMResponse
 import com.tekskills.er_tekskills.data.model.AddOpportunityRequest
 import com.tekskills.er_tekskills.data.model.AddMeetingRequest
 import com.tekskills.er_tekskills.data.model.AddTravelExpenceResponse
@@ -13,6 +15,7 @@ import com.tekskills.er_tekskills.data.model.ClientsEscalationResponse
 import com.tekskills.er_tekskills.data.model.CommentsListResponse
 import com.tekskills.er_tekskills.data.model.MeetingPurposeResponse
 import com.tekskills.er_tekskills.data.model.MeetingPurposeResponseData
+import com.tekskills.er_tekskills.data.model.MeetingStatusRequest
 import com.tekskills.er_tekskills.data.model.MomProjectResponse
 import com.tekskills.er_tekskills.data.model.MomProjectResponseItem
 import com.tekskills.er_tekskills.data.model.NewClientResponse
@@ -40,6 +43,10 @@ class MainRepository @Inject constructor(
         authorization: String, user: AddMeetingRequest
     ) = apiHelper.addMeetingPurpose(authorization, user)
 
+    suspend fun addUserCoordinates(
+        authorization: String,
+        user: AddLocationCoordinates
+    ) =apiHelper.addUserCoordinates(authorization, user)
 
     suspend fun getMeetingPurpose(authorization: String): Response<MeetingPurposeResponse> =
         apiHelper.getMeetingPurpose(authorization)
@@ -47,6 +54,11 @@ class MainRepository @Inject constructor(
     suspend fun getMeetingPurposeByID(authorization: String, itemID:String): Response<MeetingPurposeResponseData>
     = apiHelper.getMeetingPurposeByID(authorization, itemID)
 
+    suspend fun getMeetingPurposeByStatus(authorization: String,itemID:String): Response<MeetingPurposeResponse>
+    = apiHelper.getMeetingPurposeByStatus(authorization, itemID)
+
+    suspend fun getMeetingPurposeStatus(authorization: String,): Response<MeetingStatusRequest>
+    = apiHelper.getMeetingPurposeStatus(authorization)
 
     suspend fun addTravelExpense(
         authorization: String, purposeID: RequestBody, amount: Long,
@@ -64,6 +76,24 @@ class MainRepository @Inject constructor(
     ): Response<AddTravelExpenceResponse>
             = apiHelper.addFoodExpense(authorization, purposeID, user)
 
+
+    suspend fun addMOMToMeeting(authorization: String,
+                                purposeID: RequestBody, file: MutableList<MultipartBody.Part>?,
+                                user: Map<String, RequestBody>
+    ): Response<AddMOMResponse> = apiHelper.addMOMToMeeting(authorization, purposeID, file, user)
+
+    suspend fun getClients(authorization: String) = apiHelper.getClients(authorization)
+
+    suspend fun getLeads(authorization: String, itemID:String) = apiHelper.getLeads(authorization, itemID)
+
+    suspend fun putUserMeetingCheckIN(
+        authorization: String,
+        itemID: String,
+        requestBody: MutableMap<String, RequestBody>,
+        listMultipartImage: MultipartBody.Part
+    ) = apiHelper.putUserMeetingCheckIN(authorization, itemID,requestBody,listMultipartImage)
+
+    suspend fun putUserMeetingCheckOUT(authorization: String,itemID:String, requestBody: MutableMap<String, RequestBody>)= apiHelper.putUserMeetingCheckOUT(authorization, itemID,requestBody)
 
     /**
      * Dashboard Graph items
@@ -87,7 +117,7 @@ class MainRepository @Inject constructor(
         apiHelper.addOpportunity(authorization, requestBody)
 
 
-    suspend fun getClients(authorization: String) = apiHelper.getClients(authorization)
+
 
     suspend fun getProjects(authorization: String) = apiHelper.getProjects(authorization)
 

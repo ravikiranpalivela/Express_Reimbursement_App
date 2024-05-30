@@ -2,7 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
+        <variable
+            name="dateConvert"
+            type="com.tekskills.er_tekskills.data.util.DateToString" />
+
         <variable
             name="viewElement"
             type="com.tekskills.er_tekskills.utils.TextViewHtmlString" />
@@ -51,7 +57,7 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_cust_name"
                     style="@style/stlTxtKey"
-                    android:text="@string/customer_name" />
+                    android:text="@string/client_name" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/cust_name"
@@ -60,29 +66,29 @@
                     tools:text="Testing" />
             </LinearLayout>
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/ll_cust_email"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:weightSum="2"-->
-<!--                android:visibility="gone"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/ll_cust_name">-->
+            <!--            <LinearLayout-->
+            <!--                android:id="@+id/ll_cust_email"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:orientation="horizontal"-->
+            <!--                android:weightSum="2"-->
+            <!--                android:visibility="gone"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/ll_cust_name">-->
 
-<!--                <com.google.android.material.textview.MaterialTextView-->
-<!--                    android:id="@+id/tv_cust_email"-->
-<!--                    style="@style/stlTxtKey"-->
-<!--                    android:text="@string/customer_email" />-->
+            <!--                <com.google.android.material.textview.MaterialTextView-->
+            <!--                    android:id="@+id/tv_cust_email"-->
+            <!--                    style="@style/stlTxtKey"-->
+            <!--                    android:text="@string/customer_email" />-->
 
-<!--                <com.google.android.material.textview.MaterialTextView-->
-<!--                    android:id="@+id/cust_email"-->
-<!--                    style="@style/stlTxtValue"-->
-<!--                    android:text="@{taskCategoryInfo.custmerEmail}"-->
-<!--                    tools:text="Testing" />-->
+            <!--                <com.google.android.material.textview.MaterialTextView-->
+            <!--                    android:id="@+id/cust_email"-->
+            <!--                    style="@style/stlTxtValue"-->
+            <!--                    android:text="@{taskCategoryInfo.custmerEmail}"-->
+            <!--                    tools:text="Testing" />-->
 
-<!--            </LinearLayout>-->
+            <!--            </LinearLayout>-->
 
             <LinearLayout
                 android:id="@+id/ll_visit_purpose"
@@ -112,7 +118,6 @@
                 android:id="@+id/ll_visit_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ll_visit_purpose"
                 android:orientation="horizontal"
                 android:weightSum="2"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -127,18 +132,111 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/clientName"
                     style="@style/stlTxtValue"
-                    android:text="@{taskCategoryInfo.visitDate}"
+                    android:text="@{dateConvert.Companion.convertDateStringToCustomFormat(taskCategoryInfo.visitDate)}"
                     tools:text="Testing" />
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_Check_in"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:visibility="@{dateConvert.Companion.getCheckINOUTVisibility(taskCategoryInfo.userCordinates.checkInTime)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_visit_date">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_check_in_info"
+                    style="@style/stlTxtKey"
+                    android:text="@string/check_in" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/check_in"
+                    style="@style/stlTxtValue"
+                    android:text="@{dateConvert.Companion.convertDateStringToCustomFormat(taskCategoryInfo.userCordinates.checkInTime)}"
+                    tools:text="Testing" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_Check_out"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:visibility="@{dateConvert.Companion.getCheckINOUTVisibility(taskCategoryInfo.userCordinates.checkOutTime)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_Check_in">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_check_out_info"
+                    style="@style/stlTxtKey"
+                    android:text="@string/check_out" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/check_out"
+                    style="@style/stlTxtValue"
+                    android:text="@{dateConvert.Companion.convertDateStringToCustomFormat(taskCategoryInfo.userCordinates.checkOutTime)}"
+                    tools:text="Testing" />
+            </LinearLayout>
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/ll_Check_in"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:weightSum="2"-->
+<!--                android:visibility="@{dateConvert.Companion.getCheckINOUTVisibility(taskCategoryInfo.checkIn)}"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/ll_visit_date">-->
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/tv_check_in_info"-->
+<!--                    style="@style/stlTxtKey"-->
+<!--                    android:text="@string/check_in" />-->
+
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/check_in"-->
+<!--                    style="@style/stlTxtValue"-->
+<!--                    android:text="@{dateConvert.Companion.convertDateStringToCustomFormat(taskCategoryInfo.checkIn)}"-->
+<!--                    tools:text="Testing" />-->
+<!--            </LinearLayout>-->
+
+            <LinearLayout
+                android:id="@+id/ll_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:visibility="@{dateConvert.Companion.getCheckINOUTVisibility(taskCategoryInfo.userCordinates.checkOutTime)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_Check_out">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_status"
+                    style="@style/stlTxtKey"
+                    android:text="@string/status" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/status"
+                    style="@style/stlTxtValue"
+                    android:text="@{dateConvert.Companion.determineStage(taskCategoryInfo.managerStatus,taskCategoryInfo.financeStatus)}"
+                    tools:text="Testing" />
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/ll_cust_contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2"
-                app:layout_constraintEnd_toStartOf="@+id/iv_view_opportunity"
-                app:layout_constraintStart_toEndOf="@+id/priority"
-                app:layout_constraintTop_toBottomOf="@+id/ll_visit_date">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_status">
 
                 <!--                <com.google.android.material.textview.MaterialTextView-->
                 <!--                    android:id="@+id/tv_cust_contact"-->
@@ -176,9 +274,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2"
-                app:layout_constraintEnd_toStartOf="@+id/iv_view_opportunity"
-                app:layout_constraintStart_toEndOf="@+id/priority"
-                app:layout_constraintTop_toBottomOf="@+id/ll_cust_contact">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_cust_contact"
+               >
 
                 <!--                <com.google.android.material.textview.MaterialTextView-->
                 <!--                    android:id="@+id/tv_cust_contact"-->
@@ -195,10 +294,9 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginStart="@dimen/widget_size_2"
-                    android:padding="@dimen/widget_size_4"
                     android:background="@drawable/ic_email"
                     android:backgroundTint="@color/grey"
-                    />
+                    android:padding="@dimen/widget_size_4" />
 
                 <TextView
                     android:id="@+id/tv_email"
@@ -212,93 +310,240 @@
 
             </LinearLayout>
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/ll_src_loc"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@+id/ll_visit_date"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:weightSum="2"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--            <LinearLayout-->
+            <!--                android:id="@+id/ll_src_loc"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_below="@+id/ll_visit_date"-->
+            <!--                android:orientation="horizontal"-->
+            <!--                android:weightSum="2"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/ll_visit_date">-->
+
+            <!--                <com.google.android.material.textview.MaterialTextView-->
+            <!--                    android:id="@+id/tv_src_loc"-->
+            <!--                    style="@style/stlTxtKey"-->
+            <!--                    android:text="@string/src_loc" />-->
+            <!--                <com.google.android.material.textview.MaterialTextView-->
+            <!--                    android:id="@+id/src_loc"-->
+            <!--                    style="@style/stlTxtValue"-->
+            <!--                    android:text="@{taskCategoryInfo.userCordinates.source}"-->
+            <!--                    tools:text="Testing" />-->
+            <!--                <ImageView-->
+            <!--                    android:id="@+id/iv_switch"-->
+            <!--                    android:layout_width="@dimen/widget_size_24"-->
+            <!--                    android:layout_height="@dimen/widget_size_24"-->
+            <!--                    android:layout_marginStart="@dimen/widget_size_2"-->
+            <!--                    android:padding="@dimen/widget_size_2"-->
+            <!--                    android:src="@drawable/ic_switch" />-->
+            <!--                <com.google.android.material.textview.MaterialTextView-->
+            <!--                    android:id="@+id/des_loc"-->
+            <!--                    style="@style/stlTxtValue"-->
+            <!--                    android:text="@{taskCategoryInfo.userCordinates.source}"-->
+            <!--                    tools:text="Testing" />-->
+            <!--            </LinearLayout>-->
+
+            <!--            <LinearLayout-->
+            <!--                android:id="@+id/ll_des_loc"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_below="@+id/ll_src_loc"-->
+            <!--                android:orientation="horizontal"-->
+            <!--                android:weightSum="2"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/ll_src_loc">-->
+
+            <!--                <com.google.android.material.textview.MaterialTextView-->
+            <!--                    android:id="@+id/tv_des_loc"-->
+            <!--                    style="@style/stlTxtKey"-->
+            <!--                    android:singleLine="true"-->
+            <!--                    android:text="@string/des_loc" />-->
+
+            <!--                <com.google.android.material.textview.MaterialTextView-->
+            <!--                    android:id="@+id/des_loc"-->
+            <!--                    style="@style/stlTxtValue"-->
+            <!--                    android:singleLine="true"-->
+            <!--                    android:text="@{taskCategoryInfo.userCordinates.destination}"-->
+            <!--                    tools:text="Testing" />-->
+            <!--            </LinearLayout>-->
+
+            <!--            <LinearLayout-->
+            <!--                android:id="@+id/ll_oppor_desc"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:orientation="horizontal"-->
+            <!--                android:weightSum="2"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/ll_src_loc">-->
+
+            <!--                <com.google.android.material.textview.MaterialTextView-->
+            <!--                    android:id="@+id/tv_oppor_desc"-->
+            <!--                    style="@style/stlTxtKey"-->
+            <!--                    android:text="@string/kms" />-->
+
+            <!--                <com.google.android.material.textview.MaterialTextView-->
+            <!--                    android:id="@+id/opportunity_desc"-->
+            <!--                    style="@style/stlTxtValue"-->
+            <!--                    android:text="@{taskCategoryInfo.noOfDays}"-->
+            <!--                    tools:text="Testing" />-->
+            <!--            </LinearLayout>-->
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/tv_check_in"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/widget_size_40"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/widget_size_2"
+                android:backgroundTint="@color/light_blue"
+                android:text="@string/check_in"
+                android:textSize="@dimen/font_size_14"
+                android:textStyle="bold"
+                app:icon="@drawable/ic_location_blue"
+                app:iconGravity="start"
+                android:textColor="@color/white"
+                app:iconTint="@color/white"
+                android:visibility="@{dateConvert.Companion.getTextviewVisibility(taskCategoryInfo.userCordinates.checkInTime)}"
+                app:iconPadding="@dimen/widget_size_1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_cust_email" />
+
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/tv_check_out"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/widget_size_40"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/widget_size_2"
+                android:backgroundTint="@color/light_blue"
+                android:text="@string/check_out"
+                android:textSize="@dimen/font_size_14"
+                android:textStyle="bold"
+                app:icon="@drawable/ic_location_blue"
+                app:iconGravity="start"
+                android:visibility="@{dateConvert.Companion.setCheckoutVisibility(taskCategoryInfo.userCordinates.checkInTime,taskCategoryInfo.userCordinates.checkOutTime)}"
+                android:textColor="@color/white"
+                app:iconTint="@color/white"
+                app:iconPadding="@dimen/widget_size_1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_check_in"
+                app:layout_constraintTop_toBottomOf="@+id/ll_cust_email" />
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/tv_add_mom"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/widget_size_40"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/widget_size_2"
+                android:backgroundTint="@color/light_blue"
+                android:text="@string/add_mom"
+                android:textSize="@dimen/font_size_14"
+                android:textStyle="bold"
+                app:icon="@drawable/ic_baseline_add_24"
+                app:iconGravity="start"
+                android:textColor="@color/white"
+                app:iconTint="@color/white"
+                android:visibility="@{dateConvert.Companion.setAddMOMVisibility(taskCategoryInfo.userCordinates.checkInTime,taskCategoryInfo.userCordinates.checkOutTime)}"
+                app:iconPadding="@dimen/widget_size_1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_check_out"
+                app:layout_constraintTop_toBottomOf="@+id/ll_cust_email" />
+
+
+<!--            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
+<!--                android:id="@+id/tv_add_comments"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="@dimen/widget_size_40"-->
+<!--                android:layout_gravity="bottom|end"-->
+<!--                android:layout_margin="@dimen/widget_size_2"-->
+<!--                android:backgroundTint="@color/light_blue"-->
+<!--                android:text="@string/comment"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="@dimen/font_size_14"-->
+<!--                android:textStyle="bold"-->
+<!--                android:visibility="@{dateConvert.Companion.setAddMOMVisibility(taskCategoryInfo.userCordinates.checkInTime,taskCategoryInfo.userCordinates.checkOutTime)}"-->
+<!--                app:icon="@drawable/ic_baseline_add_24"-->
+<!--                app:iconGravity="start"-->
+<!--                app:iconPadding="@dimen/widget_size_1"-->
+<!--                app:iconTint="@color/white"-->
+<!--                app:layout_constraintStart_toEndOf="@id/tv_add_mom"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/ll_status" />-->
+            <!--            <TextView-->
+<!--                android:id="@+id/tv_check_in"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="@dimen/widget_size_36"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_margin="@dimen/widget_size_2"-->
+<!--                android:background="@drawable/background_select"-->
+<!--                android:drawablePadding="@dimen/widget_size_2"-->
+<!--                android:fontFamily="@font/poppins"-->
+<!--                android:paddingVertical="@dimen/widget_size_2"-->
+<!--                android:paddingStart="@dimen/widget_size_2"-->
+<!--                android:paddingEnd="@dimen/widget_size_8"-->
+<!--                android:text="@string/check_in"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="@dimen/font_size_18"-->
+<!--                android:textStyle="bold"-->
+<!--                android:visibility="@{dateConvert.Companion.getTextviewVisibility(taskCategoryInfo.checkIn)}"-->
+<!--                app:drawableStartCompat="@drawable/ic_location_blue"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
 <!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/ll_visit_date">-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/ll_cust_email" />-->
 
-<!--                <com.google.android.material.textview.MaterialTextView-->
-<!--                    android:id="@+id/tv_src_loc"-->
-<!--                    style="@style/stlTxtKey"-->
-<!--                    android:text="@string/src_loc" />-->
-<!--                <com.google.android.material.textview.MaterialTextView-->
-<!--                    android:id="@+id/src_loc"-->
-<!--                    style="@style/stlTxtValue"-->
-<!--                    android:text="@{taskCategoryInfo.userCordinates.source}"-->
-<!--                    tools:text="Testing" />-->
-<!--                <ImageView-->
-<!--                    android:id="@+id/iv_switch"-->
-<!--                    android:layout_width="@dimen/widget_size_24"-->
-<!--                    android:layout_height="@dimen/widget_size_24"-->
-<!--                    android:layout_marginStart="@dimen/widget_size_2"-->
-<!--                    android:padding="@dimen/widget_size_2"-->
-<!--                    android:src="@drawable/ic_switch" />-->
-<!--                <com.google.android.material.textview.MaterialTextView-->
-<!--                    android:id="@+id/des_loc"-->
-<!--                    style="@style/stlTxtValue"-->
-<!--                    android:text="@{taskCategoryInfo.userCordinates.source}"-->
-<!--                    tools:text="Testing" />-->
-<!--            </LinearLayout>-->
+<!--            <TextView-->
+<!--                android:id="@+id/tv_check_out"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="@dimen/widget_size_36"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_margin="@dimen/widget_size_2"-->
+<!--                android:background="@drawable/background_select"-->
+<!--                android:drawablePadding="@dimen/widget_size_2"-->
+<!--                android:fontFamily="@font/poppins"-->
+<!--                android:paddingVertical="@dimen/widget_size_2"-->
+<!--                android:paddingStart="@dimen/widget_size_2"-->
+<!--                android:paddingEnd="@dimen/widget_size_8"-->
+<!--                android:text="@string/check_out"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="@dimen/font_size_18"-->
+<!--                android:textStyle="bold"-->
+<!--                android:visibility="@{dateConvert.Companion.setCheckoutVisibility(taskCategoryInfo.checkIn,taskCategoryInfo.checkOut)}"-->
+<!--                app:drawableStartCompat="@drawable/ic_location_blue"-->
+<!--                app:layout_constraintStart_toEndOf="@id/tv_check_in"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/ll_cust_email" />-->
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/ll_des_loc"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@+id/ll_src_loc"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:weightSum="2"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/ll_src_loc">-->
-
-<!--                <com.google.android.material.textview.MaterialTextView-->
-<!--                    android:id="@+id/tv_des_loc"-->
-<!--                    style="@style/stlTxtKey"-->
-<!--                    android:singleLine="true"-->
-<!--                    android:text="@string/des_loc" />-->
-
-<!--                <com.google.android.material.textview.MaterialTextView-->
-<!--                    android:id="@+id/des_loc"-->
-<!--                    style="@style/stlTxtValue"-->
-<!--                    android:singleLine="true"-->
-<!--                    android:text="@{taskCategoryInfo.userCordinates.destination}"-->
-<!--                    tools:text="Testing" />-->
-<!--            </LinearLayout>-->
-
-<!--            <LinearLayout-->
-<!--                android:id="@+id/ll_oppor_desc"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:weightSum="2"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/ll_src_loc">-->
-
-<!--                <com.google.android.material.textview.MaterialTextView-->
-<!--                    android:id="@+id/tv_oppor_desc"-->
-<!--                    style="@style/stlTxtKey"-->
-<!--                    android:text="@string/kms" />-->
-
-<!--                <com.google.android.material.textview.MaterialTextView-->
-<!--                    android:id="@+id/opportunity_desc"-->
-<!--                    style="@style/stlTxtValue"-->
-<!--                    android:text="@{taskCategoryInfo.noOfDays}"-->
-<!--                    tools:text="Testing" />-->
-<!--            </LinearLayout>-->
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:id="@+id/priority"-->
+<!--                style="@style/stlTxtValue"-->
+<!--                android:text="@{taskCategoryInfo.managerStatus}"-->
+<!--                android:visibility="@{dateConvert.Companion.checkTextviewNullOrEmpty(taskCategoryInfo.managerStatus)}"-->
+<!--                app:layout_constraintStart_toEndOf="@id/tv_add_mom"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/ll_cust_email" />-->
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/priority"
                 style="@style/stlTxtValue"
-                android:text="@{taskCategoryInfo.status}"
-                android:visibility="visible"
-                app:layout_constraintStart_toStartOf="parent"
+                android:text="@{taskCategoryInfo.managerStatus}"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/tv_add_mom"
+                app:layout_constraintTop_toBottomOf="@+id/ll_cust_email" />
+
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:id="@+id/finance_status"-->
+<!--                style="@style/stlTxtValue"-->
+<!--                android:text="@{taskCategoryInfo.financeStatus}"-->
+<!--                android:visibility="@{dateConvert.Companion.checkTextviewNullOrEmpty(taskCategoryInfo.financeStatus)}"-->
+<!--                app:layout_constraintStart_toEndOf="@id/priority"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/ll_cust_email" />-->
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/finance_status"
+                style="@style/stlTxtValue"
+                android:text="@{taskCategoryInfo.financeStatus}"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/priority"
                 app:layout_constraintTop_toBottomOf="@+id/ll_cust_email" />
 
             <ImageButton
