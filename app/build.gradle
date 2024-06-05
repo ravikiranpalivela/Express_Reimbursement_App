@@ -216,9 +216,6 @@ dependencies {
 
     // Pagination
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
-
-    implementation files('libs/socketio.jar')
-    implementation files('libs/httpclient-4.4.1.jar')
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
 
 //    implementation project(":android-pickers")
