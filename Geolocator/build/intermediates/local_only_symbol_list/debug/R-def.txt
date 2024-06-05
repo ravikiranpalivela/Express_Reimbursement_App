@@ -1,0 +1,13 @@
+R_DEF: Internal format may change without notice
+local
+integer expiration_duration
+integer location_fastest_update_interval_in_millis
+integer location_max_wait_time_interval_in_millis
+integer location_min_distance_for_updates_in_meters
+integer location_update_interval_in_millis
+integer loitering_delay
+integer notification_responsiveness
+plurals num_locations_reported
+string button_allow
+string button_reject
+string dialog_rationale_coarse_location

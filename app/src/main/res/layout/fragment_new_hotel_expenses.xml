@@ -421,7 +421,7 @@
                                 <com.google.android.material.textview.MaterialTextView
                                     android:id="@+id/book_date"
                                     style="@style/stlTxtValue"
-                                    android:text="@{taskCategoryInfo.visitDate}"
+                                    android:text="@{dateConvert.Companion.convertDateStringToCustomFormat(taskCategoryInfo.visitDate)}"
                                     tools:text="Testing" />
                             </LinearLayout>
 

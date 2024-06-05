@@ -15,5 +15,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Expense_Reimbursement"
 include ':app'
+include ':Geolocator'
 //include ':android-pickers'
 

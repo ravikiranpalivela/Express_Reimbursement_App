@@ -41,6 +41,10 @@
             android:id="@+id/settings_fragment"
             android:title="Settings"/>
         <item
+            android:id="@+id/map_fragment"
+            android:visible="true"
+            android:title="GeoLocation"/>
+        <item
             android:id="@+id/logout"
             android:title="Logout"/>
     </group>

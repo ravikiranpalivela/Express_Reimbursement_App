@@ -8,15 +8,15 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
     namespace 'com.tekskills.er_tekskills'
 
     defaultConfig {
         applicationId "com.tekskills.er_tekskills"
         minSdk 26
-        targetSdk 33
-        versionCode 240530005
-        versionName "1.0.0"//previos 1.0.4 updated by ravi on 11th Oct '23
+        targetSdk 34
+        versionCode 240604007
+        versionName "1.0.0"//previous 1.0.4 updated by ravi on 11th Oct '23
         vectorDrawables {
             useSupportLibrary true
         }
@@ -29,7 +29,7 @@ android {
             versionCode env['VERSION_NUMBER'].toInteger()
         } else {
             // Build number not available. Build number should be entered manually.
-            versionCode 240530005
+            versionCode 240604007
         }
 
         print "versionName ::: " + env['VERSION_NAME']
@@ -67,8 +67,13 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
+            pseudoLocalesEnabled true
             debuggable true
             minifyEnabled false
+            crunchPngs false
+            shrinkResources false
+            zipAlignEnabled false
+//            resValue "string", "serverUrl", "http://192.168.0.254:8099/"
             resValue "string", "serverUrl", "https://reimbursement.tekskillsinc.com/"
 
             manifestPlaceholders = [
@@ -82,7 +87,9 @@ android {
             applicationIdSuffix '.staging'
             debuggable false
             minifyEnabled false
-            resValue "string", "serverUrl", "https://reimbursement.tekskillsinc.com/"
+            resValue "string", "serverUrl", "http://192.168.0.254:8099/"
+
+//            resValue "string", "serverUrl", "https://reimbursement.tekskillsinc.com/"
 
             manifestPlaceholders = [
                     appIcon  : "@mipmap/ic_launcher",
@@ -95,7 +102,9 @@ android {
         release {
             debuggable false
             minifyEnabled false
-            resValue "string", "serverUrl", "https://reimbursement.tekskillsinc.com/"
+            resValue "string", "serverUrl", "http://192.168.0.254:8099/"
+
+//            resValue "string", "serverUrl", "https://reimbursement.tekskillsinc.com/"
 
             manifestPlaceholders = [
                     appIcon  : "@mipmap/ic_launcher",
@@ -135,8 +144,11 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
     buildFeatures {
+        viewBinding true
         dataBinding true
+        buildConfig true
     }
 
 }
@@ -147,6 +159,15 @@ ext {
 }
 
 dependencies {
+    implementation project(':Geolocator')
+
+    implementation libs.timber
+    implementation libs.rxpermissions
+    implementation libs.rx2java
+    implementation libs.rx2Android
+    implementation libs.rx2Kotlin
+    implementation libs.applicationProvider
+
     implementation 'androidx.core:core-ktx:1.9.0'
 
     implementation 'com.google.android.libraries.places:places:3.4.0'
@@ -159,13 +180,13 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
-    def room_version = "2.4.0"
+    def room_version = "2.5.1"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     implementation 'com.github.QuadFlask:colorpicker:0.0.15'
     implementation "com.google.dagger:hilt-android:2.44.2"
-    kapt "com.google.dagger:hilt-compiler:2.44.2"
+    kapt "com.google.dagger:hilt-compiler:2.48"
     implementation 'com.google.android.play:review:2.0.0'
     implementation 'com.google.android.play:review-ktx:2.0.0'
 

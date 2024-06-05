@@ -22,4 +22,19 @@ interface TaskCategoryRepository {
     fun getCategories(): LiveData<List<CategoryInfo>>
     suspend fun getCountOfCategory(category: String) : Int
     suspend fun getActiveAlarms(currentTime : Date) : List<TaskInfo>
+
+    suspend fun insertOrUpdateTaskInfo(taskInfo: TaskInfo)
+
+    suspend fun getRangeItems(
+        destinationLatitude: Double,
+        destinationLongitude: Double,
+        radius: Double
+    ): List<TaskInfo>
+
+    suspend fun getOutsideRangeItems(
+        destinationLatitude: Double,
+        destinationLongitude: Double,
+        radius: Double
+    ): List<TaskInfo>
+
 }

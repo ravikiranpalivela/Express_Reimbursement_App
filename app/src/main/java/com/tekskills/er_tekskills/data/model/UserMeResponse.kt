@@ -4,6 +4,44 @@ package com.tekskills.er_tekskills.data.model
 import com.google.gson.annotations.SerializedName
 
 data class UserMeResponse(
+    @SerializedName("userAddress")
+    val userAddress: UserAddressData,
+    @SerializedName("securityUser")
+    val securityUser: UserDataMeResponse,
+)
+
+data class UserAddressData(
+    @SerializedName("city")
+    val city: String,
+    @SerializedName("coOrdinates")
+    val coOrdinates: String,
+    @SerializedName("country")
+    val country: String,
+    @SerializedName("createdAt")
+    val createdAt: String,
+    @SerializedName("createdBy")
+    val createdBy: Int,
+    @SerializedName("id")
+    val id: Int,
+    @SerializedName("lineOne")
+    val lineOne: String,
+    @SerializedName("lineTwo")
+    val lineTwo: String,
+    @SerializedName("state")
+    val state: String,
+    @SerializedName("tenantId")
+    val tenantId: Int,
+    @SerializedName("updatedAt")
+    val updatedAt: String,
+    @SerializedName("updatedBy")
+    val updatedBy: Int,
+    @SerializedName("userId")
+    val userId: Int,
+    @SerializedName("zpiCode")
+    val zpiCode: Int
+)
+
+data class UserDataMeResponse(
     @SerializedName("accountNonExpired")
     val accountNonExpired: Boolean,
     @SerializedName("accountNonLocked")

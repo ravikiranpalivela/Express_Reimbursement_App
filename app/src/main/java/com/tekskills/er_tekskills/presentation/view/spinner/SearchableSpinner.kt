@@ -43,6 +43,7 @@ class SearchableSpinner : RelativeLayout {
     private var mSelectedTextColor = Color.rgb(0, 0, 0)
     private var textSize = 50.0f
     private var mHint: String? = "Please Select"
+    private var mError: String? = null
     var isDisabled = false
 
     companion object {
@@ -78,6 +79,7 @@ class SearchableSpinner : RelativeLayout {
             mSelectedTextColor = a.getColor(R.styleable.SearchableSpinner_selected_item_color, mSelectedTextColor)
             textSize = a.getDimension(R.styleable.SearchableSpinner_label_text_size, textSize)
             mHint = a.getString(R.styleable.SearchableSpinner_label_hint)
+            mError = a.getString(R.styleable.SearchableSpinner_label_error)
             labelAlignment = a.getInt(R.styleable.SearchableSpinner_label_alignment, LABEL_ALIGNMENT_CENTER)
             isDisabled = a.getBoolean(R.styleable.SearchableSpinner_disabled, false)
         } finally {
@@ -120,6 +122,7 @@ class SearchableSpinner : RelativeLayout {
         mLabelView?.setTextColor(getTextColor())
         mLabelView?.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
         mLabelView?.hint = mHint
+        mLabelView?.error = mError
         mLabelView?.maxLines = 1
         mLabelView?.setLines(1)
         mLabelView?.ellipsize = TextUtils.TruncateAt.END
@@ -211,6 +214,11 @@ class SearchableSpinner : RelativeLayout {
                 popupWindow?.dismiss()
             }, SearchableSpinner.POPUP_DISMISS_DELAY)
         }
+    }
+
+    fun setError(error: String?){
+        mError = error
+        mLabelView?.error = error
     }
 
     fun onClearClicked(clearSelection: ImageView) {

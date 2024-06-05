@@ -27,10 +27,10 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.tekskills.er_tekskills.R
 import com.tekskills.er_tekskills.data.model.AddCheckInRequest
+import com.tekskills.er_tekskills.data.model.MeetingPurposeResponseData
 import com.tekskills.er_tekskills.data.model.UserExpence
 import com.tekskills.er_tekskills.databinding.FragmentMeetingPurposeDetailsBinding
 import com.tekskills.er_tekskills.presentation.activities.MainActivity
-import com.tekskills.er_tekskills.presentation.adapter.AdvanceAmountAdapter
 import com.tekskills.er_tekskills.presentation.adapter.CommentsOpportunitysAdapter
 import com.tekskills.er_tekskills.presentation.adapter.ExpensesAdapter
 import com.tekskills.er_tekskills.presentation.adapter.FoodExpenseAdapter
@@ -38,11 +38,14 @@ import com.tekskills.er_tekskills.presentation.adapter.HotelExpenseAdapter
 import com.tekskills.er_tekskills.presentation.adapter.MomActionItemsAdapter
 import com.tekskills.er_tekskills.presentation.adapter.TravelExpenseAdapter
 import com.tekskills.er_tekskills.presentation.viewmodel.MainActivityViewModel
+import com.tekskills.er_tekskills.utils.AppUtil
 import com.tekskills.er_tekskills.utils.RestApiStatus
+import com.tekskills.er_tekskills.utils.SmartDialog
+import com.tekskills.er_tekskills.utils.SmartDialogBuilder
+import com.tekskills.er_tekskills.utils.SmartDialogClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import javax.inject.Named
-
 
 @AndroidEntryPoint
 class PurposeMeetingDetailsFragment : ParentFragment() {
@@ -51,6 +54,7 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
     private val args: PurposeMeetingDetailsFragmentArgs by navArgs()
 
     private var opportunityID: String = ""
+    private var meetingDetails: MeetingPurposeResponseData? = null
 
     @Inject
     @Named("food_meeting_purpose_details_fragment")
@@ -144,71 +148,6 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
                     binding.edtComment.text.toString()
                 )
         }
-
-
-//
-//        adapter.setOnTaskStatusChangedListener {
-//
-//        }
-//        adapter.setOnItemClickListener {
-////            val action =
-////                ViewMeetingPurposeFragmentDirections.actionOpportunityDetailsFragmentToEscalationDetails(
-////                    it,
-////                    it.escalationDetails.id.toString()
-////                )
-////            binding.root.findNavController().navigate(action)
-//        }
-//
-//        adapter.setOnEditItemClickListener {
-////            val action =
-////                ViewMeetingPurposeFragmentDirections.actionOpportunityDetailsFragmentToEditEscalation(
-////                    it,
-////                    it.escalationDetails.id.toString()
-////                )
-////            binding.root.findNavController().navigate(action)
-//        }
-//
-//        foodExpenseAdapter.setOnTaskStatusChangedListener {
-////            updateTaskStatus(viewModel, it)
-//        }
-//        foodExpenseAdapter.setOnItemClickListener {
-////            val action =
-////                ViewMeetingPurposeFragmentDirections.actionOpportunityDetailsFragmentToActionItemDetails(
-////                    it,
-////                    it.id.toString()
-////                )
-////            binding.root.findNavController().navigate(action)
-//        }
-//
-//        foodExpenseAdapter.setOnEditItemClickListener {
-////            val action =
-////                ViewMeetingPurposeFragmentDirections.actionOpportunityDetailsFragmentToEditActionItem(
-////                    it,
-////                    it.id.toString()
-////                )
-////            binding.root.findNavController().navigate(action)
-//        }
-//
-//        travelExpenseAdapter.setOnTaskStatusChangedListener {
-////            updateTaskStatus(viewModel, it)
-//        }
-//        travelExpenseAdapter.setOnItemClickListener {
-////            val action =
-////                ViewMeetingPurposeFragmentDirections.actionOpportunityDetailsFragmentToMomActionItemDetails(
-////                    it,
-////                    it.id.toString()
-////                )
-////            binding.root.findNavController().navigate(action)
-//        }
-//
-//        travelExpenseAdapter.setOnEditItemClickListener {
-////            val action =
-////                ViewMeetingPurposeFragmentDirections.actionOpportunityDetailsFragmentToEditMomActionItem(
-////                    it,
-////                    it.id.toString()
-////                )
-////            binding.root.findNavController().navigate(action)
-//        }
 
         binding.ivEditPurposeVisit.setOnClickListener {
 //            val action =
@@ -354,7 +293,7 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
             }
 
             tvCheckOut.setOnClickListener {
-                getCurrentLocation(opportunityID)
+                getCurrentLocation(opportunityID,)
             }
 
             tvAddMom.setOnClickListener {
@@ -377,11 +316,7 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
 //            })
 
         }
-
         initRecyclerView()
-//        hotelExpenseAdapter.differ.submitList(createDummyData())F
-//        createDummyData()
-
         viewModel.resNewCommentResponse.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer {
@@ -477,6 +412,7 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
                             it.data.let { list ->
                                 binding.taskCategoryInfo = list
 
+                                meetingDetails = list
 //                                expensesData(list.userExpences)
 
                                 if (!list.userExpences.isNullOrEmpty()) {
@@ -562,117 +498,6 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
                     }
                 }
             })
-
-//        viewModel.resEscalationList.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-//            when (it.status) {
-//                RestApiStatus.SUCCESS -> {
-//                    binding.progress.visibility = View.GONE
-//                    if (it.data != null) {
-//                        it.data.let { list ->
-////                            if (list.isEmpty()) binding.avEscalationItems.visibility = View.VISIBLE
-////                            else binding.avEscalationItems.visibility = View.GONE
-//                            adapter.differ.submitList(list)
-//                        }
-//                    } else {
-//                        Snackbar.make(
-//                            binding.root,
-//                            "No Data Found",
-//                            Snackbar.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                }
-//
-//                RestApiStatus.LOADING -> {
-//                    binding.progress.visibility = View.VISIBLE
-//                }
-//
-//                RestApiStatus.ERROR -> {
-//                    binding.progress.visibility = View.GONE
-//                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-//                        .show()
-//                }
-//
-//                else -> {
-//                    binding.progress.visibility = View.GONE
-//                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-//                        .show()
-//                }
-//            }
-//        })
-
-//        viewModel.resActionItemsList.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-//            when (it.status) {
-//                RestApiStatus.SUCCESS -> {
-//                    binding.progress.visibility = View.GONE
-//                    if (it.data != null) {
-//                        it.data.let { list ->
-////                            if (list.isEmpty()) binding.avActionItems.visibility = View.VISIBLE
-////                            else binding.avActionItems.visibility = View.GONE
-//                            foodExpenseAdapter.differ.submitList(list)
-//                        }
-//                    } else {
-//                        Snackbar.make(
-//                            binding.root,
-//                            "No Data Found",
-//                            Snackbar.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                }
-//
-//                RestApiStatus.LOADING -> {
-//                    binding.progress.visibility = View.VISIBLE
-//                }
-//
-//                RestApiStatus.ERROR -> {
-//                    binding.progress.visibility = View.GONE
-//                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-//                        .show()
-//                }
-//
-//                else -> {
-//                    binding.progress.visibility = View.GONE
-//                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-//                        .show()
-//                }
-//            }
-//        })
-
-//        viewModel.resMomActionItemsList.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-//            when (it.status) {
-//                RestApiStatus.SUCCESS -> {
-//                    binding.progress.visibility = View.GONE
-//                    if (it.data != null) {
-//                        it.data.let { list ->
-////                            if (list.isEmpty()) binding.avMomActionItems.visibility = View.VISIBLE
-////                            else binding.avMomActionItems.visibility = View.GONE
-//                            travelExpenseAdapter.differ.submitList(list)
-//                        }
-//                    } else {
-//                        Snackbar.make(
-//                            binding.root,
-//                            "No Data Found",
-//                            Snackbar.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                }
-//
-//                RestApiStatus.LOADING -> {
-//                    binding.progress.visibility = View.VISIBLE
-//                }
-//
-//                RestApiStatus.ERROR -> {
-//                    binding.progress.visibility = View.GONE
-//                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-//                        .show()
-//                }
-//
-//                else -> {
-//                    binding.progress.visibility = View.GONE
-//                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-//                        .show()
-//                }
-//            }
-//        })
 
         viewModel.resCommentResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when (it.status) {
@@ -820,8 +645,51 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
                         latitude = latitude.toString(),
                         longitude = longitude.toString(),
                     )
-                    viewModel.putUserMeetingCheckOUT(purposeID, checkin)
-                    Log.d("Location", "Lat: $latitude, Lon: $longitude")
+                    meetingDetails?.let {
+                        if (AppUtil.isWithinRange(
+                                latitude,
+                                longitude,
+                                meetingDetails!!.userCordinates.destinationLatitude.toDouble(),
+                                meetingDetails!!.userCordinates.destinationLongitude.toDouble(),
+                                1000F
+                            )
+                        ) {
+                            viewModel.putUserMeetingCheckOUT(purposeID, checkin)
+                            Log.d("Location", "Lat: $latitude, Lon: $longitude")
+                        } else {
+                            SmartDialogBuilder(requireContext())
+                                .setTitle("Note")
+                                .setSubTitle("Your in Not in Location Range")
+                                .setCancalable(false)
+                                .setCustomIcon(R.drawable.icon2)
+                                .setTitleColor(resources.getColor(R.color.black))
+                                .setSubTitleColor(resources.getColor(R.color.black))
+                                .setNegativeButtonHide(true)
+                                .useNeutralButton(true)
+                                .setPositiveButton("Okay", object : SmartDialogClickListener {
+                                    override fun onClick(smartDialog: SmartDialog?) {
+                                        Log.d("TAG", "onViewCreated: okay for alert dialog exceeds")
+                                        smartDialog!!.dismiss()
+                                    }
+                                })
+                                .setNegativeButton("Cancel", object : SmartDialogClickListener {
+                                    override fun onClick(smartDialog: SmartDialog?) {
+                                        smartDialog!!.dismiss()
+                                    }
+                                })
+                                .setNeutralButton("Cancel", object : SmartDialogClickListener {
+                                    override fun onClick(smartDialog: SmartDialog?) {
+                                        smartDialog!!.dismiss()
+                                    }
+                                })
+                                .build().show()
+                        }
+                    }
+
+
+
+//                    viewModel.putUserMeetingCheckOUT(purposeID, checkin)
+//                    Log.d("Location", "Lat: $latitude, Lon: $longitude")
                 }
             } else {
                 Log.w("Location", "Failed to get location.")

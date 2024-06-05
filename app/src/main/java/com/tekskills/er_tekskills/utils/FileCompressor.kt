@@ -61,7 +61,7 @@ class FileCompressor(context: Context) {
             fileOutputStream = FileOutputStream(destinationPath)
             // write the compressed bitmap at the destination specified by destinationPath.
             decodeSampledBitmapFromFile(imageFile, reqWidth, reqHeight).compress(
-                compressFormat, quality,
+                compressFormat!!, quality,
                 fileOutputStream
             )
         } finally {

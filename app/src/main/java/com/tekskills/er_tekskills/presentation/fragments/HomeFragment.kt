@@ -36,18 +36,26 @@ import com.tekskills.er_tekskills.data.model.AddCheckInRequest
 import com.tekskills.er_tekskills.data.model.MeetingPurposeResponse
 import com.tekskills.er_tekskills.data.model.MeetingPurposeResponseData
 import com.tekskills.er_tekskills.data.model.MeetingStatusRequest
+import com.tekskills.er_tekskills.data.model.TaskInfo
 import com.tekskills.er_tekskills.databinding.FragmentMainBinding
 import com.tekskills.er_tekskills.presentation.activities.MainActivity
 import com.tekskills.er_tekskills.presentation.adapter.ViewMeetingPurposeAdapter
 import com.tekskills.er_tekskills.presentation.viewmodel.MainActivityViewModel
+import com.tekskills.er_tekskills.utils.AppUtil
+import com.tekskills.er_tekskills.utils.AppUtil.filterMeetingsTodayTomorrow
 import com.tekskills.er_tekskills.utils.RestApiStatus
+import com.tekskills.er_tekskills.utils.SmartDialog
+import com.tekskills.er_tekskills.utils.SmartDialogBuilder
+import com.tekskills.er_tekskills.utils.SmartDialogClickListener
+import com.tekskills.er_tekskills.utils.geoLocation.NotificationWorker
+import com.tekskills.geolocator.geofencer.Geofencer
+import com.tekskills.geolocator.geofencer.models.Geofence
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
-import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -60,10 +68,6 @@ class HomeFragment : ParentFragment(), OnChartValueSelectedListener {
     @Inject
     @Named("view_main_meetings")
     lateinit var adapter: ViewMeetingPurposeAdapter
-
-    protected val parties: Array<String> = arrayOf(
-        "Approved", "Rejected", "Pending", "Submitted", "Cancelled", "Completed", "Draft",
-    )
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -79,60 +83,17 @@ class HomeFragment : ParentFragment(), OnChartValueSelectedListener {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        createPieChart()
-        binding.llMeetings.setOnClickListener {
-            val action =
-                HomeFragmentDirections.actionHomeFragmentToViewMeetingPurposeFragment("")
-            binding.root.findNavController().navigate(action)
-        }
-        adapter.setOnTaskStatusChangedListener {
-
-        }
-        adapter.setOnItemClickListener {
-            val action =
-                HomeFragmentDirections.actionHomeFragmentToViewMeetingDetailsFragment(
-                    it.id.toString()
-                )
-            binding.root.findNavController().navigate(action)
-//            editTaskInformation(it)
-        }
-        adapter.setOnEditItemClickListener {
-//            val action =
-//                HomeFragmentDirections.actionViewOpportunityFragmentToEditAssignedProjectFragment()
-//            binding.root.findNavController().navigate(action)
-//            editTaskInformation(it)
-        }
-        adapter.setOnCheckINItemClickListener {
-            val action =
-                HomeFragmentDirections.actionHomeFragmentToNewCheckInFragment(it.id.toString())
-            binding.root.findNavController().navigate(action)
-        }
-
-        adapter.setOnCheckOUTItemClickListener {
-            getCurrentLocation(it.id.toString())
-        }
-
-        adapter.setOnAddMOMItemClickListener {
-            val action =
-                HomeFragmentDirections.actionHomeFragmentToNewAddMOMFragment(it.id.toString())
-            binding.root.findNavController().navigate(action)
-        }
-
-
-        binding.swiperefresh.setOnRefreshListener {
-            binding.swiperefresh.postDelayed({
-                viewModel.getMeetingPurpose("")
-                viewModel.getMeetingPurposeStatus()
-                binding.swiperefresh.isRefreshing = false
-            }, 50)
-        }
+        setOnClickListenerInit()
+        observerData()
 
         viewModel.getMeetingPurpose("")
-
         viewModel.getMeetingPurposeStatus()
+        initRecyclerViewAdapter()
+        createPieChart()
 
-        initRecyclerView()
+    }
 
+    private fun observerData() {
         viewModel.resMeetingPurposeStatusDetails.observe(viewLifecycleOwner, Observer {
             when (it.status) {
                 RestApiStatus.SUCCESS -> {
@@ -189,19 +150,73 @@ class HomeFragment : ParentFragment(), OnChartValueSelectedListener {
                 RestApiStatus.SUCCESS -> {
                     binding.progress.visibility = View.GONE
                     if (it.data != null) {
-
                         it.data.let { list ->
-//                            if (list.content.isEmpty()) binding.avMeetings.visibility = View.VISIBLE
-//                            else binding.avMeetings.visibility = View.GONE
-//                            adapter.differ.submitList(filterItemsByDate(list.content))
-//                            startLocationUpdates()
+                            val listData = filterMeetingsTodayTomorrow(list)
+                            binding.avMeetings.visibility = if (listData.isEmpty()) View.VISIBLE
+                            else View.GONE
+                            adapter.differ.submitList(listData)
 
-                            if (list.isEmpty()) binding.avMeetings.visibility = View.VISIBLE
-                            else binding.avMeetings.visibility = View.GONE
-                            adapter.differ.submitList(filterItemsByDate(list))
+                            listData.forEach { meetingData ->
+
+
+                                parseJsonToTaskInfo(meetingData).let {
+                                    viewModel.insertOrUpdateTaskInfo(it)
+                                }
+
+
+
+                                var geofence = Geofence()
+
+//                            geofence.message = res.userAddress.lineOne
+                                meetingData.userCordinates.let { coordinates ->
+
+                                    geofence.title =
+                                        "Reached the ${meetingData.customerName} Location"
+
+                                    geofence.message =
+                                        "Purpose Of Visit ${meetingData.visitPurpose}, Time: ${meetingData.visitTime},"
+
+                                    geofence.latitude =
+                                        coordinates.destinationLatitude.toDouble()
+                                    geofence.longitude =
+                                        coordinates.destinationLongitude.toDouble()
+
+                                    if (coordinates.checkInCordinates == null && coordinates.checkOutCordinates == null) {
+                                        geofence.radius = 500.0
+                                        geofence.locType = "Check_In"
+                                        geofence.transitionType =
+                                            com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER
+
+                                    } else if (coordinates.checkInCordinates != null && coordinates.checkOutCordinates == null) {
+                                        geofence.radius = 1000.0
+                                        geofence.locType = "Check_Out"
+                                        geofence.transitionType =
+                                            com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT
+                                    } else {
+                                        geofence.radius = 500.0
+                                        geofence.locType = "Completed"
+                                        geofence.transitionType =
+                                            com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER
+                                    }
+
+//                                    requireActivity().requestLocationPermission {
+//                                        if (it.granted) {
+                                            Geofencer(requireContext())
+                                                .addGeofenceWorker(
+                                                    geofence,
+                                                    NotificationWorker::class.java
+                                                ) {
+                                                    //                                            binding?.container?.isGone = true
+                                                    //                                            showGeofences()
+                                                }
+//                                        }
+//                                    }
+                                }
+                            }
+
+
                             startLocationUpdates()
                         }
-
                     } else {
                         Snackbar.make(
                             binding.root, "No Data Found", Snackbar.LENGTH_SHORT
@@ -305,17 +320,102 @@ class HomeFragment : ParentFragment(), OnChartValueSelectedListener {
             }
         })
 
-//        updateWeeklyDistanceChart()
-        createPieChart()
-//        binding.fab.setOnClickListener {
-//            val action =
-//                HomeFragmentDirections.actionViewOpportunityFragmentToNewAssignedProjectFragment()
-//            it.findNavController().navigate(action)
-//        }
     }
 
+    fun parseJsonToTaskInfo(responseData: MeetingPurposeResponseData): TaskInfo {
 
-    private fun getCurrentLocation(purposeID: String) {
+        val userCoordinates = responseData.userCordinates
+
+        return TaskInfo(
+            id = responseData.id,
+            purposeOfVisit = responseData.visitPurpose?:"",
+            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(responseData.visitDate),
+            priority = 1, // Assign appropriate value
+            status = responseData.status == "Completed",
+            category = "", // Assign appropriate value
+            clientContactPerson = "", // Assign appropriate value
+            clientContactPos = "", // Assign appropriate value
+            opportunityDesc = "",
+            TaskID = responseData.id,
+            customerName = responseData.customerName ?:"",
+            custmerEmail = responseData.custmerEmail ?:"",
+            modeOfTravel = responseData.modeOfTravel ?:"",
+            customerContactName = responseData.customerContactName ?:"",
+            customerPhone = responseData.customerPhone.toString(),
+            visitDate = responseData.visitDate,
+            visitTime = responseData.visitTime,
+            visitPurpose = responseData.visitPurpose,
+            source = userCoordinates.source,
+            sourceLatitude = userCoordinates.sourceLatitude ?:"0.00",
+            sourceLongitude = userCoordinates.sourceLongitude?:"0.00",
+            destination = userCoordinates.destination?:"",
+            destinationLatitude = userCoordinates.destinationLatitude?:"0.00",
+            destinationLongitude = userCoordinates.destinationLongitude?:"0.00",
+            totalDistance = userCoordinates.totalDistance,
+            checkInTime = userCoordinates.checkInTime ?: "",
+            checkInCordinates = userCoordinates.checkInCordinates?:"",
+            checkOutTime = userCoordinates.checkOutTime ?: "",
+            checkOutCordinates = userCoordinates.checkOutCordinates?:"",
+            mapTime = userCoordinates.mapTime
+        )
+    }
+
+    fun setOnClickListenerInit() {
+        binding.swiperefresh.setOnRefreshListener {
+            binding.swiperefresh.postDelayed({
+                viewModel.getMeetingPurpose("")
+                viewModel.getMeetingPurposeStatus()
+                binding.swiperefresh.isRefreshing = false
+            }, 50)
+        }
+
+        binding.llMeetings.setOnClickListener {
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToViewMeetingPurposeFragment("")
+            binding.root.findNavController().navigate(action)
+        }
+    }
+
+    private fun initRecyclerViewAdapter() {
+        binding.rvMeetings.adapter = adapter
+        binding.rvMeetings.layoutManager = LinearLayoutManager(requireContext())
+
+        adapter.setOnTaskStatusChangedListener {
+
+        }
+        adapter.setOnItemClickListener {
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToViewMeetingDetailsFragment(
+                    it.id.toString()
+                )
+            binding.root.findNavController().navigate(action)
+        }
+        adapter.setOnEditItemClickListener {
+
+        }
+        adapter.setOnCheckINItemClickListener {
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToNewCheckInFragment(it.id.toString())
+            binding.root.findNavController().navigate(action)
+        }
+
+        adapter.setOnCheckOUTItemClickListener {
+            getCurrentLocation(it.id.toString(),it)
+        }
+
+        adapter.setOnAddMOMItemClickListener {
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToNewAddMOMFragment(it.id.toString())
+            binding.root.findNavController().navigate(action)
+        }
+
+
+    }
+
+    private fun getCurrentLocation(
+        purposeID: String,
+        meetingDetails: MeetingPurposeResponseData
+    ) {
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -337,8 +437,48 @@ class HomeFragment : ParentFragment(), OnChartValueSelectedListener {
                         latitude = latitude.toString(),
                         longitude = longitude.toString(),
                     )
-                    viewModel.putUserMeetingCheckOUT(purposeID, checkin)
-                    Log.d("Location", "Lat: $latitude, Lon: $longitude")
+
+                    meetingDetails?.let {
+                        if (AppUtil.isWithinRange(
+                                latitude,
+                                longitude,
+                                meetingDetails!!.userCordinates.destinationLatitude.toDouble(),
+                                meetingDetails!!.userCordinates.destinationLongitude.toDouble(),
+                                1000F
+                            )
+                        ) {
+                            viewModel.putUserMeetingCheckOUT(purposeID, checkin)
+                            Log.d("Location", "Lat: $latitude, Lon: $longitude")
+                        } else {
+                            SmartDialogBuilder(requireContext())
+                                .setTitle("Note")
+                                .setSubTitle("Your in Not in Location Range")
+                                .setCancalable(false)
+                                .setCustomIcon(R.drawable.icon2)
+                                .setTitleColor(resources.getColor(R.color.black))
+                                .setSubTitleColor(resources.getColor(R.color.black))
+                                .setNegativeButtonHide(true)
+                                .useNeutralButton(true)
+                                .setPositiveButton("Okay", object : SmartDialogClickListener {
+                                    override fun onClick(smartDialog: SmartDialog?) {
+                                        Log.d("TAG", "onViewCreated: okay for alert dialog exceeds")
+                                        smartDialog!!.dismiss()
+                                    }
+                                })
+                                .setNegativeButton("Cancel", object : SmartDialogClickListener {
+                                    override fun onClick(smartDialog: SmartDialog?) {
+                                        smartDialog!!.dismiss()
+                                    }
+                                })
+                                .setNeutralButton("Cancel", object : SmartDialogClickListener {
+                                    override fun onClick(smartDialog: SmartDialog?) {
+                                        smartDialog!!.dismiss()
+                                    }
+                                })
+                                .build().show()
+                        }
+                    }
+//
                 }
             } else {
                 Log.w("Location", "Failed to get location.")
@@ -378,80 +518,39 @@ class HomeFragment : ParentFragment(), OnChartValueSelectedListener {
         )
     }
 
-    private fun filterEventsForTodayAndTomorrow(events: ArrayList<MeetingPurposeResponseData>): MutableList<MeetingPurposeResponseData>? {
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val today = Calendar.getInstance().time
-        val tomorrow = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 1) }.time
-
-        val todayString = sdf.format(today)
-        val tomorrowString = sdf.format(tomorrow)
-
-        return events.stream().filter {
-            it.visitDate == todayString || it.visitDate == tomorrowString
-        }.collect(Collectors.toList())
-    }
-
-//    fun filterItemsByDate(items: ArrayList<MeetingPurposeResponseData>): ArrayList<MeetingPurposeResponseData> {
+//    fun filterItemsByDate(items: MeetingPurposeResponse): ArrayList<MeetingPurposeResponseData> {
 //        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 //        val today = Calendar.getInstance().time
 //        val tomorrow = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 1) }.time
-//
 //        val todayString = sdf.format(today)
 //        val tomorrowString = sdf.format(tomorrow)
 //
-//        return items.stream().filter {
+//        return items.filter {
+////            if (it.visitTime != null) {
+////                it.visitTime == todayString || it.visitTime == tomorrowString
+////            } else {
 //            it.visitDate == todayString || it.visitDate == tomorrowString
-//        }.sortedBy { LocalDate.parse(it.visitDate) }
+////            }
+//        }.sortedBy { LocalDate.parse(it.visitDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")) }
+//            .toCollection(ArrayList())
 //    }
 
-    fun filterItemsByDate(items: MeetingPurposeResponse): ArrayList<MeetingPurposeResponseData> {
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val today = Calendar.getInstance().time
-        val tomorrow = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 1) }.time
-
-        val todayString = sdf.format(today)
-        val tomorrowString = sdf.format(tomorrow)
-
-        return items.filter {
-//            if (it.visitTime != null) {
-//                it.visitTime == todayString || it.visitTime == tomorrowString
-//            } else {
-            it.visitDate == todayString || it.visitDate == tomorrowString
-//            }
-        }.sortedBy { LocalDate.parse(it.visitDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")) }
-            .toCollection(ArrayList())
-    }
-
-
     private fun createPieChart() {
-        binding.pieChart.getDescription().setEnabled(false)
-//        val desc = Description()
-//        desc.text = "Meetings Status"
-//        desc.textSize = 15F
-
-//        binding.pieChart.description = desc
+        binding.pieChart.description.isEnabled = false
         binding.pieChart.setExtraOffsets(5F, 10F, 5F, 5F)
         binding.pieChart.setDragDecelerationFrictionCoef(0.95f)
-
-//        binding.pieChart.setCenterText(generateCenterSpannableText())
-
         binding.pieChart.isDrawHoleEnabled = true
         binding.pieChart.setHoleColor(Color.WHITE)
-
         binding.pieChart.setTransparentCircleColor(Color.WHITE)
         binding.pieChart.setTransparentCircleAlpha(110)
-
         binding.pieChart.holeRadius = 60f
         binding.pieChart.transparentCircleRadius = 61f
-
         binding.pieChart.setDrawCenterText(true)
-
-        binding.pieChart.setRotationAngle(0F)
 
         // enable rotation of the chart by touch
         binding.pieChart.isRotationEnabled = true
         binding.pieChart.isHighlightPerTapEnabled = true
-
+        binding.pieChart.rotationAngle = 20f
 
         // binding.pieChart.setUnit(" €");
         // binding.pieChart.setDrawUnitsInChart(true);
@@ -460,10 +559,8 @@ class HomeFragment : ParentFragment(), OnChartValueSelectedListener {
         binding.pieChart.setOnChartValueSelectedListener(this)
         binding.pieChart.animateY(1400, Easing.EaseInOutQuad)
 
-
         // binding.pieChart.spin(2000, 0, 360);
         val l: Legend = binding.pieChart.legend
-
         l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM;
         l.horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT;
         l.orientation = Legend.LegendOrientation.HORIZONTAL;
@@ -472,66 +569,63 @@ class HomeFragment : ParentFragment(), OnChartValueSelectedListener {
         l.formSize = 9f;
         l.setTextSize(11f);
         l.xEntrySpace = 4f;
-
-
-//        setData(3, 10F)
+        l.isWordWrapEnabled = true;
 
         // entry label styling
         binding.pieChart.setEntryLabelColor(Color.BLACK)
         binding.pieChart.setEntryLabelTextSize(12f)
-
+        binding.pieChart.extraBottomOffset = 20f;
+        binding.pieChart.extraLeftOffset = 20f;
+        binding.pieChart.extraRightOffset = 20f;
     }
 
     private fun setMeetingStatusData(meetingStatusRequest: MeetingStatusRequest) {
         val entries = ArrayList<PieEntry>()
-
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the binding.pieChart.
-
         meetingStatusRequest.let { count ->
 
             count.rejectCount.let {
-                entries.add(
-                    PieEntry(
-                        it.toFloat(),
-                        "Rejected",
-                        resources.getDrawable(R.drawable.icon2)
+                if (it > 0)
+                    entries.add(
+                        PieEntry(
+                            it.toFloat(),
+                            "Rejected",
+                            resources.getDrawable(R.drawable.icon2)
+                        )
                     )
-                )
             }
 
             count.pendingCount.let {
-                entries.add(
-                    PieEntry(
-                        it.toFloat(),
-                        "Pending",
-                        resources.getDrawable(R.drawable.icon2)
+                if (it > 0)
+                    entries.add(
+                        PieEntry(
+                            it.toFloat(),
+                            "Pending",
+                            resources.getDrawable(R.drawable.icon2)
+                        )
                     )
-                )
             }
 
             count.approveCount.let {
-                entries.add(
-                    PieEntry(
-                        it.toFloat(),
-                        "Approved",
-                        resources.getDrawable(R.drawable.icon2)
+                if (it > 0)
+                    entries.add(
+                        PieEntry(
+                            it.toFloat(),
+                            "Approved",
+                            resources.getDrawable(R.drawable.icon2)
+                        )
                     )
-                )
             }
-
         }
 
         val dataSet = PieDataSet(entries, "")
-
         dataSet.setDrawIcons(false)
-
         dataSet.sliceSpace = 10f
         dataSet.iconsOffset = MPPointF(0f, 40f)
         dataSet.selectionShift = 5f
         dataSet.xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE;
         dataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE;
-
+        dataSet.isHighlightEnabled = true
+        dataSet.setAutomaticallyDisableSliceSpacing(true)
         val colors = ArrayList<Int>()
 
 // Add new RGB colors
@@ -542,24 +636,6 @@ class HomeFragment : ParentFragment(), OnChartValueSelectedListener {
         colors.add(Color.rgb(75, 192, 192))   // rgb(75, 192, 192)
 
         dataSet.colors = colors
-
-//        // add a lot of colors
-//        val colors = ArrayList<Int>()
-//
-//        for (c in ColorTemplate.VORDIPLOM_COLORS) colors.add(c)
-//
-//        for (c in ColorTemplate.JOYFUL_COLORS) colors.add(c)
-//
-//        for (c in ColorTemplate.COLORFUL_COLORS) colors.add(c)
-//
-//        for (c in ColorTemplate.LIBERTY_COLORS) colors.add(c)
-//
-//        for (c in ColorTemplate.PASTEL_COLORS) colors.add(c)
-//
-//        colors.add(ColorTemplate.getHoloBlue())
-//
-//        dataSet.colors = colors
-
         //dataSet.setSelectionShift(0f);
         val data = PieData(dataSet)
 //        data.setValueFormatter(PercentFormatter())
@@ -568,42 +644,38 @@ class HomeFragment : ParentFragment(), OnChartValueSelectedListener {
         data.setValueTextColor(Color.BLACK)
         binding.pieChart.setData(data)
         binding.pieChart.setUsePercentValues(false)
+
         // undo all highlights
         binding.pieChart.highlightValues(null)
         binding.pieChart.invalidate()
     }
 
-    private fun initRecyclerView() {
-        binding.rvMeetings.adapter = adapter
-        binding.rvMeetings.layoutManager = LinearLayoutManager(requireContext())
-    }
-
     override fun onValueSelected(e: Entry?, h: Highlight?) {
-
         if (e == null)
             return;
-        var statusInfo = ""
+//        var statusInfo = ""
+        val pe = e as PieEntry
 
-        h?.let {
-            when (h.x) {
-                0f -> {
-                    statusInfo = "Rejected"
-                }
-
-                1f -> {
-                    statusInfo = "Pending"
-                }
-
-                2f -> {
-                    statusInfo = "Approved"
-                }
-
-                else ->
-                    statusInfo = ""
-            }
-        }
+//        h?.let {
+//            when (h.x) {
+//                0f -> {
+//                    statusInfo = "Rejected"
+//                }
+//
+//                1f -> {
+//                    statusInfo = "Pending"
+//                }
+//
+//                2f -> {
+//                    statusInfo = "Approved"
+//                }
+//
+//                else ->
+//                    statusInfo = ""
+//            }
+//        }
         val action =
-            HomeFragmentDirections.actionHomeFragmentToViewMeetingPurposeFragment(statusInfo)
+            HomeFragmentDirections.actionHomeFragmentToViewMeetingPurposeFragment(pe.label)
         binding.root.findNavController().navigate(action)
 
     }

@@ -12,7 +12,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +46,8 @@ import com.tekskills.er_tekskills.utils.RestApiStatus
 import com.tekskills.er_tekskills.utils.SmartDialog
 import com.tekskills.er_tekskills.utils.SmartDialogBuilder
 import com.tekskills.er_tekskills.utils.SmartDialogClickListener
+import com.tekskills.er_tekskills.utils.SuccessResource
+import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -63,6 +64,7 @@ class NewAddMOMFragment : Fragment() {
     private var purposeID: String = ""
 
     private val args: NewAddMOMFragmentArgs by navArgs()
+    private var validated:Boolean = false
 
     private var listImage: MutableList<File> = ArrayList()
     private var selectedSelectImage: Int = 0
@@ -74,7 +76,6 @@ class NewAddMOMFragment : Fragment() {
     private lateinit var dialog: AlertDialog
 
     var meetingDate: Date = Date(Constants.MAX_TIMESTAMP)
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -90,7 +91,6 @@ class NewAddMOMFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
         navController = findNavController()
-
         purposeID = args.opportunityID
 
 
@@ -134,6 +134,7 @@ class NewAddMOMFragment : Fragment() {
         })
 
         viewModel.getMeetingPurposeByID(purposeID)
+        viewModel._resAddMOMToMeetingExpence.postValue(SuccessResource.loading(null))
 
         binding.apply {
             llAddMomInfo.setOnClickListener(View.OnClickListener {
@@ -202,43 +203,46 @@ class NewAddMOMFragment : Fragment() {
                 }
             })
 
-        viewModel.resAddMOMToMeetingExpence.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            when (it.status) {
-                RestApiStatus.SUCCESS -> {
-                    binding.progress.visibility = View.GONE
-                    if (it.data != null)
-                        it.data.let { res ->
-                            requireActivity().onBackPressed()
+        viewModel.resAddMOMToMeetingExpence.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer {
+                when (it.status) {
+                    RestApiStatus.SUCCESS -> {
+                        binding.progress.visibility = View.GONE
+                        if (it.data != null)
+                            it.data.let { res ->
+                                if(validated)
+                                requireActivity().onBackPressed()
 //                            val intent = Intent(requireActivity(), MainActivity::class.java)
 //                            startActivity(intent)
 //                            requireActivity().finish()
+                            }
+                        else {
+                            Snackbar.make(
+                                binding.root,
+                                "Login Failed",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
                         }
-                    else {
-                        Snackbar.make(
-                            binding.root,
-                            "Login Failed",
-                            Snackbar.LENGTH_SHORT
-                        ).show()
+                    }
+
+                    RestApiStatus.LOADING -> {
+                        binding.progress.visibility = View.VISIBLE
+                    }
+
+                    RestApiStatus.ERROR -> {
+                        binding.progress.visibility = View.GONE
+                        Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
+                            .show()
+                    }
+
+                    else -> {
+                        binding.progress.visibility = View.GONE
+                        Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
+                            .show()
                     }
                 }
-
-                RestApiStatus.LOADING -> {
-                    binding.progress.visibility = View.VISIBLE
-                }
-
-                RestApiStatus.ERROR -> {
-                    binding.progress.visibility = View.GONE
-                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-                        .show()
-                }
-
-                else -> {
-                    binding.progress.visibility = View.GONE
-                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-                        .show()
-                }
-            }
-        })
+            })
 
         binding.ivAddImage.setOnClickListener {
             selectImage()
@@ -248,7 +252,7 @@ class NewAddMOMFragment : Fragment() {
         binding.btnSave.setOnClickListener {
             if (isValidate()) {
 
-                Log.d("TAG", "onViewCreated: validated successfully")
+                Timber.d("onViewCreated: validated successfully")
 
 //                SmartDialogBuilder(requireContext())
 //                    .setTitle("Note")
@@ -262,7 +266,7 @@ class NewAddMOMFragment : Fragment() {
 //                    .setPositiveButton("Okay", object : SmartDialogClickListener {
 //                        override fun onClick(smartDialog: SmartDialog?) {
 //                            Log.d("TAG", "onViewCreated: okay for alert dialog exceeds")
-                            addMOMActionItems()
+                addMOMActionItems()
 //                            smartDialog!!.dismiss()
 //                        }
 //                    })
@@ -572,6 +576,7 @@ class NewAddMOMFragment : Fragment() {
 
     fun addMOMActionItems() {
         try {
+            validated = true
             val hotelExpense = AddMOMRequest(
                 purposeId = purposeID.toInt(),
                 meetingNotes = binding.edtMeetingNotes.text.toString(),
@@ -580,12 +585,25 @@ class NewAddMOMFragment : Fragment() {
             )
             viewModel.addMOMExpense(hotelExpense, listImage)
         } catch (e: Exception) {
-            Log.d("TAG", "addMOMActionItems: ${e.message}")
+            Timber.d("addMOMActionItems: ${e.message}")
         }
     }
 
-    private fun isValidate(): Boolean =
-        validateMeetingNotes() && validateInfoFromClient() && validateTargetDate() && validateAttachment()
+//    private fun isValidate(): Boolean =
+//        validateMeetingNotes() && validateInfoFromClient() && validateTargetDate() && validateAttachment()
+
+
+    private fun isValidate(): Boolean {
+        var isValid = true
+
+        if (!validateMeetingNotes()) isValid = false
+        if (!validateInfoFromClient()) isValid = false
+        if (!validateTargetDate()) isValid = false
+        if (!validateAttachment()) isValid = false
+
+        return isValid
+    }
+
 
     /**
      * field must not be empty

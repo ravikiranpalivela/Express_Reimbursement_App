@@ -7,6 +7,7 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.places.api.model.Place
 import com.tekskills.er_tekskills.data.model.AccountHeadResponse
@@ -54,10 +55,12 @@ import com.tekskills.er_tekskills.data.model.ProjectListResponse
 import com.tekskills.er_tekskills.data.model.ProjectManagerResponse
 import com.tekskills.er_tekskills.data.model.ProjectOpportunityResponse
 import com.tekskills.er_tekskills.data.model.ProjectsAssignVO
+import com.tekskills.er_tekskills.data.model.TaskInfo
 import com.tekskills.er_tekskills.data.model.UserAllowenceResponse
 import com.tekskills.er_tekskills.data.model.UserMeResponse
 import com.tekskills.er_tekskills.data.repository.MainRepository
 import com.tekskills.er_tekskills.data.util.Constants
+import com.tekskills.er_tekskills.domain.TaskCategoryRepository
 import com.tekskills.er_tekskills.utils.AppUtil.utlIsNetworkAvailable
 import com.tekskills.er_tekskills.utils.Common
 import com.tekskills.er_tekskills.utils.Common.Companion.MANAGER
@@ -84,7 +87,7 @@ import kotlin.random.Random
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val sharedPreferences: SharedPreferences,
-//    private val repository: TaskCategoryRepository,
+    private val repository: TaskCategoryRepository,
     private val mainRepository: MainRepository
 ) : ViewModel() {
 
@@ -386,6 +389,12 @@ class MainActivityViewModel @Inject constructor(
 //        this.customerSelectedPickupPlace.value = customerSelectedPickupPlace
 //    }
 
+
+
+    fun insertOrUpdateTaskInfo(taskInfo: TaskInfo) = viewModelScope.launch {
+        repository.insertOrUpdateTaskInfo(taskInfo)
+    }
+
     /**
      * Dashboard Graph items
      */
@@ -433,6 +442,15 @@ class MainActivityViewModel @Inject constructor(
             _loading.value = View.GONE
         } finally {
         }
+    }
+
+    fun getRangeItems(
+        destinationLatitude: Double,
+        destinationLongitude: Double,
+        radius: Double
+    ): LiveData<List<TaskInfo>> = liveData {
+        val data = repository.getRangeItems(destinationLatitude, destinationLongitude, radius)
+        emit(data)
     }
 
     fun getPendingActionGraphByID(projectId: String) = viewModelScope.launch {

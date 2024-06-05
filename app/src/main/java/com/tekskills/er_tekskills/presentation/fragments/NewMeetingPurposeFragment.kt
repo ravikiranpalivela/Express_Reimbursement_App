@@ -1,9 +1,6 @@
 package com.tekskills.er_tekskills.presentation.fragments
 
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
-import android.app.DatePickerDialog.OnDateSetListener
-import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,7 +8,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.DatePicker
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -21,10 +17,6 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.common.api.Status
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.Polyline
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
@@ -50,10 +42,8 @@ import com.tekskills.er_tekskills.presentation.view.spinner.SearchableSpinner
 import com.tekskills.er_tekskills.presentation.viewmodel.MainActivityViewModel
 import com.tekskills.er_tekskills.utils.RestApiStatus
 import com.tekskills.er_tekskills.utils.UtilsConstants
-import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
-import java.util.GregorianCalendar
 
 class NewMeetingPurposeFragment : Fragment()
 //    , OnMapReadyCallback 
@@ -65,18 +55,11 @@ class NewMeetingPurposeFragment : Fragment()
     private lateinit var viewModel: MainActivityViewModel
     var meetingDate: Date = Date(Constants.MAX_TIMESTAMP)
 
-    private var mMap: GoogleMap? = null
-    private var locationClient: FusedLocationProviderClient? = null
-    private var currentUserLocationMarker: Marker? = null
-    private var currentUserLocation: Location? = null
-    private val currentRoute: ArrayList<Polyline> = ArrayList<Polyline>()
-
-
     private var mClientNames = ArrayList<ClientNamesResponseItem>()
-    private var selectClientPos:Int = 0
+    private var selectClientPos: Int = 0
 
     private var mLeadNames = ArrayList<LeadNamesResponseItem>()
-    private var selectLeadPos:Int = 0
+    private var selectLeadPos: Int = 0
 
     //Booking info
     var customerDropOffPlace: Place? = null
@@ -117,104 +100,89 @@ class NewMeetingPurposeFragment : Fragment()
         viewModel = (activity as MainActivity).viewModel
         navController = findNavController()
 
-
         viewModel.getClientNameList()
         viewModel.getEmployeeAllowences()
 
+        observeDate()
+        setOnClickListenerInit()
         initSourceGooglePlacesAutocomplete()
         setPlaceSourceSelectedActionHandler()
         initDestinationGooglePlacesAutocomplete()
         setPlaceDestinationSelectedActionHandler()
+        loadBookingFragment()
+    }
 
-//        binding.sClients.setOnItemSelectListener(object : SearchableSpinner.SearchableItemListener {
-//            override fun onItemSelected(view: View?, position: Int) {
-//                selectClientPos = mClientNames[position].clientName
-//            }
-//
-//            override fun onSelectionClear() {
-//
-//            }
-//        })
+    private fun observeDate() {
+        viewModel.resNewMeetingPurpose.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            when (it.status) {
+                RestApiStatus.SUCCESS -> {
+                    binding.progress.visibility = GONE
+                    if (it.data != null)
+                        it.data.let { res ->
+                            requireActivity().onBackPressed()
+                        }
+                    else {
+                        Snackbar.make(
+                            binding.root,
+                            "Login Failed",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                }
 
-        binding.ivCloseAddClient.setOnClickListener {
-            binding.llAddingNewClient.visibility = GONE
-            binding.edtClientName.setText("")
-            binding.edtContactName.setText("")
-            binding.edtContactNo.setText("")
-            binding.edtEmailId.setText("")
-        }
+                RestApiStatus.LOADING -> {
+                    binding.progress.visibility = VISIBLE
+                }
 
-        binding.ivCloseAddClient.setOnClickListener {
-            binding.llAddingNewClient.visibility = GONE
-        }
+                RestApiStatus.ERROR -> {
+                    binding.progress.visibility = GONE
+                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
 
-        binding.ivAddNewClient.setOnClickListener {
-            val isClientNameVisible = binding.edtClientName.isVisible
-
-            if (!isClientNameVisible) {
-                binding.edtClientName.setText("")
-                binding.edtContactName.setText("")
-                binding.edtContactNo.setText("")
-                binding.edtEmailId.setText("")
+                else -> {
+                    binding.progress.visibility = GONE
+                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
             }
+        })
 
-//            binding.sClients.isSelected = false
-            binding.sClients.setSelection(null)
-            selectClientPos = 0
+        viewModel.resEmployeeAllowence.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            when (it.status) {
+                RestApiStatus.SUCCESS -> {
+                    binding.progress.visibility = GONE
+                    if (it.data != null)
+                        it.data.let { res ->
+                            mModeType = ArrayList(res.travelType.split(",").toMutableList())
+                            binding.sModeOfTravel.setItems(mModeType)
+                        }
+                    else {
+                        Snackbar.make(
+                            binding.root,
+                            "Login Failed",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                }
 
-            binding.edtClientName.visibility = if (isClientNameVisible) GONE else VISIBLE
-            binding.llContactDetails.visibility =
-                if (isClientNameVisible) VISIBLE else GONE
-            binding.llAddContactDetails.visibility =
-                if (isClientNameVisible) GONE else VISIBLE
+                RestApiStatus.LOADING -> {
+                    binding.progress.visibility = VISIBLE
+                }
 
-            binding.ivAddNewClient.background = if (isClientNameVisible) {
-                resources.getDrawable(R.drawable.ic_baseline_add_24, null)
-            } else {
-                resources.getDrawable(R.drawable.ic_delete, null)
+                RestApiStatus.ERROR -> {
+                    binding.progress.visibility = GONE
+                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+
+                else -> {
+                    binding.progress.visibility = GONE
+                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
             }
-
-//
-//            if (!binding.edtClientName.isVisible) {
-//                binding.edtClientName.setText("")
-//                binding.edtContactName.setText("")
-//                binding.edtContactNo.setText("")
-//                binding.edtEmailId.setText("")
-//            }
-//
-//            binding.edtClientName.visibility = if (binding.edtClientName.isVisible) GONE
-//            else
-//                VISIBLE
-//
-//            binding.llContactDetails.visibility = if (binding.edtClientName.isVisible) GONE
-//            else
-//                VISIBLE
-//
-//            binding.llAddContactDetails.visibility = if (binding.edtClientName.isVisible) VISIBLE
-//            else
-//                GONE
-//
-//            binding.ivAddNewClient.background =
-//                if (binding.edtClientName.isVisible) resources.getDrawable(R.drawable.ic_delete)
-//                else
-//                    resources.getDrawable(R.drawable.ic_baseline_add_24)
-        }
-
-        binding.ivAddNewContactPerson.setOnClickListener {
-
-            binding.sLeads.setSelection(null)
-            selectLeadPos = 0
-
-            binding.llAddContactDetails.visibility =
-                if (binding.llAddContactDetails.isVisible) GONE
-                else
-                    VISIBLE
-
-            binding.ivAddNewContactPerson.background =
-                if (binding.llAddContactDetails.isVisible) resources.getDrawable(R.drawable.ic_delete)
-                else
-                    resources.getDrawable(R.drawable.ic_baseline_add_24)
-        }
+        })
 
         viewModel.resLeadNameList.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when (it.status) {
@@ -288,6 +256,9 @@ class NewMeetingPurposeFragment : Fragment()
             }
         })
 
+    }
+
+    private fun setOnClickListenerInit() {
         binding.sModeOfTravel.setItems(mModeType)
 
         binding.sModeOfTravel.setOnItemSelectListener(object :
@@ -338,104 +309,69 @@ class NewMeetingPurposeFragment : Fragment()
             }
         })
 
-        viewModel.resEmployeeAllowence.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            when (it.status) {
-                RestApiStatus.SUCCESS -> {
-                    binding.progress.visibility = GONE
-                    if (it.data != null)
-                        it.data.let { res ->
-                            mModeType = ArrayList(res.travelType.split(",").toMutableList())
-                            binding.sModeOfTravel.setItems(mModeType)
-                        }
-                    else {
-                        Snackbar.make(
-                            binding.root,
-                            "Login Failed",
-                            Snackbar.LENGTH_SHORT
-                        ).show()
-                    }
-                }
+        binding.ivCloseAddClient.setOnClickListener {
+            binding.llAddingNewClient.visibility = GONE
+            binding.edtClientName.setText("")
+            binding.edtContactName.setText("")
+            binding.edtContactNo.setText("")
+            binding.edtEmailId.setText("")
+        }
 
-                RestApiStatus.LOADING -> {
-                    binding.progress.visibility = VISIBLE
-                }
+        binding.ivCloseAddClient.setOnClickListener {
+            binding.llAddingNewClient.visibility = GONE
+        }
 
-                RestApiStatus.ERROR -> {
-                    binding.progress.visibility = GONE
-                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-                        .show()
-                }
+        binding.ivAddNewClient.setOnClickListener {
+            val isClientNameVisible = binding.edtClientName.isVisible
 
-                else -> {
-                    binding.progress.visibility = GONE
-                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-                        .show()
-                }
+            if (!isClientNameVisible) {
+                binding.edtClientName.setText("")
+                binding.edtContactName.setText("")
+                binding.edtContactNo.setText("")
+                binding.edtEmailId.setText("")
             }
-        })
 
+//            binding.sClients.isSelected = false
+            binding.sClients.setSelection(null)
+            selectClientPos = 0
 
-        viewModel.resNewMeetingPurpose.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            when (it.status) {
-                RestApiStatus.SUCCESS -> {
-                    binding.progress.visibility = GONE
-                    if (it.data != null)
-                        it.data.let { res ->
-                            requireActivity().onBackPressed()
-//                            val intent = Intent(requireActivity(), MainActivity::class.java)
-//                            startActivity(intent)
-//                            requireActivity().finish()
-                        }
-                    else {
-                        Snackbar.make(
-                            binding.root,
-                            "Login Failed",
-                            Snackbar.LENGTH_SHORT
-                        ).show()
-                    }
-                }
+            binding.edtClientName.visibility = if (isClientNameVisible) GONE else VISIBLE
+            binding.llContactDetails.visibility =
+                if (isClientNameVisible) VISIBLE else GONE
+            binding.llAddContactDetails.visibility =
+                if (isClientNameVisible) GONE else VISIBLE
 
-                RestApiStatus.LOADING -> {
-                    binding.progress.visibility = VISIBLE
-                }
-
-                RestApiStatus.ERROR -> {
-                    binding.progress.visibility = GONE
-                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-                        .show()
-                }
-
-                else -> {
-                    binding.progress.visibility = GONE
-                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-                        .show()
-                }
+            binding.ivAddNewClient.background = if (isClientNameVisible) {
+                resources.getDrawable(R.drawable.ic_baseline_add_24, null)
+            } else {
+                resources.getDrawable(R.drawable.ic_delete, null)
             }
-        })
+        }
 
-//        binding.addSourceLocation.setOnClickListener {
-//            loadBookingFragment()
-//        }
-//        binding.addSourceLocationMap.setOnClickListener {
-//            loadBookingFragment()
-//        }
-//
-//        binding.addDestinationLocation.setOnClickListener {
-//            loadBookingFragment()
-//        }
-//        binding.addDestinationLocationMap.setOnClickListener {
-//            loadBookingFragment()
-//        }
+        binding.ivAddNewContactPerson.setOnClickListener {
+
+            binding.sLeads.setSelection(null)
+            selectLeadPos = 0
+
+            binding.llAddContactDetails.visibility =
+                if (binding.llAddContactDetails.isVisible) GONE
+                else
+                    VISIBLE
+
+            binding.ivAddNewContactPerson.background =
+                if (binding.llAddContactDetails.isVisible) resources.getDrawable(R.drawable.ic_delete)
+                else
+                    resources.getDrawable(R.drawable.ic_baseline_add_24)
+        }
+
 
         binding.edtDate.setOnClickListener {
             showDateTimePicker()
-//            showDatePicker()
         }
 
         binding.btnSave.setOnClickListener {
             if (isValidate()) {
                 saveMeeting()
-//                Toast.makeText(requireActivity(), "validated", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -458,8 +394,6 @@ class NewMeetingPurposeFragment : Fragment()
             val transaction = childFragmentManager.beginTransaction()
             transaction.replace(R.id.booking_info_data, pickupFragment).commit()
         }
-
-        loadBookingFragment()
     }
 
     private fun saveMeeting() {
@@ -467,27 +401,27 @@ class NewMeetingPurposeFragment : Fragment()
 
             val visitData = AddMeetingRequest(
                 modeOfTravel = selectMOTPos,
-                customerName = binding.edtClientName.text.toString(),
                 visitPurpose = binding.edtVisitPurpose.text.toString(),
                 visitDate = convertDateToString(meetingDate),
                 visitTime = convertDateTimeToString(meetingDate),
                 leadId = selectLeadPos,
                 clientId = selectClientPos,
 //                    noOfDays = binding.edtNoOfDays.text.toString(),
-                customerPhone = binding.edtContactNo.text.toString(),
-                customerEmail = binding.edtEmailId.text.toString(),
-                customerContactName = binding.edtContactName.text.toString(),
+                customerName = if (selectLeadPos > 0) "" else binding.edtClientName.text.toString(),
+                customerPhone = if (selectLeadPos > 0) "" else binding.edtContactNo.text.toString(),
+                customerEmail = if (selectLeadPos > 0) "" else binding.edtEmailId.text.toString(),
+                customerContactName = if (selectClientPos > 0) "" else binding.edtContactName.text.toString(),
 
                 opportunity = binding.edtOpportunity.text.toString(),
                 employeeId = viewModel.getUserEmployeeID().toInt(),
                 userCoordinates = userCoordinationData!!
             )
 
-            Log.d("TAG", "saveMeeting: response ${visitData.toString()}")
+            Log.d("TAG", "saveMeeting: request ${visitData.toString()}")
 
             viewModel.addMeetingPurpose(visitData)
         } catch (e: Exception) {
-            Log.d("TAG", "saveMeeting: response ${e.message.toString()}")
+            Log.d("TAG", "saveMeeting: request ${e.message.toString()}")
 
         }
     }
@@ -524,14 +458,9 @@ class NewMeetingPurposeFragment : Fragment()
     private fun setPlaceSourceSelectedActionHandler() {
         sourceAutocompleteFragment!!.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onPlaceSelected(place: Place) {
-//                smoothlyMoveCameraToPosition(place.getLatLng(), Constants.GoogleMaps.CameraZoomLevel.betweenCityAndStreets);
-                //Send customer selected drop off place to booking fragment
+
                 if (place == null) return
-                //                smoothlyMoveCameraToPosition(place.getLatLng(), Constants.GoogleMaps.CameraZoomLevel.betweenCityAndStreets);
-                //Send customer selected drop off place to booking fragment
-//                val bookingViewModel: MainActivityViewModel = ViewModelProvider(requireActivity()).get(
-//                    MainActivityViewModel::class.java
-//                )
+
                 viewModel.setCustomerSelectedPickupPlace(place)
             }
 
@@ -553,7 +482,6 @@ class NewMeetingPurposeFragment : Fragment()
         if (!Places.isInitialized()) {
             Places.initialize(requireActivity().applicationContext, apiKey)
         }
-//        placesClient = Places.createClient(requireActivity().applicationContext)
 
         // Initialize the AutocompleteSupportFragment.
         destinationAutocompleteFragment =
@@ -579,14 +507,7 @@ class NewMeetingPurposeFragment : Fragment()
         destinationAutocompleteFragment!!.setOnPlaceSelectedListener(object :
             PlaceSelectionListener {
             override fun onPlaceSelected(place: Place) {
-//                smoothlyMoveCameraToPosition(place.getLatLng(), Constants.GoogleMaps.CameraZoomLevel.betweenCityAndStreets);
-                //Send customer selected drop off place to booking fragment
                 if (place == null) return
-                //                smoothlyMoveCameraToPosition(place.getLatLng(), Constants.GoogleMaps.CameraZoomLevel.betweenCityAndStreets);
-                //Send customer selected drop off place to booking fragment
-//                val bookingViewModel: MainActivityViewModel = ViewModelProvider(requireActivity()).get(
-//                    MainActivityViewModel::class.java
-//                )
                 viewModel.setCustomerSelectedDropOffPlace(place)
             }
 
@@ -615,7 +536,7 @@ class NewMeetingPurposeFragment : Fragment()
                     if (s == null) return@Observer
                     binding.distanceLocation.text = "${s}Km"
                     distanceInKm = s
-                    createNewBookingInDB()
+                    addingUserCoordinates()
 //                setCheckoutInfo()
                 })
             viewModel.getDropOffPlaceString()!!.observe(
@@ -630,32 +551,6 @@ class NewMeetingPurposeFragment : Fragment()
                 .observe(viewLifecycleOwner, Observer<Any?> { place ->
                     if (place == null) return@Observer
                     customerDropOffPlace = place as Place?
-//                binding.fragmentMapsBackBtn.visibility = VISIBLE //Show back button
-//                binding.edtDestination.text = (place?.toString() ?: "") as Editable?
-
-//                    //TODO Move to customerPickUpPlace fragment
-//                    if (customerPickupPlace != null)
-//                        loadPickupPlacePickerFragment()
-
-//                    if (currentUserLocation != null) {
-//                        smoothlyMoveCameraToPosition(
-//                            LatLng(currentUserLocation!!.latitude, currentUserLocation!!.longitude),
-//                            UtilsConstants.GoogleMaps.CameraZoomLevel.betweenStreetsAndBuildings
-//                        )
-//                    }
-                    //TODO Draw 2 pickup/drop-off markers
-
-                    if (customerDropOffPlace != null && customerPickupPlace != null) {
-                        //TODO load checkout fragment
-//                        loadCheckoutFragment()
-
-//                        drawDropOffAndPickupMarkers()
-
-                        //TODO Draw route from pickup place to drop-off place
-//                        drawRouteFromPickupToDropOff()
-
-//                        createNewBookingInDB()
-                    }
                 })
 
             viewModel!!.getCustomerSelectedPickupPlace()
@@ -664,7 +559,7 @@ class NewMeetingPurposeFragment : Fragment()
                     customerPickupPlace = place as Place?
 
                     if (customerDropOffPlace != null && customerPickupPlace != null) {
-//                        createNewBookingInDB()
+//                        addingUserCoordinates()
                     }
                 })
 
@@ -674,10 +569,9 @@ class NewMeetingPurposeFragment : Fragment()
     }
 
     /**
-     * Create booking in db
+     * Adding User Coordinates
      */
-    private fun createNewBookingInDB() {
-
+    private fun addingUserCoordinates() {
         userCoordinationData = UserCoordinates(
             sourceLatitude = customerPickupPlace!!.latLng!!.latitude.toString(),
             sourceLongitude = customerPickupPlace!!.latLng!!.longitude.toString(),
@@ -692,47 +586,6 @@ class NewMeetingPurposeFragment : Fragment()
             checkOutCordinates = "",
             mapTime = distanceInKm.toString()
         )
-
-//       userCoordinationData["userCordinates"] = mapOf(
-//            "sourceLatitude" to customerPickupPlace!!.getLatLng().latitude,
-//            "sourceLongitude" to customerPickupPlace!!.getLatLng().longitude,
-//            "sourceAddress" to customerPickupPlace!!.getAddress(),
-//            "destinantionLatitude" to customerDropOffPlace!!.getLatLng().latitude,
-//            "destinantionLongitude" to customerDropOffPlace!!.getLatLng().longitude,
-//            "destinantionAddress" to customerDropOffPlace!!.getAddress(),
-//            "totalDistance" to distanceInKmString.toDouble()
-//        )
-
-//        val data: MutableMap<String, Any?> = HashMap()
-//        data[UtilsConstants.FSBooking.pickupPlaceAddress] = customerPickupPlace!!.getAddress()
-//        data[UtilsConstants.FSBooking.pickUpPlaceLatitude] =
-//            customerPickupPlace!!.getLatLng().latitude
-//        data[UtilsConstants.FSBooking.pickUpPlaceLongitude] =
-//            customerPickupPlace!!.getLatLng().longitude
-//        data[UtilsConstants.FSBooking.dropOffPlaceAddress] = customerDropOffPlace!!.getAddress()
-//        data[UtilsConstants.FSBooking.dropOffPlaceLatitude] =
-//            customerDropOffPlace!!.getLatLng().latitude
-//        data[UtilsConstants.FSBooking.dropOffPlaceLongitude] =
-//            customerDropOffPlace!!.getLatLng().longitude
-//        data[UtilsConstants.FSBooking.distanceInKm] = distanceInKmString
-//        db.collection(UtilsConstants.FSBooking.bookingCollection)
-//            .add(data)
-//            .addOnSuccessListener(object : OnSuccessListener<DocumentReference?> {
-//                override fun onSuccess(documentReference: DocumentReference) {
-//                    currentBookingDocRef = documentReference
-//                    setDetectAcceptedDriver()
-//                }
-//            })
-//            .addOnFailureListener(object : OnFailureListener {
-//                override fun onFailure(e: Exception) {
-//                    Toast.makeText(
-//                        requireActivity(),
-//                        UtilsConstants.ToastMessage.addNewBookingToDbFail,
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                    resetBookingFlow()
-//                }
-//            })
     }
 
 
@@ -776,129 +629,38 @@ class NewMeetingPurposeFragment : Fragment()
         datePicker.show(childFragmentManager, "TAG")
     }
 
-    private fun showDateTimePickerData() {
-        val today = MaterialDatePicker.todayInUtcMilliseconds()
-
-        val constraintsBuilder = CalendarConstraints.Builder()
-            .setValidator(DateValidatorPointForward.from(today))
-
-        val datePicker = MaterialDatePicker.Builder.datePicker()
-            .setTitleText("Select a Visit Date")
-            .setCalendarConstraints(constraintsBuilder.build()).build()
-        val timePicker = MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_24H)
-            .build()
-        datePicker.addOnPositiveButtonClickListener {
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = it
-            calendar.set(Calendar.HOUR_OF_DAY, 0)
-            calendar.set(Calendar.MINUTE, 0)
-            calendar.set(Calendar.SECOND, 0)
-            meetingDate = calendar.time
-            binding.edtDate.setText(DateToString.convertDateToStringDateWise(meetingDate))
-            timePicker.show(childFragmentManager, "TAG")
-        }
-
-        timePicker.addOnPositiveButtonClickListener {
-            val cal = Calendar.getInstance()
-            cal.time = meetingDate
-            cal.set(Calendar.HOUR_OF_DAY, timePicker.hour)
-            cal.set(Calendar.MINUTE, timePicker.minute)
-            cal.set(Calendar.SECOND, 5)
-            meetingDate = cal.time
-            binding.edtDate.setText(DateToString.convertDateToStringDateWise(meetingDate))
-        }
-        datePicker.show(childFragmentManager, "TAG")
-    }
-
-
-    private fun showDatePicker() {
-        val date = System.currentTimeMillis()
-        val sdf = SimpleDateFormat("yyyy/MM/dd")
-        val dateString = sdf.format(date)
-        val myCal: Calendar = GregorianCalendar()
-        try {
-            val theDate = sdf.parse(dateString)
-            myCal.time = theDate
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-
-        val _date: DatePickerDialog = object : DatePickerDialog(
-            requireContext(), mDateSetListener,
-            myCal[Calendar.YEAR], myCal[Calendar.MONTH],
-            myCal[Calendar.DAY_OF_MONTH]
-        ) {
-            override fun onDateChanged(
-                view: DatePicker,
-                year: Int,
-                monthOfYear: Int,
-                dayOfMonth: Int
-            ) {
-                if (year < myCal[Calendar.YEAR]) view.updateDate(
-                    myCal[Calendar.YEAR],
-                    myCal[Calendar.MONTH], myCal[Calendar.DAY_OF_MONTH]
-                )
-                if (monthOfYear < myCal[Calendar.MONTH] && year == myCal[Calendar.YEAR]) view.updateDate(
-                    myCal[Calendar.YEAR], myCal[Calendar.MONTH], myCal[Calendar.DAY_OF_MONTH]
-                )
-                if (dayOfMonth < myCal[Calendar.DAY_OF_MONTH] && year == myCal[Calendar.YEAR] && monthOfYear == myCal[Calendar.MONTH]) view.updateDate(
-                    myCal[Calendar.YEAR], myCal[Calendar.MONTH], myCal[Calendar.DAY_OF_MONTH]
-                )
-            }
-        }
-        _date.show()
-    }
-
-    private val mDateSetListener =
-        OnDateSetListener { view, yearSelected, monthOfYear, dayOfMonth ->
-
-            val calendar = Calendar.getInstance()
-//            calendar.timeInMillis = it
-            calendar.set(Calendar.YEAR, yearSelected)
-            calendar.set(Calendar.MONTH, monthOfYear)
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            meetingDate = calendar.time
-            binding.edtDate.setText(DateToString.convertDateToStringDateWise(meetingDate))
-
-//            year = yearSelected
-//            month = monthOfYear + 1
-//            day = dayOfMonth
-//
-//
-//            binding.edtDate.setText("" + year + "/" + month + "/" + day)
-//            if (day < 10) {
-//                StartDate =
-//                    "0" + year + "/" + month + "/" + day
-//            } else {
-//                StartDate =
-//                    "" + year + "/" + month + "/" + day
-//            }
-        }
-
-
     override fun onDestroyView() {
         super.onDestroyView()
         sourceAutocompleteFragment!!.setOnPlaceSelectedListener(null)
         destinationAutocompleteFragment!!.setOnPlaceSelectedListener(null)
-
     }
 
-    private fun isValidate(): Boolean =
-        validateClientName() && validateMeetingTitle() && validateMeetingDate()
-                && validateOpportunity()
-//                && validateNoOfDays()
-                && validateContactEmail() && validateContact() && validateContactName()
-                && validateUserCordinates()
+    private fun isValidate(): Boolean {
+        var isValid = true
+
+        if (!validateVisitPurpose()) isValid = false
+        if (!validateMeetingDate()) isValid = false
+        if (!validateOpportunity()) isValid = false
+        // if (!validateNoOfDays()) isValid = false
+        if (!validateClientName()) isValid = false
+        if (!validateLeadInfo()) isValid = false
+        if (!validateContactEmail()) isValid = false
+        if (!validateContact()) isValid = false
+        if (!validateContactName()) isValid = false
+        if (!validateUserCordinates()) isValid = false
+
+        return isValid
+    }
 
     private fun validateUserCordinates(): Boolean {
         if (userCoordinationData == null) {
             binding.distanceLocation.error = "Required Field!"
+            Snackbar.make(binding.root, "Source And Destination Missing", Snackbar.LENGTH_SHORT)
+                .show()
             binding.distanceLocation.requestFocus()
             return false
         } else {
             binding.distanceLocation.error = null
-            Snackbar.make(binding.root, "Source And Destination Missing", Snackbar.LENGTH_SHORT)
-                .show()
         }
         return true
     }
@@ -906,9 +668,9 @@ class NewMeetingPurposeFragment : Fragment()
     /**
      * field must not be empty
      */
-    private fun validateMeetingTitle(): Boolean {
+    private fun validateVisitPurpose(): Boolean {
         if (binding.edtVisitPurpose.text.toString().trim().isEmpty()) {
-            binding.edtVisitPurpose.error = "Required Field!"
+            binding.edtVisitPurpose.setError("Required Field!")
             binding.edtVisitPurpose.requestFocus()
             return false
         } else {
@@ -922,7 +684,7 @@ class NewMeetingPurposeFragment : Fragment()
      */
     private fun validateOpportunity(): Boolean {
         if (binding.edtOpportunity.text.toString().trim().isEmpty()) {
-            binding.edtOpportunity.error = "Required Field!"
+            binding.edtOpportunity.setError("Required Field!")
             binding.edtOpportunity.requestFocus()
             return false
         } else {
@@ -936,7 +698,7 @@ class NewMeetingPurposeFragment : Fragment()
      */
     private fun validateNoOfDays(): Boolean {
         if (binding.edtNoOfDays.text.toString().trim().isEmpty()) {
-            binding.edtNoOfDays.error = "Required Field!"
+            binding.edtNoOfDays.setError("Required Field!")
             binding.edtNoOfDays.requestFocus()
             return false
         } else {
@@ -947,69 +709,77 @@ class NewMeetingPurposeFragment : Fragment()
 
     private fun validateMeetingDate(): Boolean {
         if (binding.edtDate.text.toString().trim().isEmpty()) {
-            binding.edtDate.error = "Required Field!"
+            binding.edtDate.setError("Required Field!")
             binding.edtDate.requestFocus()
             return false
         } else {
             binding.edtDate.error = null
-//            binding.dateEscalatedMeetingDate.isErrorEnabled = false
-        }
-        return true
-    }
-
-    private fun validateClientPos(): Boolean {
-        if (selectClientPos == 0) {
-            return false
-        } else {
-
         }
         return true
     }
 
     private fun validateClientName(): Boolean {
-        if (binding.edtClientName.text.toString().trim().isEmpty()) {
-            binding.edtClientName.error = "Required Field!"
-            binding.edtClientName.requestFocus()
-            return false
+
+        if (selectClientPos == 0) {
+            if (binding.edtClientName.text.toString().trim().isEmpty()) {
+                binding.edtClientName.setError("Required Field!")
+                binding.sClients.setError("Please Add Client!")
+                binding.edtClientName.requestFocus()
+                return false
+            } else {
+                binding.edtClientName.error = null
+                binding.sClients.setError(null)
+            }
         } else {
             binding.edtClientName.error = null
-//            binding.dateEscalatedMeetingDate.isErrorEnabled = false
+            binding.sClients.setError(null)
         }
         return true
     }
 
     private fun validateSourceLoc(): Boolean {
         if (binding.addSourceLocation.text.toString().trim().isEmpty()) {
-            binding.addSourceLocation.error = "Required Field!"
+            binding.addSourceLocation.setError("Required Field!")
             binding.addSourceLocation.requestFocus()
             return false
         } else {
             binding.addSourceLocation.error = null
-//            binding.dateEscalatedMeetingDate.isErrorEnabled = false
         }
         return true
     }
 
     private fun validateDestinationLoc(): Boolean {
         if (binding.addDestinationLocation.text.toString().trim().isEmpty()) {
-            binding.addDestinationLocation.error = "Required Field!"
+            binding.addDestinationLocation.setError("Required Field!")
             binding.addDestinationLocation.requestFocus()
             return false
         } else {
             binding.addDestinationLocation.error = null
-//            binding.dateEscalatedMeetingDate.isErrorEnabled = false
         }
+        return true
+    }
+
+    private fun validateLeadInfo(): Boolean {
+        val mobile = binding.edtContactNo.text.toString().trim()
+        val email = binding.edtEmailId.text.toString().trim()
+        val name = binding.edtContactName.text.toString().trim()
+
+        if (mobile.isEmpty() || email.isEmpty() || name.isEmpty()) {
+            binding.sLeads.setError("Complete Lead Details")
+            return false
+        }
+        binding.sLeads.setError(null)
         return true
     }
 
     private fun validateContact(): Boolean {
         val mobile = binding.edtContactNo.text.toString().trim()
         if (mobile.isEmpty()) {
-            binding.edtContactNo.error = "Empty Contact Number"
+            binding.edtContactNo.setError("Empty Contact Number")
             binding.edtContactNo.requestFocus()
             return false
         } else if (!mobile.matches(Regex("^[0-9]{10}$"))) {
-            binding.edtContactNo.error = "Invalid Contact Number"
+            binding.edtContactNo.setError("Invalid Contact Number")
             binding.edtContactNo.requestFocus()
             return false
         }
@@ -1020,11 +790,11 @@ class NewMeetingPurposeFragment : Fragment()
     private fun validateContactEmail(): Boolean {
         val mobile = binding.edtEmailId.text.toString().trim()
         if (mobile.isEmpty()) {
-            binding.edtEmailId.error = "Empty Email ID"
+            binding.edtEmailId.setError("Empty Email ID")
             binding.edtEmailId.requestFocus()
             return false
         } else if (!mobile.matches(Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"))) {
-            binding.edtEmailId.error = "Invalid Email ID"
+            binding.edtEmailId.setError("Invalid Email ID")
             binding.edtEmailId.requestFocus()
             return false
         }
@@ -1034,65 +804,12 @@ class NewMeetingPurposeFragment : Fragment()
 
     private fun validateContactName(): Boolean {
         if (binding.edtContactName.text.toString().trim().isEmpty()) {
-            binding.edtContactName.error = "Required Field!"
+            binding.edtContactName.setError("Required Field!")
             binding.edtContactName.requestFocus()
             return false
         } else {
             binding.edtContactName.error = null
-//            binding.dateEscalatedMeetingDate.isErrorEnabled = false
         }
         return true
     }
-
-//    override fun onMapReady(p0: GoogleMap) {
-//        val apiKey = getString(R.string.google_maps_key)
-//        if (!Places.isInitialized()) { //Init GooglePlaceAutocomplete if not existed
-//            Places.initialize(requireActivity().applicationContext, apiKey)
-//        }
-//        placesClient = Places.createClient(requireActivity().applicationContext)
-//        mMap = p0
-//        requestPermission() //Request user for location permission
-//        locationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-//        mMap!!.uiSettings.isZoomControlsEnabled = true
-//        startLocationUpdate() //Start location update listener
-//        //        setUpCluster(); //Set up cluster on Google Map
-//        onGetPositionClick() // Position the map.
-//    }
-
-//    /**
-//     * //Start location update listener
-//     */
-//    @SuppressLint("MissingPermission", "RestrictedApi")
-//    private fun startLocationUpdate() {
-//        locationRequest = LocationRequest()
-//        locationRequest!!.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-//        locationRequest!!.setInterval((5 * 1000).toLong()) //5s
-//        locationRequest!!.setFastestInterval((5 * 1000).toLong()) //5s
-//        locationClient!!.requestLocationUpdates(
-//            locationRequest!!,
-//            object : LocationCallback() {
-//                override fun onLocationResult(locationResult: LocationResult) {
-//                    super.onLocationResult(locationResult)
-//                    val location: Location = locationResult.lastLocation!!
-//                    val latLng = LatLng(
-//                        location.latitude,
-//                        location.longitude
-//                    )
-//                    updateCurrentUserLocationMarker(latLng)
-//                    //                        updateCurrentRoute();
-//                }
-//            }, null
-//        )
-//    }
-//
-//    /**
-//     * Request user for location permission
-//     */
-//    private fun requestPermission() {
-//        ActivityCompat.requestPermissions(
-//            requireActivity(), arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
-//            MY_LOCATION_REQUEST
-//        )
-//    }
-
 }

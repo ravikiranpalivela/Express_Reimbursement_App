@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import kotlin.random.Random
 
-
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
     // ...
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -42,16 +41,11 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
             context?.let {
                 saveLocationPrefs(it, geofenceTransitionDetails, geofenceTransition)
-
-
                 (context.getSystemService(NotificationManager::class.java) as NotificationManager)
                     .notify(Random.nextInt(), notification)
             }
         } else {
-            Log.e(
-                TAG,
-                "Tipo de transição invalida: ${geofenceTransition ?: -1}",
-            )
+            Log.e(TAG, "invalida: ${geofenceTransition ?: -1}")
         }
     }
 

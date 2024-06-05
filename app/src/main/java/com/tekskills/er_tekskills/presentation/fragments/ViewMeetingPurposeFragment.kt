@@ -8,28 +8,28 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.Task
-import com.tekskills.er_tekskills.presentation.activities.MainActivity
 import com.tekskills.er_tekskills.presentation.viewmodel.MainActivityViewModel
 import com.tekskills.er_tekskills.R
-import com.tekskills.er_tekskills.data.model.TaskCategoryInfo
 import com.google.android.material.snackbar.Snackbar
 import com.tekskills.er_tekskills.data.model.AddCheckInRequest
+import com.tekskills.er_tekskills.data.model.MeetingPurposeResponseData
 import com.tekskills.er_tekskills.databinding.FragmentViewPurposeMeetingsBinding
 import com.tekskills.er_tekskills.presentation.adapter.ViewMeetingPurposeAdapter
-import com.tekskills.er_tekskills.utils.DummyData
+import com.tekskills.er_tekskills.utils.AppUtil
 import com.tekskills.er_tekskills.utils.RestApiStatus
+import com.tekskills.er_tekskills.utils.SmartDialog
+import com.tekskills.er_tekskills.utils.SmartDialogBuilder
+import com.tekskills.er_tekskills.utils.SmartDialogClickListener
 import com.tekskills.er_tekskills.utils.SuccessResource
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -94,7 +94,7 @@ class ViewMeetingPurposeFragment : ParentFragment() {
         }
 
         adapter.setOnCheckOUTItemClickListener {
-            getCurrentLocation(it.id.toString())
+            getCurrentLocation(it.id.toString(),it)
         }
 
         adapter.setOnAddMOMItemClickListener {
@@ -236,7 +236,10 @@ class ViewMeetingPurposeFragment : ParentFragment() {
             viewModel.getMeetingPurpose("")
     }
 
-    private fun getCurrentLocation(purposeID: String) {
+    private fun getCurrentLocation(
+        purposeID: String,
+        meetingDetails: MeetingPurposeResponseData
+    ) {
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -258,8 +261,46 @@ class ViewMeetingPurposeFragment : ParentFragment() {
                         latitude = latitude.toString(),
                         longitude = longitude.toString(),
                     )
-                    viewModel.putUserMeetingCheckOUT(purposeID, checkin)
-                    Log.d("Location", "Lat: $latitude, Lon: $longitude")
+                    meetingDetails?.let {
+                        if (AppUtil.isWithinRange(
+                                latitude,
+                                longitude,
+                                meetingDetails!!.userCordinates.destinationLatitude.toDouble(),
+                                meetingDetails!!.userCordinates.destinationLongitude.toDouble(),
+                                1000F
+                            )
+                        ) {
+                            viewModel.putUserMeetingCheckOUT(purposeID, checkin)
+                            Log.d("Location", "Lat: $latitude, Lon: $longitude")
+                        } else {
+                            SmartDialogBuilder(requireContext())
+                                .setTitle("Note")
+                                .setSubTitle("Your in Not in Location Range")
+                                .setCancalable(false)
+                                .setCustomIcon(R.drawable.icon2)
+                                .setTitleColor(resources.getColor(R.color.black))
+                                .setSubTitleColor(resources.getColor(R.color.black))
+                                .setNegativeButtonHide(true)
+                                .useNeutralButton(true)
+                                .setPositiveButton("Okay", object : SmartDialogClickListener {
+                                    override fun onClick(smartDialog: SmartDialog?) {
+                                        Log.d("TAG", "onViewCreated: okay for alert dialog exceeds")
+                                        smartDialog!!.dismiss()
+                                    }
+                                })
+                                .setNegativeButton("Cancel", object : SmartDialogClickListener {
+                                    override fun onClick(smartDialog: SmartDialog?) {
+                                        smartDialog!!.dismiss()
+                                    }
+                                })
+                                .setNeutralButton("Cancel", object : SmartDialogClickListener {
+                                    override fun onClick(smartDialog: SmartDialog?) {
+                                        smartDialog!!.dismiss()
+                                    }
+                                })
+                                .build().show()
+                        }
+                    }
                 }
             } else {
                 Log.w("Location", "Failed to get location.")
@@ -274,42 +315,4 @@ class ViewMeetingPurposeFragment : ParentFragment() {
 //        val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
 //        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }
-
-//    private fun editTaskInformation(taskCategoryInfo: TaskCategoryInfo) {
-//        val action = CompletedTasksFragmentDirections.actionCompletedTasksFragmentToNewTaskFragment(
-//            taskCategoryInfo
-//        )
-//        findNavController().navigate(action)
-//    }
-
-//    private val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
-//        ItemTouchHelper.SimpleCallback(
-//            0,
-//            ItemTouchHelper.LEFT
-//        ) {
-//        override fun onMove(
-//            recyclerView: RecyclerView,
-//            viewHolder: RecyclerView.ViewHolder,
-//            target: RecyclerView.ViewHolder
-//        ): Boolean {
-//            return false
-//        }
-//
-//        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-//            val position = viewHolder.adapterPosition
-//            val taskInfo = adapter.differ.currentList[position]?.taskInfo
-//            val categoryInfo = adapter.differ.currentList[position]?.categoryInfo?.get(0)
-//            if (taskInfo != null && categoryInfo!= null) {
-//                deleteTask(viewModel, taskInfo, categoryInfo)
-//                Snackbar.make(binding.root,"Deleted Successfully",Snackbar.LENGTH_LONG)
-//                    .apply {
-//                        setAction("Undo") {
-//                            viewModel.insertTaskAndCategory(taskInfo, categoryInfo)
-//                        }
-//                        show()
-//                    }
-//            }
-//        }
-//    }
-
 }

@@ -13,6 +13,7 @@
         <attr name="selected_item_color" format="color"/>
         <attr name="label_text_size" format="dimension"/>
         <attr name="label_hint" format="string"/>
+        <attr name="label_error" format="string"/>
         <attr name="label_alignment" format="integer"/>
         <attr name="disabled" format="boolean"/>
         <attr name="sort" format="boolean"/>

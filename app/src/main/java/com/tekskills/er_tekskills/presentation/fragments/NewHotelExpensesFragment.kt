@@ -73,7 +73,7 @@ class NewHotelExpensesFragment : Fragment() {
     private var listImage: MutableList<File> = ArrayList()
     private var selectedSelectImage: Int = 0
     private val listSelectImage = arrayOf("Take Photo", "Choose from Gallery")
-    private var validated:Boolean = false
+    private var validated: Boolean = false
 
     private var purposeID: String = ""
     private val args: NewHotelExpensesFragmentArgs by navArgs()
@@ -242,7 +242,7 @@ class NewHotelExpensesFragment : Fragment() {
 //                        .setPositiveButton("Okay", object : SmartDialogClickListener {
 //                            override fun onClick(smartDialog: SmartDialog?) {
 //                                Log.d("TAG", "onViewCreated: okay for alert dialog exceeds")
-                                addHotelExpenseDetails()
+                addHotelExpenseDetails()
 //                                smartDialog!!.dismiss()
 //                            }
 //                        })
@@ -373,7 +373,7 @@ class NewHotelExpensesFragment : Fragment() {
                 listSelectImage[item] == "Take Photo" -> {
                     selectedSelectImage = 0
 //                    if (checkPersmission()) {
-                        takePhoto()
+                    takePhoto()
 //                    } else {
 //                        requestPermission()
 //                    }
@@ -382,7 +382,7 @@ class NewHotelExpensesFragment : Fragment() {
                 listSelectImage[item] == "Choose from Gallery" -> {
                     selectedSelectImage = 1
 //                    if (checkPersmission()) {
-                        openGallery()
+                    openGallery()
 //                    } else {
 //                        requestPermission()
 //                    }
@@ -509,11 +509,24 @@ class NewHotelExpensesFragment : Fragment() {
         }
     }
 
-    private fun isValidate(): Boolean =
+//    private fun isValidate(): Boolean =
+//        if (binding.chkRoundTrip.isChecked)
+//            validateAttachment() && validateHotelAmount() && validateReturnHotelDate()
+//        else
+//            validateAttachment() && validateHotelAmount()
+
+
+    private fun isValidate(): Boolean {
+        var isValid = true
+
         if (binding.chkRoundTrip.isChecked)
-            validateAttachment() && validateHotelAmount() && validateReturnHotelDate()
-        else
-            validateAttachment() && validateHotelAmount()
+            if (!validateReturnHotelDate()) isValid = false
+
+        if (!validateHotelAmount()) isValid = false
+        if (!validateAttachment()) isValid = false
+
+        return isValid
+    }
 
     /**
      * field must not be empty

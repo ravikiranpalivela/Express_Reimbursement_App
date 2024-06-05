@@ -132,7 +132,7 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/clientName"
                     style="@style/stlTxtValue"
-                    android:text="@{dateConvert.Companion.convertDateStringToCustomFormat(taskCategoryInfo.visitDate)}"
+                    android:text="@{dateConvert.Companion.convertDateStringToCustomFormat(taskCategoryInfo.visitTime)}"
                     tools:text="Testing" />
             </LinearLayout>
 

@@ -1,0 +1,85 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:1:1-41:12
+INJECTED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:1:1-41:12
+INJECTED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:1:1-41:12
+	package
+		INJECTED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:1:1-41:12
+		INJECTED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:2:5-63
+uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
+ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:4:5-81
+	android:name
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:4:22-78
+uses-permission#android.permission.POST_NOTIFICATIONS
+ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:6:5-76
+	android:name
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:6:22-74
+uses-permission#android.permission.ACCESS_BACKGROUND_LOCATION
+ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:8:5-85
+	android:name
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:8:22-82
+application
+ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:10:5-39:19
+receiver#com.tekskills.geolocator.geofencer.service.GeofenceBroadcastReceiver
+ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:12:9-15:40
+	android:enabled
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:14:13-35
+	android:exported
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:15:13-37
+	android:name
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:13:13-96
+receiver#com.tekskills.geolocator.geofencer.service.GeofenceBootReceiver
+ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:17:9-29:20
+	android:enabled
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:19:13-35
+	android:exported
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:20:13-37
+	android:name
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:18:13-91
+intent-filter#action:name:android.intent.action.BOOT_COMPLETED+action:name:android.intent.action.QUICKBOOT_POWERON+action:name:com.htc.intent.action.QUICKBOOT_POWERON+category:name:android.intent.category.DEFAULT
+ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:21:13-28:29
+category#android.intent.category.DEFAULT
+ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:22:17-76
+	android:name
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:22:27-73
+action#android.intent.action.BOOT_COMPLETED
+ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:24:17-79
+	android:name
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:24:25-76
+action#android.intent.action.QUICKBOOT_POWERON
+ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:25:17-82
+	android:name
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:25:25-79
+action#com.htc.intent.action.QUICKBOOT_POWERON
+ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:27:17-82
+	android:name
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:27:25-79
+receiver#com.tekskills.geolocator.tracking.service.LocationTrackerUpdateBroadcastReceiver
+ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:31:9-37:20
+	android:exported
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:33:13-36
+	android:name
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:32:13-84
+intent-filter#action:name:com.tekskills.geolocator.tracking.service.ACTION_PROCESS_UPDATES
+ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:34:13-36:29
+action#com.tekskills.geolocator.tracking.service.ACTION_PROCESS_UPDATES
+ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:35:17-107
+	android:name
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:35:25-104
+uses-sdk
+INJECTED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml
+INJECTED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml
+INJECTED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml
+INJECTED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml
+		INJECTED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml
+		ADDED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml
+		INJECTED from D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml

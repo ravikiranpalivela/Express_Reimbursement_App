@@ -64,31 +64,24 @@ import java.util.Date
 import java.util.GregorianCalendar
 
 class NewTravelExpensesFragment : Fragment() {
-
     private lateinit var binding: FragmentNewTravelExpensesBinding
     private lateinit var viewModel: MainActivityViewModel
-
     private var selectMOTPos = "Bike"
     private var mClientNames: ArrayList<String> = arrayListOf(
         "Train", "Bus", "Bike", "Car", "Flight"
     )
-
     private lateinit var addImageAdapter: AddImageAdapter
     private lateinit var fileCompressor: FileCompressor
     private lateinit var fileImage: File
     private lateinit var dialog: AlertDialog
     private var listImage: MutableList<File> = ArrayList()
     private var selectedSelectImage: Int = 0
-
     private var validated:Boolean = false
-
     private var purposeID: String = ""
     private val args: NewTravelExpensesFragmentArgs by navArgs()
     var travelDate: Date = Date(Constants.MAX_TIMESTAMP)
     private var selectReturnMOTPos = 0
-
     private val listSelectImage = arrayOf("Take Photo", "Choose from Gallery")
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -442,11 +435,7 @@ class NewTravelExpensesFragment : Fragment() {
 //                            requireActivity().finish()
                         }
                     else {
-                        Snackbar.make(
-                            binding.root,
-                            "Login Failed",
-                            Snackbar.LENGTH_SHORT
-                        ).show()
+                        Snackbar.make(binding.root, "Login Failed", Snackbar.LENGTH_SHORT).show()
                     }
                 }
 
@@ -617,14 +606,25 @@ class NewTravelExpensesFragment : Fragment() {
         }
     }
 
-    private fun isValidate(): Boolean =
+//    private fun isValidate(): Boolean =
+//        if (binding.chkRoundTrip.isChecked)
+//            validateAttachment()
+////                    && validateTravelAmount()
+//                    && validateReturnTravelDate()
+//        else
+//            validateAttachment()
+//                    && validateTravelAmount()
+
+    private fun isValidate(): Boolean {
+        var isValid = true
+
         if (binding.chkRoundTrip.isChecked)
-            validateAttachment()
-//                    && validateTravelAmount()
-                    && validateReturnTravelDate()
-        else
-            validateAttachment()
-//                    && validateTravelAmount()
+            if (!validateReturnTravelDate()) isValid = false
+
+        if (!validateAttachment()) isValid = false
+
+        return isValid
+    }
 
     /**
      * field must not be empty

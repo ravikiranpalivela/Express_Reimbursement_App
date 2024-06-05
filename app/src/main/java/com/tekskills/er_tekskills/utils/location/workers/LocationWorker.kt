@@ -55,13 +55,13 @@ class LocationWorker(context: Context, workerParams: WorkerParameters) :
                 PendingIntent.FLAG_MUTABLE
             )
 
-            val notification = MyNotificationService
-                .createWorkerNotification(applicationContext, date)
-
-            val notificationManager =
-                applicationContext.getSystemService(NotificationManager::class.java) as NotificationManager
-
-            notificationManager.notify(Random.nextInt(), notification)
+//            val notification = MyNotificationService
+//                .createWorkerNotification(applicationContext, date)
+//
+//            val notificationManager =
+//                applicationContext.getSystemService(NotificationManager::class.java) as NotificationManager
+//
+//            notificationManager.notify(Random.nextInt(), notification)
             fusedLocationClient.requestLocationUpdates(locationRequest, pendingIntent)
             fusedLocationClient.flushLocations()
 

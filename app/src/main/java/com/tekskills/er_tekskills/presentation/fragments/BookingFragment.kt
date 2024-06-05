@@ -67,7 +67,6 @@ class BookingFragment : Fragment(),
     private lateinit var binding: FragmentCustomerBookingBinding
 
     //Maps marker clustering
-    private val clusterManager: ClusterManager<MyClusterItem>? = null
     private var supportMapFragment: SupportMapFragment? = null //maps view
     private var mMap: GoogleMap? = null
     private var locationClient: FusedLocationProviderClient? = null
@@ -77,9 +76,6 @@ class BookingFragment : Fragment(),
     private var currentUserLocationMarker: Marker? = null
     private var currentDriverLocationMarker: Marker? = null
     private var currentUserLocation: Location? = null
-    private val prevUserLocation: LatLng? = null
-    private val currentTargetLocationClusterItem: MyClusterItem? = null
-    private val prevTargetLocation: LatLng? = null
     private val currentRoute: ArrayList<Polyline> = ArrayList<Polyline>()
     private var placesClient: PlacesClient? = null
 
@@ -91,10 +87,6 @@ class BookingFragment : Fragment(),
     var distanceInKm: Double? = null
     var distanceInKmString: String? = null
     var priceInVNDString: String? = null
-
-    //Booking flow
-    var bookBtnPressed: Boolean? = null
-    var cancelBookingBtnPressed: Boolean? = null
 
     /**
      * Init Google MapsFragment
@@ -168,25 +160,6 @@ class BookingFragment : Fragment(),
     }
 
     /**
-     * Load drop-off picker fragment
-     */
-    private fun loadDropOffPlacePickerFragment() {
-        //Load drop-off picker fragment
-//        val dropoffFragment = DropoffFragment()
-//        val transaction = childFragmentManager.beginTransaction()
-//        transaction.replace(R.id.booking_info, dropoffFragment).commit()
-    }
-
-    /**
-     * Load pick up picker fragment
-     */
-    private fun loadPickupPlacePickerFragment() {
-//        val pickupFragment = PickupFragment()
-//        val transaction = childFragmentManager.beginTransaction()
-//        transaction.replace(R.id.booking_info, pickupFragment).commit()
-    }
-
-    /**
      * Load checkout fragment
      */
     private fun loadCheckoutFragment() {
@@ -252,29 +225,6 @@ class BookingFragment : Fragment(),
         fetchRouteDataTask.execute(url)
     }
 
-
-//    /**
-//     * Draw route from pickup location to drop off location on the map fragment
-//     */
-//    private fun drawRouteFromPickupToDropOff() {
-//        // Checks, whether start and end locations are captured
-//        // Getting URL to the Google Directions API
-//        val url = customerPickupPlace?.let {
-//            customerDropOffPlace?.latLng?.let { it1 ->
-//                it.latLng?.let { it2 ->
-//                    getRouteUrl(
-//                        it2,
-//                        it1,
-//                        "driving"
-//                    )
-//                }
-//            }
-//        }
-//        val fetchRouteDataTask = FetchRouteDataTask()
-//
-//        // Start fetching json data from Google Directions API
-//        fetchRouteDataTask.execute(url)
-//    }
 
     /**
      * //Find My location Button listener
@@ -497,12 +447,6 @@ class BookingFragment : Fragment(),
             .observe(viewLifecycleOwner, Observer<Any?> { place ->
                 if (place == null) return@Observer
                 customerDropOffPlace = place as Place?
-//                binding.fragmentMapsBackBtn.visibility = View.VISIBLE //Show back button
-//                binding.edtDestination.text = (place?.toString() ?: "") as Editable?
-
-                //TODO Move to customerPickUpPlace fragment
-                if (customerPickupPlace != null)
-                    loadPickupPlacePickerFragment()
 
                 if (currentUserLocation != null) {
                     smoothlyMoveCameraToPosition(
@@ -523,29 +467,12 @@ class BookingFragment : Fragment(),
                 }
             })
 
-
-//                mViewModel!!.getCustomerSelectedDropOffPlace()
-//                    .observe(viewLifecycleOwner, Observer<Any?> { place ->
-//                        if (place == null) return@Observer
-//                        customerDropOffPlace = place as Place?
-//                        binding.fragmentMapsBackBtn.setVisibility(View.VISIBLE) //Show back button
-//
-//                        //TODO Move to customerPickUpPlace fragment
-//                        loadPickupPlacePickerFragment()
-//                        smoothlyMoveCameraToPosition(
-//                            LatLng(currentUserLocation!!.latitude, currentUserLocation!!.longitude),
-//                            UtilsConstants.GoogleMaps.CameraZoomLevel.betweenStreetsAndBuildings
-//                        )
-//                    })
-
         mViewModel!!.getCustomerSelectedPickupPlace()
             .observe(viewLifecycleOwner, Observer<Any?> { place ->
                 if (place == null) return@Observer
                 customerPickupPlace = place as Place?
 
 //                binding.edtSource.text = (place?.toString() ?: "") as Editable?
-
-                loadDropOffPlacePickerFragment()
 
                 //TODO Draw 2 pickup/drop-off markers
 
@@ -559,22 +486,6 @@ class BookingFragment : Fragment(),
                     drawRouteFromPickupToDropOff()
                 }
             })
-
-//                //Action handler when customer's chosen pickup place is selected
-//                mViewModel!!.getCustomerSelectedPickupPlace()
-//                    .observe(viewLifecycleOwner, Observer<Any?> { place ->
-//                        if (place == null) return@Observer
-//                        customerPickupPlace = place as Place?
-//
-//                        //TODO load checkout fragment
-//                        loadCheckoutFragment()
-//
-//                        //TODO Draw 2 pickup/drop-off markers
-//                        drawDropOffAndPickupMarkers()
-//
-//                        //TODO Draw route from pickup place to drop-off place
-//                        drawRouteFromPickupToDropOff()
-//                    })
 
         mViewModel!!.getTransportationType()!!
             .observe(viewLifecycleOwner, Observer<String?> { s ->
@@ -636,24 +547,6 @@ class BookingFragment : Fragment(),
         data[UtilsConstants.FSBooking.finished] = false
         data[UtilsConstants.FSBooking.arrived] = false
         data[UtilsConstants.FSBooking.driver] = null
-//        db.collection(UtilsConstants.FSBooking.bookingCollection)
-//            .add(data)
-//            .addOnSuccessListener(object : OnSuccessListener<DocumentReference?> {
-//                override fun onSuccess(documentReference: DocumentReference) {
-//                    currentBookingDocRef = documentReference
-//                    setDetectAcceptedDriver()
-//                }
-//            })
-//            .addOnFailureListener(object : OnFailureListener {
-//                override fun onFailure(e: Exception) {
-//                    Toast.makeText(
-//                        requireActivity(),
-//                        UtilsConstants.ToastMessage.addNewBookingToDbFail,
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                    resetBookingFlow()
-//                }
-//            })
     }
 
     /*************************************************** For booking synchronization  */

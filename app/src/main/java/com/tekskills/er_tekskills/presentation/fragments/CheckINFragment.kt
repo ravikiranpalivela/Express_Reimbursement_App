@@ -34,10 +34,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.tekskills.er_tekskills.R
 import com.tekskills.er_tekskills.data.model.AddCheckInRequest
+import com.tekskills.er_tekskills.data.model.MeetingPurposeResponseData
 import com.tekskills.er_tekskills.databinding.FragmentCheckinBinding
 import com.tekskills.er_tekskills.presentation.activities.MainActivity
 import com.tekskills.er_tekskills.presentation.adapter.AddImageAdapter
 import com.tekskills.er_tekskills.presentation.viewmodel.MainActivityViewModel
+import com.tekskills.er_tekskills.utils.AppUtil.isWithinRange
 import com.tekskills.er_tekskills.utils.AppUtil.showSnackBar
 import com.tekskills.er_tekskills.utils.Common.Companion.checkLocationPermission
 import com.tekskills.er_tekskills.utils.FileCompressor
@@ -57,6 +59,7 @@ class CheckINFragment : BottomSheetDialogFragment() {
     private lateinit var navController: NavController
     private lateinit var viewModel: MainActivityViewModel
     private var purposeID: String = ""
+    private var meetingDetails: MeetingPurposeResponseData? = null
 
     private val args: CheckINFragmentArgs by navArgs()
 
@@ -85,7 +88,7 @@ class CheckINFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
         navController = findNavController()
-        showSnackBar(binding.root)
+//        showSnackBar(binding.root)
 
         purposeID = args.opportunityID
 
@@ -131,7 +134,7 @@ class CheckINFragment : BottomSheetDialogFragment() {
             }
         })
 
-//        viewModel.getMeetingPurposeByID(purposeID)
+        viewModel.getMeetingPurposeByID(purposeID)
 
 
         binding.apply {
@@ -164,7 +167,7 @@ class CheckINFragment : BottomSheetDialogFragment() {
                         if (it.data != null) {
                             it.data.let { list ->
                                 binding.taskCategoryInfo = list
-
+                                meetingDetails= list
 //                                binding.priority.text = if (list.status == "Active")
 //                                    "Active" else "InActive"
                             }
@@ -332,14 +335,54 @@ class CheckINFragment : BottomSheetDialogFragment() {
                         latitude = latitude.toString(),
                         longitude = longitude.toString(),
                     )
-                    viewModel.putUserMeetingCheckIN(purposeID, checkin, listImage)
-                    Log.d("Location", "Lat: $latitude, Lon: $longitude")
+                    meetingDetails?.let {
+                        if (isWithinRange(
+                                latitude,
+                                longitude,
+                                meetingDetails!!.userCordinates.destinationLatitude.toDouble(),
+                                meetingDetails!!.userCordinates.destinationLongitude.toDouble(),
+                                1000F
+                            )
+                        ) {
+                            viewModel.putUserMeetingCheckIN(purposeID, checkin, listImage)
+                            Log.d("Location", "Lat: $latitude, Lon: $longitude")
+                        } else {
+                            SmartDialogBuilder(requireContext())
+                                .setTitle("Note")
+                                .setSubTitle("Your in Not in Location Range")
+                                .setCancalable(false)
+                                .setCustomIcon(R.drawable.icon2)
+                                .setTitleColor(resources.getColor(R.color.black))
+                                .setSubTitleColor(resources.getColor(R.color.black))
+                                .setNegativeButtonHide(true)
+                                .useNeutralButton(true)
+                                .setPositiveButton("Okay", object : SmartDialogClickListener {
+                                    override fun onClick(smartDialog: SmartDialog?) {
+                                        Log.d("TAG", "onViewCreated: okay for alert dialog exceeds")
+                                        smartDialog!!.dismiss()
+                                    }
+                                })
+                                .setNegativeButton("Cancel", object : SmartDialogClickListener {
+                                    override fun onClick(smartDialog: SmartDialog?) {
+                                        smartDialog!!.dismiss()
+                                    }
+                                })
+                                .setNeutralButton("Cancel", object : SmartDialogClickListener {
+                                    override fun onClick(smartDialog: SmartDialog?) {
+                                        smartDialog!!.dismiss()
+                                    }
+                                })
+                                .build().show()
+                        }
+                    }
                 }
             } else {
                 Log.w("Location", "Failed to get location.")
             }
         }
     }
+
+
 
     private fun initAdapter() {
         addImageAdapter = AddImageAdapter(listImage)

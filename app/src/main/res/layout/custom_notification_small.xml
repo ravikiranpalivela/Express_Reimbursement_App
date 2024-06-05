@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/widget_size_2">
+
+        <ImageView
+            android:id="@+id/image_app"
+            android:layout_width="@dimen/app_bar_height"
+            android:layout_height="@dimen/app_bar_height"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/widget_size_2"
+            android:src="@mipmap/ic_launcher_foreground" />
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/stlTxtHeading"
+            android:gravity="left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/widget_size_1"
+            android:layout_marginEnd="167dp"
+            android:layout_toStartOf="@+id/button"
+            android:layout_toEndOf="@id/image_app"
+            android:padding="@dimen/widget_size_2"
+            android:textSize="@dimen/font_size_16"
+            tools:text="Title" />
+
+        <TextView
+            android:id="@+id/text"
+            style="@style/stlTxtSubHeading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_margin="@dimen/widget_size_2"
+            android:layout_marginEnd="186dp"
+            android:layout_toStartOf="@+id/button"
+            android:layout_toEndOf="@id/image_app"
+            tools:text="Title" />
+
+        <TextView
+            android:id="@+id/button"
+            style="@style/stlTxtHeading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="Check-IN"
+            android:textSize="@dimen/font_size_16"
+            app:drawableEndCompat="@drawable/ic_arrow_right"
+            app:drawableTint="@color/black" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,71 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.tekskills.geolocator" >
+4
+5    <uses-sdk android:minSdkVersion="16" />
+5-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml
+6
+7    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+7-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:4:5-81
+7-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:4:22-78
+8    <!-- Required in API 33/Android 13 onwards -->
+9    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+9-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:6:5-76
+9-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:6:22-74
+10    <!-- Required in API 30/Android 11 onwards -->
+11    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+11-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:8:5-85
+11-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:8:22-82
+12
+13    <application>
+13-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:10:5-39:19
+14        <receiver
+14-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:12:9-15:40
+15            android:name="com.tekskills.geolocator.geofencer.service.GeofenceBroadcastReceiver"
+15-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:13:13-96
+16            android:enabled="true"
+16-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:14:13-35
+17            android:exported="false" />
+17-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:15:13-37
+18        <receiver
+18-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:17:9-29:20
+19            android:name="com.tekskills.geolocator.geofencer.service.GeofenceBootReceiver"
+19-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:18:13-91
+20            android:enabled="true"
+20-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:19:13-35
+21            android:exported="false" >
+21-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:20:13-37
+22            <intent-filter>
+22-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:21:13-28:29
+23                <category android:name="android.intent.category.DEFAULT" />
+23-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:22:17-76
+23-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:22:27-73
+24
+25                <action android:name="android.intent.action.BOOT_COMPLETED" />
+25-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:24:17-79
+25-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:24:25-76
+26                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+26-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:25:17-82
+26-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:25:25-79
+27                <!-- For HTC devices -->
+28                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+28-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:27:17-82
+28-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:27:25-79
+29            </intent-filter>
+30        </receiver>
+31        <receiver
+31-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:31:9-37:20
+32            android:name="com.tekskills.geolocator.tracking.service.LocationTrackerUpdateBroadcastReceiver"
+32-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:32:13-84
+33            android:exported="true" >
+33-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:33:13-36
+34            <intent-filter>
+34-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:34:13-36:29
+35                <action android:name="com.tekskills.geolocator.tracking.service.ACTION_PROCESS_UPDATES" />
+35-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:35:17-107
+35-->D:\202904\Projects\Express_Reimbursement_App\Geolocator\src\main\AndroidManifest.xml:35:25-104
+36            </intent-filter>
+37        </receiver>
+38    </application>
+39
+40</manifest>

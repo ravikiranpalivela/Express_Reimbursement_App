@@ -36,7 +36,7 @@
     </queries>
 
     <application
-        android:name="com.tekskills.er_tekskills.presentation.di.PSVTekskillsApplication"
+        android:name="com.tekskills.er_tekskills.presentation.di.ERTekskillsApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -57,6 +57,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.tekskills.er_tekskills.presentation.activities.LoginActivity"
             android:exported="true">
@@ -76,7 +77,9 @@
 <!--                <category android:name="android.intent.category.LAUNCHER" />-->
 <!--            </intent-filter>-->
         </activity>
-
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.tekskills.er_tekskills.fileprovider"

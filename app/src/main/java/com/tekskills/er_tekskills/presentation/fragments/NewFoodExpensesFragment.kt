@@ -484,8 +484,19 @@ class NewFoodExpensesFragment : Fragment() {
         }
     }
 
-    private fun isValidate(): Boolean =
-        validateFoodAmount() && validateFoodComment() &&validateAttachment()
+//    private fun isValidate(): Boolean =
+//        validateFoodAmount() && validateFoodComment() &&validateAttachment()
+
+
+    private fun isValidate(): Boolean {
+        var isValid = true
+
+        if (!validateFoodAmount()) isValid = false
+        if (!validateFoodComment()) isValid = false
+        if (!validateAttachment()) isValid = false
+
+        return isValid
+    }
 
     /**
      * field must not be empty

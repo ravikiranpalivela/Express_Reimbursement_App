@@ -41,7 +41,7 @@
             android:layout_toEndOf="@id/isCompleted"
             android:layout_marginTop="12dp"
             android:textSize="16sp"
-            android:text="@{taskCategoryInfo.taskInfo.description}"/>
+            android:text="@{taskCategoryInfo.taskInfo.purposeOfVisit}"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dueDate"
