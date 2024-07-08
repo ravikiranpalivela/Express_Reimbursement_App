@@ -147,6 +147,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/_8dp"
                 android:background="@drawable/ic_edit"
+                android:visibility="gone"
                 android:contentDescription="@string/edit_opportunity"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />

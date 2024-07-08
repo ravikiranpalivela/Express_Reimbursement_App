@@ -93,7 +93,6 @@ class NewAddMOMFragment : Fragment() {
         navController = findNavController()
         purposeID = args.opportunityID
 
-
 //        viewModel.getClientNameList()
 
         viewModel.resNewClientResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -211,8 +210,10 @@ class NewAddMOMFragment : Fragment() {
                         binding.progress.visibility = View.GONE
                         if (it.data != null)
                             it.data.let { res ->
-                                if(validated)
-                                requireActivity().onBackPressed()
+                                if(validated) {
+                                    validated = false
+                                    requireActivity().onBackPressed()
+                                }
 //                            val intent = Intent(requireActivity(), MainActivity::class.java)
 //                            startActivity(intent)
 //                            requireActivity().finish()

@@ -133,6 +133,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/_8dp"
                 android:background="@drawable/ic_edit"
+                android:visibility="gone"
                 android:contentDescription="@string/edit_mom"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -145,7 +146,7 @@
                 android:layout_margin="@dimen/_8dp"
                 android:background="@drawable/ic_view"
                 android:contentDescription="@string/edit_mom"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/iv_edit_mom"
                 app:layout_constraintTop_toBottomOf="@+id/ll_target_date" />

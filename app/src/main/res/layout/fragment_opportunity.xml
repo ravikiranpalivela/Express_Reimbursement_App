@@ -17,6 +17,18 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+                <ProgressBar
+                    android:id="@+id/progress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/widget_size_8"
+                    android:indeterminate="true"
+                    android:progress="100"
+                    android:visibility="gone"
+                    android:layout_marginHorizontal="@dimen/widget_size_10"
+                    android:progressDrawable="@drawable/my_progress_bar"
+                    />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -438,18 +450,6 @@
 <!--                    app:lottie_rawRes="@raw/noresultanim" />-->
 
             </LinearLayout>
-
-
-            <ProgressBar
-                android:id="@+id/progress"
-            style="?android:attr/progressBarStyleSmallTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <!--            <com.google.android.material.floatingactionbutton.FloatingActionButton-->
             <!--                android:id="@+id/fab"-->

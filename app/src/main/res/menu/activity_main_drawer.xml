@@ -2,7 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/home_fragment"
@@ -24,25 +23,23 @@
         <item
             android:id="@+id/new_purpose_meeting"
             android:title="@string/add_meeting"
-            android:visible="true"
-            />
+            android:visible="true" />
         <item
             android:id="@+id/view_meetings"
             android:title="@string/view_meeting"
             android:visible="true"
-            android:defaultValue=""
-            />
+            android:defaultValue="" />
         <item
             android:id="@+id/view_opportunity_fragment"
             android:title="View Opportunity Tasks"
-            android:visible="false"
-            />
+            android:visible="false" />
         <item
             android:id="@+id/settings_fragment"
-            android:title="Settings"/>
+            android:title="Settings"
+            android:visible="false"/>
         <item
             android:id="@+id/map_fragment"
-            android:visible="true"
+            android:visible="false"
             android:title="GeoLocation"/>
         <item
             android:id="@+id/logout"

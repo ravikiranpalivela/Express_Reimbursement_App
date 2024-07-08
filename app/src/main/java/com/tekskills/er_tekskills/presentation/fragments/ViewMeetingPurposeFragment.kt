@@ -32,13 +32,12 @@ import com.tekskills.er_tekskills.utils.SmartDialogBuilder
 import com.tekskills.er_tekskills.utils.SmartDialogClickListener
 import com.tekskills.er_tekskills.utils.SuccessResource
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
 @AndroidEntryPoint
 class ViewMeetingPurposeFragment : ParentFragment() {
-//    private lateinit var viewModel: MainActivityViewModel
-
     val viewModel: MainActivityViewModel by viewModels()
     private lateinit var binding: FragmentViewPurposeMeetingsBinding
 
@@ -271,11 +270,11 @@ class ViewMeetingPurposeFragment : ParentFragment() {
                             )
                         ) {
                             viewModel.putUserMeetingCheckOUT(purposeID, checkin)
-                            Log.d("Location", "Lat: $latitude, Lon: $longitude")
+                            Timber.tag("Location").d("Lat: $latitude, Lon: $longitude")
                         } else {
                             SmartDialogBuilder(requireContext())
                                 .setTitle("Note")
-                                .setSubTitle("Your in Not in Location Range")
+                                .setSubTitle("Your Not in Location Range")
                                 .setCancalable(false)
                                 .setCustomIcon(R.drawable.icon2)
                                 .setTitleColor(resources.getColor(R.color.black))
@@ -284,7 +283,8 @@ class ViewMeetingPurposeFragment : ParentFragment() {
                                 .useNeutralButton(true)
                                 .setPositiveButton("Okay", object : SmartDialogClickListener {
                                     override fun onClick(smartDialog: SmartDialog?) {
-                                        Log.d("TAG", "onViewCreated: okay for alert dialog exceeds")
+                                        Timber.tag("TAG")
+                                            .d("onViewCreated: okay for alert dialog exceeds")
                                         smartDialog!!.dismiss()
                                     }
                                 })
@@ -303,11 +303,10 @@ class ViewMeetingPurposeFragment : ParentFragment() {
                     }
                 }
             } else {
-                Log.w("Location", "Failed to get location.")
+                Timber.tag("Location").w("Failed to get location.")
             }
         }
     }
-
 
     private fun initRecyclerView() {
         binding.rvMeetings.adapter = adapter

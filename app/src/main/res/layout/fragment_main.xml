@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:id="@+id/containerView"
@@ -21,6 +22,21 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
+                    <ProgressBar
+                        android:id="@+id/progress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/widget_size_8"
+                        android:layout_marginHorizontal="@dimen/widget_size_10"
+                        android:indeterminate="true"
+                        android:progress="100"
+                        android:progressDrawable="@drawable/my_progress_bar"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:visibility="visible" />
 
                     <LinearLayout
                         android:id="@+id/ll_leads"
@@ -159,7 +175,7 @@
                         style="@style/stlTxtKey"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/chartWeeklyDistance"
+                        android:layout_below="@+id/progress"
                         android:layout_margin="@dimen/_4dp"
                         android:textSize="@dimen/font_size_18"
                         android:text="@string/meeting_status" />
@@ -219,16 +235,6 @@
                                 app:lottie_loop="true"
                                 app:lottie_rawRes="@raw/taskaanim" />
 
-                            <ProgressBar
-                                android:id="@+id/progress"
-                                style="?android:attr/progressBarStyleSmallTitle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:visibility="visible"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <RelativeLayout

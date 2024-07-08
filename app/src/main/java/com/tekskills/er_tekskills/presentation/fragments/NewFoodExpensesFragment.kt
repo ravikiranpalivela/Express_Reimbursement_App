@@ -41,6 +41,7 @@ import com.tekskills.er_tekskills.utils.SmartDialog
 import com.tekskills.er_tekskills.utils.SmartDialogBuilder
 import com.tekskills.er_tekskills.utils.SmartDialogClickListener
 import com.tekskills.er_tekskills.utils.SuccessResource
+import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -86,7 +87,7 @@ class NewFoodExpensesFragment : Fragment() {
 
 //        viewModel.getClientNameList()
 
-        viewModel.resNewClientResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.resNewClientResponse.observe(viewLifecycleOwner) {
             when (it.status) {
                 RestApiStatus.SUCCESS -> {
                     binding.progress.visibility = View.GONE
@@ -121,30 +122,32 @@ class NewFoodExpensesFragment : Fragment() {
                         .show()
                 }
             }
-        })
+        }
 
         viewModel.getMeetingPurposeByID(purposeID)
 
 
         binding.apply {
-            llFoodExpensesInfo.setOnClickListener(View.OnClickListener {
+            llFoodExpensesInfo.setOnClickListener {
                 if (llFoodExpenses.isVisible) {
                     llFoodExpenses.visibility = View.GONE
-                    ivViewFoodExpensesInfo.background = resources.getDrawable(R.drawable.ic_down_icon)
+                    ivViewFoodExpensesInfo.background =
+                        resources.getDrawable(R.drawable.ic_down_icon)
                 } else {
                     llFoodExpenses.visibility = View.VISIBLE
                     ivViewFoodExpensesInfo.background = resources.getDrawable(R.drawable.ic_up_icon)
                 }
-            })
-            ivViewFoodExpensesInfo.setOnClickListener(View.OnClickListener {
+            }
+            ivViewFoodExpensesInfo.setOnClickListener {
                 if (llFoodExpenses.isVisible) {
                     llFoodExpenses.visibility = View.GONE
-                    ivViewFoodExpensesInfo.background = resources.getDrawable(R.drawable.ic_down_icon)
+                    ivViewFoodExpensesInfo.background =
+                        resources.getDrawable(R.drawable.ic_down_icon)
                 } else {
                     llFoodExpenses.visibility = View.VISIBLE
                     ivViewFoodExpensesInfo.background = resources.getDrawable(R.drawable.ic_up_icon)
                 }
-            })
+            }
         }
 
 
@@ -188,14 +191,16 @@ class NewFoodExpensesFragment : Fragment() {
                 }
             })
 
-        viewModel.resAddFoodExpence.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.resAddFoodExpence.observe(viewLifecycleOwner) {
             when (it.status) {
                 RestApiStatus.SUCCESS -> {
                     binding.progress.visibility = View.GONE
                     if (it.data != null)
                         it.data.let { res ->
-                            if(validated)
-                            requireActivity().onBackPressed()
+                            if (validated) {
+                                validated = false
+                                requireActivity().onBackPressed()
+                            }
 //                            val intent = Intent(requireActivity(), MainActivity::class.java)
 //                            startActivity(intent)
 //                            requireActivity().finish()
@@ -225,7 +230,7 @@ class NewFoodExpensesFragment : Fragment() {
                         .show()
                 }
             }
-        })
+        }
 
         binding.ivAddImage.setOnClickListener {
             selectImage()
@@ -235,7 +240,7 @@ class NewFoodExpensesFragment : Fragment() {
         binding.btnSave.setOnClickListener {
             if (isValidate()) {
 
-                Log.d("TAG", "onViewCreated: validated successfully")
+                Timber.tag("TAG").d("onViewCreated: validated successfully")
 
 //                if (binding.edtFoodAmt.text.toString().toDouble() >
 //                    binding.taskCategoryInfo!!.allowncesLimit.foodLimit.toString()
@@ -407,8 +412,6 @@ class NewFoodExpensesFragment : Fragment() {
         startActivityForResult(intent, REQUEST_OPEN_GALLERY)
     }
 
-
-
     @SuppressLint("SimpleDateFormat")
     @Throws(IOException::class)
     private fun createFile(): File {
@@ -430,7 +433,7 @@ class NewFoodExpensesFragment : Fragment() {
             fos.close()
             fileImage
         } catch (e: Exception) {
-            e.printStackTrace()
+            Timber.e("Exception occur at bitmapToFile ${e.message}")
             fileImage
         }
     }
@@ -465,10 +468,8 @@ class NewFoodExpensesFragment : Fragment() {
         }
     }
 
-    fun addHotelExpenseDetails() {
-
+    private fun addHotelExpenseDetails() {
         try {
-
             val hotelExpense = AddFoodExpenceRequest(
                 purposeId = purposeID.toInt(),
                 foodComments = binding.edtFoodComment.text.toString(),
@@ -480,13 +481,12 @@ class NewFoodExpensesFragment : Fragment() {
             validated = true
             viewModel.addFoodExpense(hotelExpense,listImage)
         } catch (e: Exception) {
-            Log.d("TAG", "addHotelExpenseDetails: ${e.message}")
+            Timber.tag("TAG").e("addHotelExpenseDetails: ${e.message}")
         }
     }
 
 //    private fun isValidate(): Boolean =
 //        validateFoodAmount() && validateFoodComment() &&validateAttachment()
-
 
     private fun isValidate(): Boolean {
         var isValid = true

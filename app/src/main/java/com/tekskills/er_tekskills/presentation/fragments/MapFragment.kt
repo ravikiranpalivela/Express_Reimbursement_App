@@ -38,9 +38,7 @@ import com.tekskills.er_tekskills.utils.geoLocation.requestFocusWithKeyboard
 import com.tekskills.er_tekskills.utils.geoLocation.requestLocationPermission
 import com.tekskills.er_tekskills.utils.geoLocation.sharedPreferencesData
 import com.tekskills.er_tekskills.utils.geoLocation.showGeofenceInMap
-import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
-import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
@@ -56,7 +54,10 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
         map?.isMyLocationEnabled = it.granted
         if (it.granted) {
             LocationTracker.removeLocationUpdates(requireContext())
-            LocationTracker.requestLocationUpdates(requireContext(), LocationTrackerWorker::class.java)
+            LocationTracker.requestLocationUpdates(
+                requireContext(),
+                LocationTrackerWorker::class.java
+            )
             binding?.run {
                 newReminder.isVisible = true
                 currentLocation.isVisible = true
@@ -79,11 +80,11 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
         (activity as FragmentActivity).showTwoButtonDialog(getString(R.string.dialog_rationale_coarse_location)) {
             if (it) {
                 // ask for permission again
-                Timber.d("ask for permission again")
+                Timber.i("ask for permission again")
                 requestLocationPermissionLambda()
             } else {
                 // permission for denied
-                Timber.d("permission was denied")
+                Timber.i("permission was denied")
             }
         }
     }
@@ -131,16 +132,16 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
             }
         }
 
-    val checkNotificationPermission: ()-> Unit = {
+    val checkNotificationPermission: () -> Unit = {
         // check for notification only on new permission system introduced in Android Api 33
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
         } else {
             requestLocationPermissionLambda()
         }
     }
 
-    private val askForPNRationale: ()-> Unit = {
+    private val askForPNRationale: () -> Unit = {
         requireActivity().showTwoButtonDialog(getString(R.string.dialog_rationale_permission)) {
             if (it) {
                 // ask again after rationale user action is positive
@@ -149,23 +150,19 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
         }
     }
 
-    private val preferenceChangedListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-
-        Timber.v("OnSharedPreferenceChange key=$key")
-
-        // key has been updated
-        if (key == LocationTrackerWorker.USER_LOCATION_KEY) {
-
-            // retrieve location from preferences
-            val locationResult = sharedPreferences.getString(key, null)
-            Timber.v("OnSharedPreferenceChange 1 $locationResult")
+    private val preferenceChangedListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            Timber.v("OnSharedPreferenceChange key=$key")
+            // key has been updated
+            if (key == LocationTrackerWorker.USER_LOCATION_KEY) {
+                // retrieve location from preferences
+                val locationResult = sharedPreferences.getString(key, null)
+                Timber.v("OnSharedPreferenceChange 1 $locationResult")
+            }
         }
-    }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View = FragmentMapBinding.inflate(
         inflater,
         container,
@@ -178,16 +175,15 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
         sharedPreferencesData?.registerOnSharedPreferenceChangeListener(preferenceChangedListener)
     }
 
-
     @SuppressLint("MissingPermission")
     private fun FragmentMapBinding.setup() {
         newReminder.isGone = true
         currentLocation.isGone = true
-
         currentLocation.setOnClickListener {
-
-            val locationManager = requireContext().getSystemService<LocationManager>() ?: return@setOnClickListener
-            val bestProvider = locationManager.getBestProvider(Criteria(), false) ?: return@setOnClickListener
+            val locationManager =
+                requireContext().getSystemService<LocationManager>() ?: return@setOnClickListener
+            val bestProvider =
+                locationManager.getBestProvider(Criteria(), false) ?: return@setOnClickListener
 
             @SuppressLint("MissingPermission")
             val location = locationManager.getLastKnownLocation(bestProvider)
@@ -278,9 +274,7 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
             setButton(
                 AlertDialog.BUTTON_NEGATIVE,
                 getString(R.string.reminder_removal_alert_negative)
-            ) { dialog, _ ->
-                dialog.dismiss()
-            }
+            ) { dialog, _ -> dialog.dismiss() }
             show()
         }
     }

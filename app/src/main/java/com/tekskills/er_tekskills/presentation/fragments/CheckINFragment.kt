@@ -47,6 +47,7 @@ import com.tekskills.er_tekskills.utils.RestApiStatus
 import com.tekskills.er_tekskills.utils.SmartDialog
 import com.tekskills.er_tekskills.utils.SmartDialogBuilder
 import com.tekskills.er_tekskills.utils.SmartDialogClickListener
+import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -60,18 +61,13 @@ class CheckINFragment : BottomSheetDialogFragment() {
     private lateinit var viewModel: MainActivityViewModel
     private var purposeID: String = ""
     private var meetingDetails: MeetingPurposeResponseData? = null
-
     private val args: CheckINFragmentArgs by navArgs()
-
     private var listImage: MutableList<File> = ArrayList()
     private var selectedSelectImage: Int = 0
     private val listSelectImage = arrayOf("Take Photo", "Choose from Gallery")
-
     private lateinit var addImageAdapter: AddImageAdapter
     private lateinit var fileCompressor: FileCompressor
     private lateinit var fileImage: File
-    private lateinit var dialog: AlertDialog
-
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreateView(
@@ -97,7 +93,7 @@ class CheckINFragment : BottomSheetDialogFragment() {
 //        viewModel.getClientNameList()
         checkLocationPermission(requireContext())
 
-        viewModel.resNewClientResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.resNewClientResponse.observe(viewLifecycleOwner) {
             when (it.status) {
                 RestApiStatus.SUCCESS -> {
                     binding.progress.visibility = View.GONE
@@ -132,7 +128,7 @@ class CheckINFragment : BottomSheetDialogFragment() {
                         .show()
                 }
             }
-        })
+        }
 
         viewModel.getMeetingPurposeByID(purposeID)
 
@@ -158,85 +154,81 @@ class CheckINFragment : BottomSheetDialogFragment() {
             })
         }
 
-        viewModel.resMeetingPurposeIDItems.observe(
-            viewLifecycleOwner,
-            androidx.lifecycle.Observer {
-                when (it.status) {
-                    RestApiStatus.SUCCESS -> {
-                        binding.progress.visibility = View.GONE
-                        if (it.data != null) {
-                            it.data.let { list ->
-                                binding.taskCategoryInfo = list
-                                meetingDetails= list
+        viewModel.resMeetingPurposeIDItems.observe(viewLifecycleOwner) {
+            when (it.status) {
+                RestApiStatus.SUCCESS -> {
+                    binding.progress.visibility = View.GONE
+                    if (it.data != null) {
+                        it.data.let { list ->
+                            binding.taskCategoryInfo = list
+                            meetingDetails = list
 //                                binding.priority.text = if (list.status == "Active")
 //                                    "Active" else "InActive"
-                            }
-                        } else {
-                            Snackbar.make(
-                                binding.root,
-                                "No Data Found",
-                                Snackbar.LENGTH_SHORT
-                            ).show()
                         }
-                    }
-
-                    RestApiStatus.LOADING -> {
-                        binding.progress.visibility = View.VISIBLE
-                    }
-
-                    RestApiStatus.ERROR -> {
-                        binding.progress.visibility = View.GONE
-                        Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-                            .show()
-                    }
-
-                    else -> {
-                        binding.progress.visibility = View.GONE
-                        Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-                            .show()
+                    } else {
+                        Snackbar.make(
+                            binding.root,
+                            "No Data Found",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
                     }
                 }
-            })
 
-        viewModel.resUserMeetingCheckIN.observe(
-            viewLifecycleOwner,
-            androidx.lifecycle.Observer {
-                when (it.status) {
-                    RestApiStatus.SUCCESS -> {
-                        binding.progress.visibility = View.GONE
-                        if (it.data != null)
-                            it.data.let { res ->
-                                requireActivity().onBackPressed()
+                RestApiStatus.LOADING -> {
+                    binding.progress.visibility = View.VISIBLE
+                }
+
+                RestApiStatus.ERROR -> {
+                    binding.progress.visibility = View.GONE
+                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+
+                else -> {
+                    binding.progress.visibility = View.GONE
+                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
+
+        viewModel.resUserMeetingCheckIN.observe(viewLifecycleOwner) {
+            when (it.status) {
+                RestApiStatus.SUCCESS -> {
+                    binding.progress.visibility = View.GONE
+                    if (it.data != null)
+                        it.data.let { res ->
+                            requireActivity().onBackPressed()
 //                            val intent = Intent(requireActivity(), MainActivity::class.java)
 //                            startActivity(intent)
 //                            requireActivity().finish()
-                            }
-                        else {
-                            Snackbar.make(
-                                binding.root,
-                                "Login Failed",
-                                Snackbar.LENGTH_SHORT
-                            ).show()
                         }
-                    }
-
-                    RestApiStatus.LOADING -> {
-                        binding.progress.visibility = View.VISIBLE
-                    }
-
-                    RestApiStatus.ERROR -> {
-                        binding.progress.visibility = View.GONE
-                        Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-                            .show()
-                    }
-
-                    else -> {
-                        binding.progress.visibility = View.GONE
-                        Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
-                            .show()
+                    else {
+                        Snackbar.make(
+                            binding.root,
+                            "Login Failed",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
                     }
                 }
-            })
+
+                RestApiStatus.LOADING -> {
+                    binding.progress.visibility = View.VISIBLE
+                }
+
+                RestApiStatus.ERROR -> {
+                    binding.progress.visibility = View.GONE
+                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+
+                else -> {
+                    binding.progress.visibility = View.GONE
+                    Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
 
         binding.ivAddImage.setOnClickListener {
             if (listImage.size >= 1) {
@@ -345,11 +337,11 @@ class CheckINFragment : BottomSheetDialogFragment() {
                             )
                         ) {
                             viewModel.putUserMeetingCheckIN(purposeID, checkin, listImage)
-                            Log.d("Location", "Lat: $latitude, Lon: $longitude")
+                            Timber.tag("TAG").d("Lat: $latitude , Lon: $longitude")
                         } else {
                             SmartDialogBuilder(requireContext())
                                 .setTitle("Note")
-                                .setSubTitle("Your in Not in Location Range")
+                                .setSubTitle("Your Not in Location Range")
                                 .setCancalable(false)
                                 .setCustomIcon(R.drawable.icon2)
                                 .setTitleColor(resources.getColor(R.color.black))
@@ -358,7 +350,8 @@ class CheckINFragment : BottomSheetDialogFragment() {
                                 .useNeutralButton(true)
                                 .setPositiveButton("Okay", object : SmartDialogClickListener {
                                     override fun onClick(smartDialog: SmartDialog?) {
-                                        Log.d("TAG", "onViewCreated: okay for alert dialog exceeds")
+                                        Timber.tag("TAG")
+                                            .d("onViewCreated: okay for alert dialog exceeds")
                                         smartDialog!!.dismiss()
                                     }
                                 })
@@ -377,12 +370,10 @@ class CheckINFragment : BottomSheetDialogFragment() {
                     }
                 }
             } else {
-                Log.w("Location", "Failed to get location.")
+                Timber.tag("TAG").w("Failed to get location.")
             }
         }
     }
-
-
 
     private fun initAdapter() {
         addImageAdapter = AddImageAdapter(listImage)
@@ -556,7 +547,7 @@ class CheckINFragment : BottomSheetDialogFragment() {
 //            )
 //            viewModel.addMOMExpense(hotelExpense, listImage)
         } catch (e: Exception) {
-            Log.d("TAG", "addHotelExpenseDetails: ${e.message}")
+            Timber.tag("TAG").d("addHotelExpenseDetails: ${e.message}")
         }
     }
 

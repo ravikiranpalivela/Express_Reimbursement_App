@@ -86,7 +86,7 @@ class HomeFragment : ParentFragment(), OnChartValueSelectedListener {
         setOnClickListenerInit()
         observerData()
 
-        viewModel.getMeetingPurpose("")
+        viewModel.getMeetingPurposeByStatus("Today")
         viewModel.getMeetingPurposeStatus()
         initRecyclerViewAdapter()
         createPieChart()
@@ -150,20 +150,16 @@ class HomeFragment : ParentFragment(), OnChartValueSelectedListener {
                 RestApiStatus.SUCCESS -> {
                     binding.progress.visibility = View.GONE
                     if (it.data != null) {
-                        it.data.let { list ->
-                            val listData = filterMeetingsTodayTomorrow(list)
+                        it.data.let { listData ->
+//                            val listData = filterMeetingsTodayTomorrow(list)
                             binding.avMeetings.visibility = if (listData.isEmpty()) View.VISIBLE
                             else View.GONE
                             adapter.differ.submitList(listData)
 
                             listData.forEach { meetingData ->
-
-
                                 parseJsonToTaskInfo(meetingData).let {
                                     viewModel.insertOrUpdateTaskInfo(it)
                                 }
-
-
 
                                 var geofence = Geofence()
 
@@ -322,7 +318,7 @@ class HomeFragment : ParentFragment(), OnChartValueSelectedListener {
 
     }
 
-    fun parseJsonToTaskInfo(responseData: MeetingPurposeResponseData): TaskInfo {
+    private fun parseJsonToTaskInfo(responseData: MeetingPurposeResponseData): TaskInfo {
 
         val userCoordinates = responseData.userCordinates
 
@@ -360,7 +356,7 @@ class HomeFragment : ParentFragment(), OnChartValueSelectedListener {
         )
     }
 
-    fun setOnClickListenerInit() {
+    private fun setOnClickListenerInit() {
         binding.swiperefresh.setOnRefreshListener {
             binding.swiperefresh.postDelayed({
                 viewModel.getMeetingPurpose("")
@@ -452,7 +448,7 @@ class HomeFragment : ParentFragment(), OnChartValueSelectedListener {
                         } else {
                             SmartDialogBuilder(requireContext())
                                 .setTitle("Note")
-                                .setSubTitle("Your in Not in Location Range")
+                                .setSubTitle("Your Not in Location Range")
                                 .setCancalable(false)
                                 .setCustomIcon(R.drawable.icon2)
                                 .setTitleColor(resources.getColor(R.color.black))

@@ -9,13 +9,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
-import com.google.android.libraries.places.api.model.Place
+//import com.google.android.libraries.places.api.model.Place
 import com.tekskills.er_tekskills.data.model.AccountHeadResponse
 import com.tekskills.er_tekskills.data.model.ActionItemProjectIDResponse
 import com.tekskills.er_tekskills.data.model.ActionItemProjectIDResponseItem
 import com.tekskills.er_tekskills.data.model.AddActionItemOpportunityRequest
 import com.tekskills.er_tekskills.data.model.AddCheckInRequest
-import com.tekskills.er_tekskills.data.model.AddComment
 import com.tekskills.er_tekskills.data.model.AddCommentOpportunity
 import com.tekskills.er_tekskills.data.model.AddEscalationRequest
 import com.tekskills.er_tekskills.data.model.AddFoodExpenceRequest
@@ -49,6 +48,7 @@ import com.tekskills.er_tekskills.data.model.OpportunityByProjectIDResponse
 import com.tekskills.er_tekskills.data.model.PendingActionGraphResponse
 import com.tekskills.er_tekskills.data.model.PendingActionItemGraphByIDResponse
 import com.tekskills.er_tekskills.data.model.PendingEscalationGraphResponse
+import com.tekskills.er_tekskills.data.model.PlaceDetails
 import com.tekskills.er_tekskills.data.model.PracticeHeadResponse
 import com.tekskills.er_tekskills.data.model.ProjectDetailsVO
 import com.tekskills.er_tekskills.data.model.ProjectListResponse
@@ -59,26 +59,22 @@ import com.tekskills.er_tekskills.data.model.TaskInfo
 import com.tekskills.er_tekskills.data.model.UserAllowenceResponse
 import com.tekskills.er_tekskills.data.model.UserMeResponse
 import com.tekskills.er_tekskills.data.repository.MainRepository
-import com.tekskills.er_tekskills.data.util.Constants
 import com.tekskills.er_tekskills.domain.TaskCategoryRepository
 import com.tekskills.er_tekskills.utils.AppUtil.utlIsNetworkAvailable
 import com.tekskills.er_tekskills.utils.Common
-import com.tekskills.er_tekskills.utils.Common.Companion.MANAGER
 import com.tekskills.er_tekskills.utils.Common.Companion.PREF_DEFAULT
 import com.tekskills.er_tekskills.utils.Common.Companion.PREF_EMP_ID
 import com.tekskills.er_tekskills.utils.Common.Companion.PREF_FIRST_TIME
 import com.tekskills.er_tekskills.utils.Common.Companion.PREF_REFRESH_TOKEN
-import com.tekskills.er_tekskills.utils.Common.Companion.PREF_ROLE_TYPE
 import com.tekskills.er_tekskills.utils.Common.Companion.PREF_TOKEN
 import com.tekskills.er_tekskills.utils.SuccessResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import timber.log.Timber
 import java.io.File
 import java.util.*
 import javax.inject.Inject
@@ -94,39 +90,20 @@ class MainActivityViewModel @Inject constructor(
     val _loading: MutableLiveData<Int> = MutableLiveData<Int>()
     val loading: LiveData<Int> get() = _loading
 
-    private val _eventChannel = Channel<MainEvent>()
-    private val _hotelEventChannel = Channel<MainEvent>()
-
-//    val cartoonListData = Pager(PagingConfig(pageSize = 1)) {
-//        repository
-//    }.flow.cachedIn(viewModelScope)
-
-    val mainEvent = _eventChannel.receiveAsFlow()
-    val hotelMainEvent = _hotelEventChannel.receiveAsFlow()
-
     val _networkLiveData: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     val networkLiveData: LiveData<Boolean> get() = _networkLiveData
 
     private val _resClientNameList = MutableLiveData<SuccessResource<ClientNamesResponse>>()
-
     val resClientNameList: LiveData<SuccessResource<ClientNamesResponse>>
         get() = _resClientNameList
 
     private val _resLeadNameList = MutableLiveData<SuccessResource<LeadNamesResponse>>()
-
     val resLeadNameList: LiveData<SuccessResource<LeadNamesResponse>>
         get() = _resLeadNameList
 
     private val _resProjectList = MutableLiveData<SuccessResource<ProjectListResponse>>()
-
     val resProjectList: LiveData<SuccessResource<ProjectListResponse>>
         get() = _resProjectList
-
-    private val _resProjectOpportunityList =
-        MutableLiveData<SuccessResource<ProjectOpportunityResponse>>()
-
-    val resProjectOpportunityList: LiveData<SuccessResource<ProjectOpportunityResponse>>
-        get() = _resProjectOpportunityList
 
     private val _resEmployeeMe = MutableLiveData<SuccessResource<UserMeResponse>>()
 
@@ -273,90 +250,80 @@ class MainActivityViewModel @Inject constructor(
     val resAddMOMToMeetingExpence: LiveData<SuccessResource<AddMOMResponse>>
         get() = _resAddMOMToMeetingExpence
 
-    private var dropOffPlaceAddress: MutableLiveData<String>? = MutableLiveData()
-    private var pickupPlaceAddress: MutableLiveData<String>? = MutableLiveData()
-    private var priceInVNDString: MutableLiveData<String>? = MutableLiveData()
-    private val distanceInKmString: MutableLiveData<Double>? = MutableLiveData()
-    private var transportationType: MutableLiveData<String>? = MutableLiveData()
-    private var bookBtnPressed: MutableLiveData<Boolean>? = MutableLiveData()
-    private var cancelBookingBtnPressed: MutableLiveData<Boolean>? = MutableLiveData()
-    private val customerSelectedDropOffPlace: MutableLiveData<Place?> = MutableLiveData<Place?>();
-    private val customerSelectedPickupPlace: MutableLiveData<Place?> = MutableLiveData<Place?>();
+
+    private val _dropOffPlaceAddress = MutableLiveData<String?>()
+    val dropOffPlaceAddress: LiveData<String?>
+        get() = _dropOffPlaceAddress
+
+    private val _pickupPlaceAddress = MutableLiveData<String?>()
+    val pickupPlaceAddress: LiveData<String?>
+        get() = _pickupPlaceAddress
+
+    private val _priceInVNDString = MutableLiveData<String?>()
+    val priceInVNDString: LiveData<String?>
+        get() = _priceInVNDString
+
+    private val _distanceInKmString = MutableLiveData<Double?>()
+    val distanceInKmString: LiveData<Double?>
+        get() = _distanceInKmString
+
+    private val _transportationType = MutableLiveData<String?>()
+    val transportationType: LiveData<String?>
+        get() = _transportationType
+
+    private val _bookBtnPressed = MutableLiveData<Boolean?>()
+    val bookBtnPressed: LiveData<Boolean?>
+        get() = _bookBtnPressed
+
+    private val _cancelBookingBtnPressed = MutableLiveData<Boolean?>()
+    val cancelBookingBtnPressed: LiveData<Boolean?>
+        get() = _cancelBookingBtnPressed
+
+    private val _customerSelectedDropOffPlace = MutableLiveData<PlaceDetails?>()
+    val customerSelectedDropOffPlace: LiveData<PlaceDetails?>
+        get() = _customerSelectedDropOffPlace
+
+    private val _customerSelectedPickupPlace = MutableLiveData<PlaceDetails?>()
+    val customerSelectedPickupPlace: LiveData<PlaceDetails?>
+        get() = _customerSelectedPickupPlace
 
     fun setDistanceInKmString(distanceInKmString: Double?) {
-        this.distanceInKmString!!.value = distanceInKmString
+        _distanceInKmString.value = distanceInKmString
     }
 
-    fun getDistanceInKmString(): MutableLiveData<Double>? {
-        return distanceInKmString
+    fun setPriceInVNDString(priceInVNDString: String?) {
+        _priceInVNDString.value = priceInVNDString
     }
 
-
-    fun setPriceInVNDString(priceInVNDString: String) {
-        this.priceInVNDString!!.value = priceInVNDString
+    fun setDropOffPlaceString(dropOffPlaceString: String?) {
+        _dropOffPlaceAddress.value = dropOffPlaceString
     }
 
-    fun setDropOffPlaceString(dropOffPlaceString: String) {
-        dropOffPlaceAddress!!.value = dropOffPlaceString
-    }
-
-    fun setPickupPlaceString(pickupPlaceString: String) {
-        pickupPlaceAddress!!.value = pickupPlaceString
-    }
-
-    fun getPriceInVNDString(): MutableLiveData<String>? {
-        return priceInVNDString
-    }
-
-    fun getDropOffPlaceString(): MutableLiveData<String>? {
-        return dropOffPlaceAddress
-    }
-
-    fun getPickupPlaceString(): MutableLiveData<String>? {
-        return pickupPlaceAddress
-    }
-
-    fun getTransportationType(): MutableLiveData<String>? {
-        return transportationType
+    fun setPickupPlaceString(pickupPlaceString: String?) {
+        _pickupPlaceAddress.value = pickupPlaceString
     }
 
     fun setTransportationType(transportationType: String?) {
-        this.transportationType!!.value = transportationType
+        _transportationType.value = transportationType
     }
 
-    fun setCustomerSelectedDropOffPlace(customerSelectedDropOffPlace: Place?) {
-        this.customerSelectedDropOffPlace!!.value = customerSelectedDropOffPlace
+    fun setCustomerSelectedDropOffPlace(customerSelectedDropOffPlace: PlaceDetails?) {
+        _customerSelectedDropOffPlace.value = customerSelectedDropOffPlace
     }
 
-    fun setCustomerSelectedPickupPlace(customerSelectedPickupPlace: Place?) {
-        this.customerSelectedPickupPlace!!.value = customerSelectedPickupPlace
+    fun setCustomerSelectedPickupPlace(customerSelectedPickupPlace: PlaceDetails?) {
+        _customerSelectedPickupPlace.value = customerSelectedPickupPlace
     }
 
     fun setBookBtnPressed(bookBtnPressed: Boolean?) {
-        this.bookBtnPressed!!.value = bookBtnPressed
+        _bookBtnPressed.value = bookBtnPressed
     }
 
     fun setCancelBookingBtnPressed(cancelBookingBtnPressed: Boolean?) {
-        this.cancelBookingBtnPressed!!.value = cancelBookingBtnPressed
+        _cancelBookingBtnPressed.value = cancelBookingBtnPressed
     }
 
-    fun getCustomerSelectedPickupPlace(): MutableLiveData<Place?> {
-        return customerSelectedPickupPlace
-    }
-
-    fun getCustomerSelectedDropOffPlace(): MutableLiveData<Place?> {
-        return customerSelectedDropOffPlace
-    }
-
-    fun getBookBtnPressed(): MutableLiveData<Boolean>? {
-        return bookBtnPressed
-    }
-
-    fun getCancelBookingBtnPressed(): MutableLiveData<Boolean>? {
-        return cancelBookingBtnPressed
-    }
-
-    private val _resNewMeetingPurpose =
+    val _resNewMeetingPurpose =
         MutableLiveData<SuccessResource<AddPurposeMeetingResponse>>()
 
     val resNewMeetingPurpose: LiveData<SuccessResource<AddPurposeMeetingResponse>>
@@ -380,16 +347,6 @@ class MainActivityViewModel @Inject constructor(
 
     val resUserMeetingCheckOUT: LiveData<SuccessResource<LocationResponse>>
         get() = _resUserMeetingCheckOUT
-
-//    fun setCustomerSelectedDropOffPlace(customerSelectedDropOffPlace: Place?) {
-//        this.customerSelectedDropOffPlace.value = customerSelectedDropOffPlace
-//    }
-//
-//    fun setCustomerSelectedPickupPlace(customerSelectedPickupPlace: Place?) {
-//        this.customerSelectedPickupPlace.value = customerSelectedPickupPlace
-//    }
-
-
 
     fun insertOrUpdateTaskInfo(taskInfo: TaskInfo) = viewModelScope.launch {
         repository.insertOrUpdateTaskInfo(taskInfo)
@@ -422,109 +379,6 @@ class MainActivityViewModel @Inject constructor(
     val resEscalationGraphByIDList: LiveData<SuccessResource<ClientEscalationGraphByIDResponse>>
         get() = _resEscalationGraphByIDList
 
-    fun getPendingActionGraph() = viewModelScope.launch {
-        try {
-            _resPendingActionGraphList.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getPendingActionGraph("Bearer ${checkIfUserLogin()}").let {
-                    if (it.isSuccessful) {
-                        _resPendingActionGraphList.postValue(SuccessResource.success(it.body()))
-                    } else {
-                        _resPendingActionGraphList.postValue(
-                            SuccessResource.error(
-                                it.errorBody().toString(), null
-                            )
-                        )
-                    }
-                }
-        } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
-            _loading.value = View.GONE
-        } finally {
-        }
-    }
-
-    fun getRangeItems(
-        destinationLatitude: Double,
-        destinationLongitude: Double,
-        radius: Double
-    ): LiveData<List<TaskInfo>> = liveData {
-        val data = repository.getRangeItems(destinationLatitude, destinationLongitude, radius)
-        emit(data)
-    }
-
-    fun getPendingActionGraphByID(projectId: String) = viewModelScope.launch {
-        try {
-            _resPendingActionGraphByIDList.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getPendingActionGraphByID("Bearer ${checkIfUserLogin()}", projectId)
-                    .let {
-                        if (it.isSuccessful) {
-                            _resPendingActionGraphByIDList.postValue(SuccessResource.success(it.body()))
-                        } else {
-                            _resPendingActionGraphByIDList.postValue(
-                                SuccessResource.error(
-                                    it.errorBody().toString(), null
-                                )
-                            )
-                        }
-                    }
-        } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
-            _loading.value = View.GONE
-        } finally {
-        }
-    }
-
-    fun getClientEscalationGraphByID(clientId: String) = viewModelScope.launch {
-        try {
-            _resEscalationGraphByIDList.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getEscalationGraphByID("Bearer ${checkIfUserLogin()}", clientId)
-                    .let {
-                        if (it.isSuccessful) {
-                            _resEscalationGraphByIDList.postValue(SuccessResource.success(it.body()))
-                        } else {
-                            _resEscalationGraphByIDList.postValue(
-                                SuccessResource.error(
-                                    it.errorBody().toString(),
-                                    null
-                                )
-                            )
-                        }
-                    }
-        } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
-            _loading.value = View.GONE
-        } finally {
-        }
-    }
-
-
-    @SuppressLint("SuspiciousIndentation")
-    fun getEscalationGraph() = viewModelScope.launch {
-        try {
-            _resEscalationGraphList.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getEscalationGraph("Bearer ${checkIfUserLogin()}").let {
-                    if (it.isSuccessful) {
-                        _resEscalationGraphList.postValue(SuccessResource.success(it.body()))
-                    } else {
-                        _resEscalationGraphList.postValue(
-                            SuccessResource.error(
-                                it.errorBody().toString(),
-                                null
-                            )
-                        )
-                    }
-                }
-        } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
-            _loading.value = View.GONE
-        } finally {
-        }
-    }
-
     fun getClientNameList() = viewModelScope.launch {
         try {
             _resClientNameList.postValue(SuccessResource.loading(null))
@@ -542,7 +396,7 @@ class MainActivityViewModel @Inject constructor(
                     }
                 }
         } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            Timber.tag("TAG").e("Exception occur at getClients ${e.message}")
             _loading.value = View.GONE
         } finally {
         }
@@ -565,157 +419,11 @@ class MainActivityViewModel @Inject constructor(
                     }
                 }
         } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            Timber.tag("TAG").e("Exception occur at getClients ${e.message}")
             _loading.value = View.GONE
         } finally {
         }
     }
-
-
-    fun getProjectList() = viewModelScope.launch {
-        try {
-            _resProjectList.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getProjects("Bearer ${checkIfUserLogin()}").let {
-                    if (it.isSuccessful) {
-                        _resProjectList.postValue(SuccessResource.success(it.body()))
-                    } else {
-                        _resProjectList.postValue(
-                            SuccessResource.error(
-                                it.errorBody().toString(),
-                                null
-                            )
-                        )
-                    }
-                }
-        } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
-            _loading.value = View.GONE
-        } finally {
-        }
-    }
-
-    fun getAssignedProjectList() = viewModelScope.launch {
-        try {
-            _resAssignedProjectList.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getAssignProjects("Bearer ${checkIfUserLogin()}").let {
-                    if (it.isSuccessful) {
-                        _resAssignedProjectList.postValue(SuccessResource.success(it.body()))
-                    } else {
-                        _resAssignedProjectList.postValue(
-                            SuccessResource.error(
-                                it.errorBody().toString(),
-                                null
-                            )
-                        )
-                    }
-                }
-        } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
-            _loading.value = View.GONE
-        } finally {
-        }
-    }
-
-
-    fun getManagementList(authorization: String) =
-        viewModelScope.launch {
-            try {
-                _resManagementList.postValue(SuccessResource.loading(null))
-                if (utlIsNetworkAvailable())
-                    mainRepository.getManagementList("Bearer ${checkIfUserLogin()}").let {
-                        if (it.isSuccessful) {
-                            _resManagementList.postValue(SuccessResource.success(it.body()))
-                        } else {
-                            _resManagementList.postValue(
-                                SuccessResource.error(
-                                    it.errorBody().toString(),
-                                    null
-                                )
-                            )
-                        }
-                    }
-            } catch (e: Exception) {
-                Log.e("TAG", "Exception occur at getClients ${e.message}")
-                _loading.value = View.GONE
-            } finally {
-            }
-        }
-
-    fun getAccountManagerList(authorization: String) =
-        viewModelScope.launch {
-            try {
-                _resAccountHeadList.postValue(SuccessResource.loading(null))
-                if (utlIsNetworkAvailable())
-                    mainRepository.getAccountManagerList("Bearer ${checkIfUserLogin()}").let {
-                        if (it.isSuccessful) {
-                            _resAccountHeadList.postValue(SuccessResource.success(it.body()))
-                        } else {
-                            _resAccountHeadList.postValue(
-                                SuccessResource.error(
-                                    it.errorBody().toString(),
-                                    null
-                                )
-                            )
-                        }
-                    }
-            } catch (e: Exception) {
-                Log.e("TAG", "Exception occur at getClients ${e.message}")
-                _loading.value = View.GONE
-            } finally {
-            }
-        }
-
-
-    fun getProjectManagerList(authorization: String) =
-        viewModelScope.launch {
-            try {
-                _resProjectManagerList.postValue(SuccessResource.loading(null))
-                if (utlIsNetworkAvailable())
-                    mainRepository.getProjectManagerList("Bearer ${checkIfUserLogin()}").let {
-                        if (it.isSuccessful) {
-                            _resProjectManagerList.postValue(SuccessResource.success(it.body()))
-                        } else {
-                            _resProjectManagerList.postValue(
-                                SuccessResource.error(
-                                    it.errorBody().toString(),
-                                    null
-                                )
-                            )
-                        }
-                    }
-            } catch (e: Exception) {
-                Log.e("TAG", "Exception occur at getClients ${e.message}")
-                _loading.value = View.GONE
-            } finally {
-            }
-        }
-
-    fun getPracticeHeadList(authorization: String) =
-        viewModelScope.launch {
-            try {
-                _resPracticeHeadList.postValue(SuccessResource.loading(null))
-                if (utlIsNetworkAvailable())
-                    mainRepository.getPracticeHeadList("Bearer ${checkIfUserLogin()}").let {
-                        if (it.isSuccessful) {
-                            _resPracticeHeadList.postValue(SuccessResource.success(it.body()))
-                        } else {
-                            _resPracticeHeadList.postValue(
-                                SuccessResource.error(
-                                    it.errorBody().toString(),
-                                    null
-                                )
-                            )
-                        }
-                    }
-            } catch (e: Exception) {
-                Log.e("TAG", "Exception occur at getClients ${e.message}")
-                _loading.value = View.GONE
-            } finally {
-            }
-        }
-
 
     fun getMeetingPurpose(authorization: String) =
         viewModelScope.launch {
@@ -735,7 +443,7 @@ class MainActivityViewModel @Inject constructor(
                         }
                     }
             } catch (e: Exception) {
-                Log.e("TAG", "Exception occur at getClients ${e.message}")
+                Timber.tag("TAG").e("Exception occur at getClients ${e.message}")
                 _loading.value = View.GONE
             } finally {
             }
@@ -759,7 +467,7 @@ class MainActivityViewModel @Inject constructor(
                         }
                     }
         } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            Timber.tag("TAG").e("Exception occur at getClients ${e.message}")
             _loading.value = View.GONE
         } finally {
         }
@@ -782,7 +490,7 @@ class MainActivityViewModel @Inject constructor(
                         }
                     }
         } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getMeetingPurposeByStatus ${e.message}")
+            Timber.tag("TAG").e("Exception occur at getMeetingPurposeByStatus ${e.message}")
             _loading.value = View.GONE
         } finally {
         }
@@ -805,7 +513,7 @@ class MainActivityViewModel @Inject constructor(
                         }
                     }
         } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getMeetingPurposeStatus ${e.message}")
+            Timber.tag("TAG").e("Exception occur at getMeetingPurposeStatus ${e.message}")
             _loading.value = View.GONE
         } finally {
         }
@@ -818,7 +526,7 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _loading.value = View.VISIBLE
-                Log.d("TAG", "uploadGenresFile: ${travelExpence.toString()}")
+                Timber.tag("TAG").d("uploadGenresFile: " + travelExpence.toString())
 
                 val requestBody: MutableMap<String, RequestBody> = HashMap()
                 requestBody["travelFrom"] =
@@ -866,7 +574,7 @@ class MainActivityViewModel @Inject constructor(
 
                 _resAddTravelExpence.postValue(SuccessResource.loading(null))
                 if (utlIsNetworkAvailable()) {
-                    Log.d("TAG", "addTravelExpense: ${travelExpence.toString()}")
+                    Timber.tag("TAG").d("addTravelExpense: " + travelExpence.toString())
 
                     mainRepository.addTravelExpense(
                         "Bearer ${checkIfUserLogin()}",
@@ -889,7 +597,7 @@ class MainActivityViewModel @Inject constructor(
                         }
                 }
             } catch (e: Exception) {
-                Log.e("TAG", "Exception occur at add travel expenses ${e.message}")
+                Timber.tag("TAG").e("Exception occur at add travel expenses ${e.message}")
                 _loading.value = View.GONE
             } finally {
             }
@@ -903,23 +611,7 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _loading.value = View.VISIBLE
-                Log.d("TAG", "uploadGenresFile: ${travelExpence.toString()}")
-//                if (file == null) {
-//                    _eventChannel.send(MainEvent.Error("File is empty"))
-//                    return@launch
-//                }
-
-
-//                val reqBody =
-//                    file!!.toRequestBody(
-//                        "multipart/form-data".toMediaTypeOrNull(),
-//                        0,
-//                    )
-//                val formData = MultipartBody.Part.createFormData(
-//                    "file",
-//                    "expensesFile-${Random.nextInt(1, 10)}",
-//                    reqBody
-//                )
+                Timber.tag("TAG").d("uploadGenresFile: " + travelExpence.toString())
 
                 val requestBody: MutableMap<String, RequestBody> = HashMap()
                 requestBody["meetingNotes"] =
@@ -948,7 +640,7 @@ class MainActivityViewModel @Inject constructor(
 
                 _resAddMOMToMeetingExpence.postValue(SuccessResource.loading(null))
                 if (utlIsNetworkAvailable()) {
-                    Log.d("TAG", "addFoodExpense: ${travelExpence.toString()}")
+                    Timber.tag("TAG").d("addFoodExpense: " + travelExpence.toString())
 
                     mainRepository.addMOMToMeeting(
                         "Bearer ${checkIfUserLogin()}",
@@ -970,12 +662,11 @@ class MainActivityViewModel @Inject constructor(
                         }
                 }
             } catch (e: Exception) {
-                Log.e("TAG", "Exception occur at add travel expenses ${e.message}")
+                Timber.tag("TAG").e("Exception occur at add travel expenses ${e.message}")
                 _loading.value = View.GONE
             } finally {
             }
         }
-
 
     fun putUserMeetingCheckIN(
         clientName: String,
@@ -985,7 +676,7 @@ class MainActivityViewModel @Inject constructor(
 
         try {
             _loading.value = View.VISIBLE
-            Log.d("TAG", "uploadGenresFile: ${checkin.toString()}")
+            Timber.tag("TAG").d("uploadGenresFile: " + checkin.toString())
             val requestBody: MutableMap<String, RequestBody> = HashMap()
             requestBody["latitude"] =
                 checkin.latitude.toRequestBody("text/plain".toMediaTypeOrNull())
@@ -1022,12 +713,10 @@ class MainActivityViewModel @Inject constructor(
                     }
                 }
         } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at add travel expenses ${e.message}")
+            Timber.tag("TAG").e("Exception occur at add travel expenses ${e.message}")
             _loading.value = View.GONE
         } finally {
         }
-
-
     }
 
     fun putUserMeetingCheckOUT(
@@ -1036,23 +725,8 @@ class MainActivityViewModel @Inject constructor(
 
         try {
             _loading.value = View.VISIBLE
-            Log.d("TAG", "uploadGenresFile: ${checkin.toString()}")
-//                if (file == null) {
-//                    _eventChannel.send(MainEvent.Error("File is empty"))
-//                    return@launch
-//                }
+            Timber.tag("TAG").d("uploadGenresFile: " + checkin.toString())
 
-
-//                val reqBody =
-//                    file!!.toRequestBody(
-//                        "multipart/form-data".toMediaTypeOrNull(),
-//                        0,
-//                    )
-//                val formData = MultipartBody.Part.createFormData(
-//                    "file",
-//                    "expensesFile-${Random.nextInt(1, 10)}",
-//                    reqBody
-//                )
 
             val requestBody: MutableMap<String, RequestBody> = HashMap()
             requestBody["latitude"] =
@@ -1080,7 +754,7 @@ class MainActivityViewModel @Inject constructor(
                         }
                     }
         } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at add travel expenses ${e.message}")
+            Timber.tag("TAG").e("Exception occur at add travel expenses ${e.message}")
             _loading.value = View.GONE
         } finally {
 
@@ -1094,23 +768,7 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _loading.value = View.VISIBLE
-                Log.d("TAG", "uploadGenresFile: ${travelExpence.toString()}")
-//                if (file == null) {
-//                    _eventChannel.send(MainEvent.Error("File is empty"))
-//                    return@launch
-//                }
-
-
-//                val reqBody =
-//                    file!!.toRequestBody(
-//                        "multipart/form-data".toMediaTypeOrNull(),
-//                        0,
-//                    )
-//                val formData = MultipartBody.Part.createFormData(
-//                    "file",
-//                    "expensesFile-${Random.nextInt(1, 10)}",
-//                    reqBody
-//                )
+                Timber.tag("TAG").d("uploadGenresFile: " + travelExpence.toString())
 
                 val requestBody: MutableMap<String, RequestBody> = HashMap()
                 requestBody["foodComments"] =
@@ -1138,15 +796,12 @@ class MainActivityViewModel @Inject constructor(
                                 "multipart/form-data".toMediaTypeOrNull(), 0,
                             )
                         )
-//                    )
                     )
                 }
 
-//                val amountPart = MultipartBody.Part.createFormData("amount", travelExpence.hotelAmount.toString())
-
                 _resAddFoodExpence.postValue(SuccessResource.loading(null))
                 if (utlIsNetworkAvailable()) {
-                    Log.d("TAG", "addFoodExpense: ${travelExpence.toString()}")
+                    Timber.tag("TAG").d("addFoodExpense: $travelExpence")
 
                     mainRepository.addTravelExpense(
                         "Bearer ${checkIfUserLogin()}",
@@ -1169,7 +824,7 @@ class MainActivityViewModel @Inject constructor(
                         }
                 }
             } catch (e: Exception) {
-                Log.e("TAG", "Exception occur at add travel expenses ${e.message}")
+                Timber.tag("TAG").e("Exception occur at add travel expenses ${e.message}")
                 _loading.value = View.GONE
             } finally {
             }
@@ -1182,23 +837,7 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _loading.value = View.VISIBLE
-                Log.d("TAG", "uploadGenresFile: ${travelExpence.toString()}")
-//                if (file == null) {
-//                    _eventChannel.send(MainEvent.Error("File is empty"))
-//                    return@launch
-//                }
-
-
-//                val reqBody =
-//                    file!!.toRequestBody(
-//                        "multipart/form-data".toMediaTypeOrNull(),
-//                        0,
-//                    )
-//                val formData = MultipartBody.Part.createFormData(
-//                    "file",
-//                    "expensesFile-${Random.nextInt(1, 10)}",
-//                    reqBody
-//                )
+                Timber.tag("TAG").d("uploadGenresFile: " + travelExpence.toString())
 
                 val requestBody: MutableMap<String, RequestBody> = HashMap()
                 requestBody["location"] =
@@ -1260,194 +899,7 @@ class MainActivityViewModel @Inject constructor(
                         }
                 }
             } catch (e: Exception) {
-                Log.e("TAG", "Exception occur at add travel expenses ${e.message}")
-                _loading.value = View.GONE
-            } finally {
-            }
-        }
-
-
-//    fun addMultipleImages(name: String, listImage: MutableList<File>) {
-//        disposables.add(
-//            repo.addMultipleImages(name, listImage)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .doOnSubscribe {}
-//                .doOnComplete {}
-//                .doOnError {
-//                    ldMsg.value = it.message
-//                }
-//                .subscribe {
-//                    val response = Gson().fromJson(it.string(), RespAddMultipleImagesModel::class.java)
-//                    ldRespAddMultipleImages.value = response
-//                }
-//        )
-//    }
-
-//    fun addHotelExpense(travelExpence: AddHotelExpenceRequest) = viewModelScope.launch {
-//
-//        try {
-//            _loading.value = View.VISIBLE
-//            Log.d("TAG", "uploadGenresFile: ${travelExpence.toString()}")
-//            if (file == null) {
-//                _eventChannel.send(MainEvent.Error("File is empty"))
-//                return@launch
-//            }
-//            val reqBody =
-//                file!!.toRequestBody(
-//                    "multipart/form-data".toMediaTypeOrNull(),
-//                    0,
-//                )
-//            val formData = MultipartBody.Part.createFormData(
-//                "file",
-//                "expensesFile-${Random.nextInt(1, 10)}",
-//                reqBody
-//            )
-//
-//            val requestBody: MutableMap<String, RequestBody> = HashMap()
-////            requestBody["purposeId"] = travelExpence.purposeId.toString()
-//            requestBody["hotelFromDate"] =
-//                travelExpence.hotelFromDate.toRequestBody("text/plain".toMediaTypeOrNull())
-//            requestBody["hotelToDate"] =
-//                travelExpence.hotelToDate.toRequestBody("text/plain".toMediaTypeOrNull())
-//            requestBody["location"] =
-//                travelExpence.location.toRequestBody("text/plain".toMediaTypeOrNull())
-//            requestBody["noOfDays"] =
-//                travelExpence.noOfDays.toRequestBody("text/plain".toMediaTypeOrNull())
-//            requestBody["hotelAmount"] =
-//                travelExpence.hotelAmount.toRequestBody("text/plain".toMediaTypeOrNull())
-//            requestBody["expensesUser"] =
-//                travelExpence.expensesUser.toRequestBody("text/plain".toMediaTypeOrNull())
-//
-////            val fields: MutableMap<String, RequestBody> = HashMap()
-//////            fields["purposeId"] =
-//////                RequestBody.create(MediaType.parse("text/plain"), travelExpence.purposeId.toString())
-////            fields["travelFrom"] =
-////                RequestBody.create(MediaType.parse("text/plain"), travelExpence.travelFrom)
-////            fields["travelTo"] =
-////                RequestBody.create(MediaType.parse("text/plain"), travelExpence.travelTo)
-////            fields["travelDate"] =
-////                RequestBody.create(MediaType.parse("text/plain"), travelExpence.travelDate)
-////            fields["modeOfTravel"] =
-////                RequestBody.create(MediaType.parse("text/plain"), travelExpence.modeOfTravel)
-////            fields["expensesUser"] =
-////                RequestBody.create(MediaType.parse("text/plain"),  travelExpence.expensesUser)
-//
-//            _resMeetingPurposeIDItems.postValue(SuccessResource.loading(null))
-//            if (utlIsNetworkAvailable()) {
-//                Log.d("TAG", "addTravelExpense: ${travelExpence.toString()}")
-//
-//                mainRepository.addHotelExpense(
-//                    "Bearer ${checkIfUserLogin()}",
-//                    travelExpence.purposeId.toString()
-//                        .toRequestBody("text/plain".toMediaTypeOrNull()),
-////                    RequestBody.create(MediaType.parse("text/plain"), travelExpence.purposeId.toString()),
-//                    formData, requestBody
-//                )
-//                    .let {
-//                        if (it.isSuccessful) {
-//                            _resAddTravelExpence.postValue(SuccessResource.success(it.body()))
-//                        } else {
-//                            _resAddTravelExpence.postValue(
-//                                SuccessResource.error(
-//                                    it.errorBody().toString(), null
-//                                )
-//                            )
-//                        }
-//                    }
-//            }
-//        } catch (e: Exception) {
-//            Log.e("TAG", "Exception occur at add travel expenses ${e.message}")
-//            _loading.value = View.GONE
-//        } finally {
-//        }
-//    }
-
-//    fun uploadGenresFile(genresName: String, genresDesc: String) =
-//        viewModelScope.launch {
-//            if (utlIsNetworkAvailable())
-//                try {
-//                    _loading.value = View.VISIBLE
-//
-//                    if (file == null) {
-//                        _eventChannel.send(MainEvent.Error("File is empty"))
-//                        return@launch
-//                    }
-//                    val reqBody =
-//                        file!!.toRequestBody(
-//                            "multipart/form-data".toMediaTypeOrNull(),
-//                            0,
-//                        )
-//                    val formData = MultipartBody.Part.createFormData(
-//                        "",
-//                        "pexcelfile-${Random.nextInt(1, 10)}",
-//                        reqBody
-//                    )
-//                    val requestBody: MutableMap<String, String> = HashMap()
-//                    requestBody["AppConstant.NAME"] = genresName
-//                    requestBody["AppConstant.DESCRIPTION"] = genresDesc
-//
-////                    homeRepo.uploadGenresFile(formData, requestBody, object : ApiCallback {
-////                        @SuppressLint("SuspiciousIndentation")
-////                        override fun onSuccess(response: Any) {
-////                            response.let { advertisement ->
-////                                uploadedSuccessful()
-////                            }
-////                        }
-////
-////                        override fun onFailure(errorMsg: String) {
-////                            message.value =
-////                                Event("getUploadGenres Exception $errorMsg")
-////                            _errorMessage.value = Event(errorMsg)
-////                            uploadError(errorMsg)
-////                            _loading.value = View.GONE
-////                        }
-////
-////                        override fun onSubscribe(disposable: Disposable) {
-////                            getCompositeDisposable()!!.add(disposable)
-////                        }
-////
-////                        override fun showLoading() {
-////                            getLogDebugData(
-////                                "FullScreenViewModel",
-////                                "uploadGenresFile loading visible"
-////                            )
-////                        }
-////
-////                        override fun hideLoading() {
-////                            getLogDebugData(
-////                                "FullScreenViewModel",
-////                                "uploadGenresFile loading hide"
-////                            )
-////                        }
-////                    })
-//
-//                } catch (e: Exception) {
-//                    _loading.value = View.GONE
-//                } finally {
-//                }
-//        }
-
-
-    fun getProjectOpportunity(authorization: String) =
-        viewModelScope.launch {
-            try {
-                _resProjectOpportunityList.postValue(SuccessResource.loading(null))
-                if (utlIsNetworkAvailable())
-                    mainRepository.getProjectOpportunity("Bearer ${checkIfUserLogin()}").let {
-                        if (it.isSuccessful) {
-                            _resProjectOpportunityList.postValue(SuccessResource.success(it.body()))
-                        } else {
-                            _resProjectOpportunityList.postValue(
-                                SuccessResource.error(
-                                    it.errorBody().toString(),
-                                    null
-                                )
-                            )
-                        }
-                    }
-            } catch (e: Exception) {
-                Log.e("TAG", "Exception occur at getClients ${e.message}")
+                Timber.tag("TAG").e("Exception occur at add travel expenses ${e.message}")
                 _loading.value = View.GONE
             } finally {
             }
@@ -1471,7 +923,7 @@ class MainActivityViewModel @Inject constructor(
                     }
                 }
         } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            Timber.tag("TAG").e("Exception occur at getClients ${e.message}")
             _loading.value = View.GONE
         } finally {
         }
@@ -1498,12 +950,11 @@ class MainActivityViewModel @Inject constructor(
                     }
                 }
         } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            Timber.tag("TAG").e("Exception occur at getClients ${e.message}")
             _loading.value = View.GONE
         } finally {
         }
     }
-
 
     @SuppressLint("SuspiciousIndentation")
     fun addUserCoordinates(
@@ -1525,7 +976,7 @@ class MainActivityViewModel @Inject constructor(
                     }
                 }
         } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            Timber.tag("TAG").e("Exception occur at getClients ${e.message}")
             _loading.value = View.GONE
         } finally {
         }
@@ -1534,20 +985,7 @@ class MainActivityViewModel @Inject constructor(
     @SuppressLint("SuspiciousIndentation")
     fun addMeetingPurpose(
         visitDate: AddMeetingRequest
-//        employeeId: String,
-//        noOfDays: Int,
-//        userCordinates: UserCoordinates,
-//        visitDate: String,
-//        visitPurpose: String
     ) = viewModelScope.launch {
-
-//        val requestBody = AddMeetingRequest(
-//            employeeId = employeeId,
-//            noOfDays = noOfDays,
-//            userCordinates = userCordinates,
-//            visitDate = visitDate,
-//            visitPurpose = visitPurpose
-//        )
 
         try {
             _resNewMeetingPurpose.postValue(SuccessResource.loading(null))
@@ -1565,154 +1003,7 @@ class MainActivityViewModel @Inject constructor(
                     }
                 }
         } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
-            _loading.value = View.GONE
-        } finally {
-        }
-    }
-
-    fun getEscalationItemProjectID(itemID: String) = viewModelScope.launch {
-        try {
-            _resEscalationList.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getEscalationItemProjectID("Bearer ${checkIfUserLogin()}", itemID)
-                    .let {
-                        if (it.isSuccessful) {
-                            _resEscalationList.postValue(SuccessResource.success(it.body()))
-                        } else {
-                            _resEscalationList.postValue(
-                                SuccessResource.error(
-                                    it.errorBody().toString(),
-                                    null
-                                )
-                            )
-                        }
-                    }
-        } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
-            _loading.value = View.GONE
-        } finally {
-        }
-    }
-
-    fun getMOMProjects(opportunityID: String) = viewModelScope.launch {
-        try {
-            _resMomActionItemsList.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getMOMProjects("Bearer ${checkIfUserLogin()}", opportunityID).let {
-                    if (it.isSuccessful) {
-                        _resMomActionItemsList.postValue(SuccessResource.success(it.body()))
-                    } else {
-                        _resMomActionItemsList.postValue(
-                            SuccessResource.error(
-                                it.errorBody().toString(),
-                                null
-                            )
-                        )
-                    }
-                }
-        } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
-            _loading.value = View.GONE
-        } finally {
-        }
-    }
-
-    fun getMOMActionItemDetailsBYId(opportunityID: String) = viewModelScope.launch {
-        try {
-            _resMomActionItemBYID.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getMOMActionItemDetailsBYId(
-                    "Bearer ${checkIfUserLogin()}",
-                    opportunityID
-                ).let {
-                    if (it.isSuccessful) {
-                        _resMomActionItemBYID.postValue(SuccessResource.success(it.body()))
-                    } else {
-                        _resMomActionItemBYID.postValue(
-                            SuccessResource.error(
-                                it.errorBody().toString(),
-                                null
-                            )
-                        )
-                    }
-                }
-        } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
-            _loading.value = View.GONE
-        } finally {
-        }
-    }
-
-    fun getOpportunityByProductID(opportunityID: String) = viewModelScope.launch {
-        try {
-            _resOpportunityByProjectIDItems.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getOpportunityByProductID(
-                    "Bearer ${checkIfUserLogin()}",
-                    opportunityID
-                )
-                    .let {
-                        if (it.isSuccessful) {
-                            _resOpportunityByProjectIDItems.postValue(SuccessResource.success(it.body()))
-                        } else {
-                            _resOpportunityByProjectIDItems.postValue(
-                                SuccessResource.error(
-                                    it.errorBody().toString(), null
-                                )
-                            )
-                        }
-                    }
-        } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
-            _loading.value = View.GONE
-        } finally {
-        }
-    }
-
-    fun getActionItemProjectID(opportunityID: String) = viewModelScope.launch {
-        try {
-            _resActionItemsList.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getActionItemProjectID("Bearer ${checkIfUserLogin()}", opportunityID)
-                    .let {
-                        if (it.isSuccessful) {
-                            _resActionItemsList.postValue(SuccessResource.success(it.body()))
-                        } else {
-                            _resActionItemsList.postValue(
-                                SuccessResource.error(
-                                    it.errorBody().toString(),
-                                    null
-                                )
-                            )
-                        }
-                    }
-        } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
-            _loading.value = View.GONE
-        } finally {
-        }
-    }
-
-    fun getActionItemBYID(opportunityID: String) = viewModelScope.launch {
-        try {
-            _resActionItemBYID.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.getActionItemBYID("Bearer ${checkIfUserLogin()}", opportunityID)
-                    .let {
-                        if (it.isSuccessful) {
-                            _resActionItemBYID.postValue(SuccessResource.success(it.body()))
-                        } else {
-                            _resActionItemBYID.postValue(
-                                SuccessResource.error(
-                                    it.errorBody().toString(),
-                                    null
-                                )
-                            )
-                        }
-                    }
-        } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            Timber.tag("TAG").e("Exception occur at getClients ${e.message}")
             _loading.value = View.GONE
         } finally {
         }
@@ -1736,12 +1027,11 @@ class MainActivityViewModel @Inject constructor(
                         }
                     }
         } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            Timber.tag("TAG").e("Exception occur at getClients ${e.message}")
             _loading.value = View.GONE
         } finally {
         }
     }
-
 
     fun userLogin(userId: String, password: String) = viewModelScope.launch {
         try {
@@ -1763,7 +1053,7 @@ class MainActivityViewModel @Inject constructor(
                     }
                 }
         } catch (e: Exception) {
-            Log.e("TAG", "Exception occur at getClients ${e.message}")
+            Timber.tag("TAG").e("Exception occur at getClients ${e.message}")
             _loading.value = View.GONE
         } finally {
         }
@@ -1792,156 +1082,7 @@ class MainActivityViewModel @Inject constructor(
                         }
                     }
             } catch (e: Exception) {
-                Log.e("TAG", "Exception occur at getClients ${e.message}")
-                _loading.value = View.GONE
-            } finally {
-            }
-        }
-
-
-//    fun addComment(itemId: String, commentText: String) =
-//        viewModelScope.launch {
-//            val requestBody: MutableMap<String, String> = HashMap()
-//            requestBody[Common.CLIENT_NAME] = clientName
-//            requestBody[Common.CLIENT_CONTACT_NAME] = clientContactName
-//            requestBody[Common.CLIENT_CONTACT_POS] = clientContactPos
-//
-//            _resNewClientResponse.postValue(SuccessResource.loading(null))
-//            mainRepository.addClient("Bearer ${checkIfUserLogin()}", requestBody).let {
-//                if (it.isSuccessful) {
-//                    _resNewClientResponse.postValue(SuccessResource.success(it.body()))
-//                } else {
-//                    _resNewClientResponse.postValue(
-//                        SuccessResource.error(
-//                            it.errorBody().toString(),
-//                            null
-//                        )
-//                    )
-//                }
-//            }
-//        }
-
-    fun addEmployee(
-        userName: String, pwd: String, employeeNumber: String,
-        roleId: String, departmentId: String,
-        reportingManagerId: String, contactNoOne: String, email: String, status: String
-    ) =
-        viewModelScope.launch {
-            try {
-                val requestBody: MutableMap<String, String> = HashMap()
-                requestBody[Common.USER_NAME] = userName
-                requestBody[Common.PASSWORD] = pwd
-                requestBody[Common.EMPLOYEE_NUM] = employeeNumber
-                requestBody[Common.ROLE_ID] = roleId
-                requestBody[Common.DEPT_ID] = departmentId
-                requestBody[Common.REPORTMANAGER_ID] = reportingManagerId
-                requestBody[Common.CONTACT_NUM] = contactNoOne
-                requestBody[Common.EMAIL_ID] = email
-                requestBody[Common.STATUS] = status
-
-                _resNewClientResponse.postValue(SuccessResource.loading(null))
-                if (utlIsNetworkAvailable())
-                    mainRepository.addEmployee("Bearer ${checkIfUserLogin()}", requestBody).let {
-                        if (it.isSuccessful) {
-                            _resNewClientResponse.postValue(SuccessResource.success(it.body()))
-                        } else {
-                            _resNewClientResponse.postValue(
-                                SuccessResource.error(
-                                    it.errorBody().toString(),
-                                    null
-                                )
-                            )
-                        }
-                    }
-            } catch (e: Exception) {
-                Log.e("TAG", "Exception occur at getClients ${e.message}")
-                _loading.value = View.GONE
-            } finally {
-            }
-        }
-
-    fun addClientEscalation(
-        projectId: String, clientId: String, clientEscalations: String,
-        escalationDescription: String, escalationRaisedDate: String,
-        escalationResolvedDate: String, escalationStatus: String
-    ) =
-        viewModelScope.launch {
-            try {
-                val requestBody = AddEscalationRequest(
-                    clientId = clientId,
-                    projectId = projectId,
-                    escalationRaisedDate = escalationRaisedDate,
-                    escalationResolvedDate = escalationResolvedDate,
-                    escalationDescription = escalationDescription,
-                    clientEscalations = clientEscalations == "NO",
-                    escalationStatus = escalationStatus
-
-                )
-//            val requestBody: MutableMap<String, String> = HashMap()
-//            requestBody[Common.PROJECT_ID] = projectId
-//            requestBody[Common.CLIENT_ID] = clientId
-//            requestBody[Common.CLIENT_ESCALATION] = clientEscalations
-//            requestBody[Common.ESCALATION_DESC] = escalationDescription
-//            requestBody[Common.ESCALATION_RAISED_DATE] = escalationRaisedDate
-//            requestBody[Common.ESCALATION_RESOLVE_DATE] = escalationResolvedDate
-//            requestBody[Common.ESCALATION_STATUS] = escalationStatus
-
-                _resNewClientResponse.postValue(SuccessResource.loading(null))
-                if (utlIsNetworkAvailable())
-                    mainRepository.addClientEscalation("Bearer ${checkIfUserLogin()}", requestBody)
-                        .let {
-                            if (it.isSuccessful) {
-                                _resNewClientResponse.postValue(SuccessResource.success(it.body()))
-                            } else {
-                                _resNewClientResponse.postValue(
-                                    SuccessResource.error(
-                                        it.errorBody().toString(),
-                                        null
-                                    )
-                                )
-                            }
-                        }
-            } catch (e: Exception) {
-                Log.e("TAG", "Exception occur at getClients ${e.message}")
-                _loading.value = View.GONE
-            } finally {
-            }
-        }
-
-    fun addMOMActionItem(
-        projectId: String, clientId: String, assignedId: String,
-        meetingTitle: String, meetingDate: String,
-        meetingTime: String, meetingNotes: String
-    ) =
-        viewModelScope.launch {
-            try {
-                val requestBody = AddMOMOpportunityRequest(
-                    meetingNotes = meetingNotes,
-                    meetingTitle = meetingTitle,
-                    clientId = clientId,
-                    projectId = projectId,
-                    assignedId = assignedId,
-                    meetingDate = meetingDate,
-                    meetingTime = meetingTime,
-                )
-
-                _resNewClientResponse.postValue(SuccessResource.loading(null))
-                if (utlIsNetworkAvailable())
-                    mainRepository.addMOMActionItem("Bearer ${checkIfUserLogin()}", requestBody)
-                        .let {
-                            if (it.isSuccessful) {
-                                _resNewClientResponse.postValue(SuccessResource.success(it.body()))
-                            } else {
-                                _resNewClientResponse.postValue(
-                                    SuccessResource.error(
-                                        it.errorBody().toString(),
-                                        null
-                                    )
-                                )
-                            }
-                        }
-            } catch (e: Exception) {
-                Log.e("TAG", "Exception occur at getClients ${e.message}")
+                Timber.tag("TAG").e("Exception occur at getClients ${e.message}")
                 _loading.value = View.GONE
             } finally {
             }
@@ -1953,13 +1094,6 @@ class MainActivityViewModel @Inject constructor(
     ) =
         viewModelScope.launch {
             try {
-//                val requestBody = AddCommentOpportunity(
-//                    comments = comment,
-//                    projectId = projectId,
-//                    assignedId = assignedId,
-//                    employeeId = getUserEmployeeID(),
-//                )
-
                 val requestBody = AddCommentOpportunity(
                     comment = comment,
                     purposeId = projectId,
@@ -1985,139 +1119,10 @@ class MainActivityViewModel @Inject constructor(
                             }
                         }
             } catch (e: Exception) {
-                Log.e("TAG", "Exception occur at getClients ${e.message}")
+                Timber.tag("TAG").e("Exception occur at getClients ${e.message}")
                 _loading.value = View.GONE
             } finally {
             }
-        }
-
-    fun addActionItemOpportunity(
-        projectId: String, momId: String, assignedId: String,
-        expectedInfoFromClient: String, actionItemCompletionDate: String,
-        expectedInfoFromTekskills: String, tekskillsActionItesm: String, actionStatus: String
-    ) =
-        viewModelScope.launch {
-            try {
-                val requestBody = AddActionItemOpportunityRequest(
-                    projectId = projectId,
-                    assignedId = assignedId,
-                    momId = momId,
-                    expectedInfoFromClient = expectedInfoFromClient,
-                    expectedInfoFromTekskills = expectedInfoFromTekskills,
-                    tekskillsActionItesm = tekskillsActionItesm,
-                    actionItemCompletionDate = actionItemCompletionDate,
-                    actionStatus = actionStatus,
-                    date = Date(Constants.MAX_TIMESTAMP)
-                )
-
-                _resNewClientResponse.postValue(SuccessResource.loading(null))
-                if (utlIsNetworkAvailable())
-                    mainRepository.addActionItemOpportunity(
-                        "Bearer ${checkIfUserLogin()}",
-                        requestBody
-                    )
-                        .let {
-                            if (it.isSuccessful) {
-                                _resNewClientResponse.postValue(SuccessResource.success(it.body()))
-                            } else {
-                                _resNewClientResponse.postValue(
-                                    SuccessResource.error(
-                                        it.errorBody().toString(),
-                                        null
-                                    )
-                                )
-                            }
-                        }
-            } catch (e: Exception) {
-                Log.e("TAG", "Exception occur at getClients ${e.message}")
-                _loading.value = View.GONE
-            } finally {
-            }
-        }
-
-    /**
-     * ADD Opportunity
-     */
-    private val _resAddOpportunity =
-        MutableLiveData<SuccessResource<NewClientResponse>>()
-
-    val resAddOpportunity: LiveData<SuccessResource<NewClientResponse>>
-        get() = _resAddOpportunity
-
-    fun addOpportunity(
-        managementId: String, accountHeadId: String,
-        practiceHeadId: String, projectManagerId: String, projectName: String,
-        clientId: String,
-        opportunityType: String,
-        opportunityDesc: String,
-        status: String
-    ) = viewModelScope.launch {
-       try{ _resAddOpportunity.postValue(SuccessResource.loading(null))
-        val requestBody = AddOpportunityRequest(
-            clientId = clientId,
-            projectDetailsVO = ProjectDetailsVO(
-                projectName = projectName,
-                oppotunityType = opportunityType,
-                opportunityDesc = opportunityDesc,
-                status = status
-            ),
-            projectsAssignVO = ProjectsAssignVO(
-                managementId = managementId,
-                accountHeadId = accountHeadId,
-                practiceHeadId = practiceHeadId,
-                projectManagerId = projectManagerId
-            )
-        )
-        if (utlIsNetworkAvailable())
-            mainRepository.addOpportunity("Bearer ${checkIfUserLogin()}", requestBody).let {
-                if (it.isSuccessful) {
-                    _resAddOpportunity.postValue(SuccessResource.success(it.body()))
-                } else {
-                    _resAddOpportunity.postValue(
-                        SuccessResource.error(
-                            it.errorBody().toString(),
-                            null
-                        )
-                    )
-                }
-            }} catch (e: Exception) {
-           Log.e("TAG", "Exception occur at getClients ${e.message}")
-           _loading.value = View.GONE
-       } finally {
-       }
-    }
-
-
-    fun addAssignProject(
-        projectId: String, managementId: String, accountHeadId: String,
-        practiceHeadId: String, projectManagerId: String
-    ) =
-        viewModelScope.launch {
-           try{ val requestBody: MutableMap<String, String> = HashMap()
-            requestBody[Common.PROJECT_ID] = projectId
-            requestBody[Common.MANAGEMENT_ID] = managementId
-            requestBody[Common.ACCOUNTHEAD_ID] = accountHeadId
-            requestBody[Common.PRACTICEHEAD_ID] = practiceHeadId
-            requestBody[Common.PROJECTMANAGER_ID] = projectManagerId
-
-            _resNewClientResponse.postValue(SuccessResource.loading(null))
-            if (utlIsNetworkAvailable())
-                mainRepository.assignProject("Bearer ${checkIfUserLogin()}", requestBody).let {
-                    if (it.isSuccessful) {
-                        _resNewClientResponse.postValue(SuccessResource.success(it.body()))
-                    } else {
-                        _resNewClientResponse.postValue(
-                            SuccessResource.error(
-                                it.errorBody().toString(),
-                                null
-                            )
-                        )
-                    }
-                }} catch (e: Exception) {
-               Log.e("TAG", "Exception occur at getClients ${e.message}")
-               _loading.value = View.GONE
-           } finally {
-           }
         }
 
 
@@ -2149,206 +1154,15 @@ class MainActivityViewModel @Inject constructor(
                     )
                 }
             }} catch (e: Exception) {
-           Log.e("TAG", "Exception occur at getClients ${e.message}")
+           Timber.tag("TAG").e("Exception occur at getClients ${e.message}")
            _loading.value = View.GONE
        } finally {
        }
     }
 
-    var file: ByteArray? = null
-        set(value) {
-            field = value
-            selectedFile()
-        }
-
-    private fun selectedFile() = viewModelScope.launch {
-        if (file != null)
-            _eventChannel.send(MainEvent.FileSelected)
-    }
-
-    var returnFile: ByteArray? = null
-        set(value) {
-            field = value
-            selectedReturnFile()
-        }
-
-    private fun selectedReturnFile() = viewModelScope.launch {
-        if (returnFile != null)
-            _eventChannel.send(MainEvent.FileSelected)
-    }
-
-    var hotelFile: ByteArray? = null
-        set(value) {
-            field = value
-            selectedHotelFile()
-        }
-
-    private fun selectedHotelFile() = viewModelScope.launch {
-        if (hotelFile != null)
-            _hotelEventChannel.send(MainEvent.FileSelected)
-    }
-
-    fun uploadGenresFile(genresName: String, genresDesc: String) =
-        viewModelScope.launch {
-            if (utlIsNetworkAvailable())
-                try {
-                    _loading.value = View.VISIBLE
-
-                    if (file == null) {
-                        _hotelEventChannel.send(MainEvent.Error("File is empty"))
-                        return@launch
-                    }
-                    val reqBody =
-                        file!!.toRequestBody(
-                            "multipart/form-data".toMediaTypeOrNull(),
-                            0,
-                        )
-                    val formData = MultipartBody.Part.createFormData(
-                        "",
-                        "pexcelfile-${Random.nextInt(1, 10)}",
-                        reqBody
-                    )
-                    val requestBody: MutableMap<String, String> = HashMap()
-                    requestBody["AppConstant.NAME"] = genresName
-                    requestBody["AppConstant.DESCRIPTION"] = genresDesc
-
-//                    homeRepo.uploadGenresFile(formData, requestBody, object : ApiCallback {
-//                        @SuppressLint("SuspiciousIndentation")
-//                        override fun onSuccess(response: Any) {
-//                            response.let { advertisement ->
-//                                uploadedSuccessful()
-//                            }
-//                        }
-//
-//                        override fun onFailure(errorMsg: String) {
-//                            message.value =
-//                                Event("getUploadGenres Exception $errorMsg")
-//                            _errorMessage.value = Event(errorMsg)
-//                            uploadError(errorMsg)
-//                            _loading.value = View.GONE
-//                        }
-//
-//                        override fun onSubscribe(disposable: Disposable) {
-//                            getCompositeDisposable()!!.add(disposable)
-//                        }
-//
-//                        override fun showLoading() {
-//                            getLogDebugData(
-//                                "FullScreenViewModel",
-//                                "uploadGenresFile loading visible"
-//                            )
-//                        }
-//
-//                        override fun hideLoading() {
-//                            getLogDebugData(
-//                                "FullScreenViewModel",
-//                                "uploadGenresFile loading hide"
-//                            )
-//                        }
-//                    })
-
-                } catch (e: Exception) {
-                    _loading.value = View.GONE
-                } finally {
-                }
-        }
-
-
-//    fun updateTaskStatus(task: TaskInfo) {
-//        viewModelScope.launch(IO) {
-//            repository.updateTaskStatus(task)
-//        }
-//    }
-//
-//    fun deleteTask(task: TaskInfo) {
-//        viewModelScope.launch(IO) {
-//            repository.deleteTask(task)
-//        }
-//    }
-//
-//    fun insertTaskAndCategory(taskInfo: TaskInfo, categoryInfo: CategoryInfo) {
-//        viewModelScope.launch(IO) {
-//            repository.insertTaskAndCategory(taskInfo, categoryInfo)
-//        }
-//    }
-//
-//    fun updateTaskAndAddCategory(taskInfo: TaskInfo, categoryInfo: CategoryInfo) {
-//        viewModelScope.launch(IO) {
-//            repository.updateTaskAndAddCategory(taskInfo, categoryInfo)
-//        }
-//    }
-//
-//    fun updateTaskAndAddDeleteCategory(
-//        taskInfo: TaskInfo,
-//        categoryInfoAdd: CategoryInfo,
-//        categoryInfoDelete: CategoryInfo
-//    ) {
-//        viewModelScope.launch(IO) {
-//            repository.updateTaskAndAddDeleteCategory(taskInfo, categoryInfoAdd, categoryInfoDelete)
-//        }
-//    }
-//
-//    fun deleteTaskAndCategory(taskInfo: TaskInfo, categoryInfo: CategoryInfo) {
-//        viewModelScope.launch(IO) {
-//            repository.deleteTaskAndCategory(taskInfo, categoryInfo)
-//        }
-//    }
-//
-//    fun getUncompletedTask(): LiveData<List<TaskCategoryInfo>> {
-//        return repository.getUncompletedTask()
-//    }
-//
-//    fun getCompletedTask(): LiveData<List<TaskCategoryInfo>> {
-//        return repository.getCompletedTask()
-//    }
-//
-//    fun getUncompletedTaskOfCategory(category: String): LiveData<List<TaskCategoryInfo>> {
-//        return repository.getUncompletedTaskOfCategory(category)
-//    }
-//
-//    fun getCompletedTaskOfCategory(category: String): LiveData<List<TaskCategoryInfo>> {
-//        return repository.getCompletedTaskOfCategory(category)
-//    }
-//
-//    fun getNoOfTaskForEachCategory(): LiveData<List<NoOfTaskForEachCategory>> {
-//        return repository.getNoOfTaskForEachCategory()
-//    }
-//
-//    fun getCategories(): LiveData<List<CategoryInfo>> {
-//        return repository.getCategories()
-//    }
-//
-//    suspend fun getCountOfCategory(category: String): Int {
-//        var count: Int
-//        coroutineScope() {
-//            count = withContext(IO) { repository.getCountOfCategory(category) }
-//        }
-//        return count
-//    }
-//
-//    fun getAlarms(currentTime: Date) {
-//        CoroutineScope(Dispatchers.Main).launch {
-//            val list = repository.getActiveAlarms(currentTime)
-//            Log.d("DATA", list.toString())
-//        }
-//    }
-
-
     fun checkIfUserLogin(): String {
         return getAuthToken()
     }
-
-    fun checkFirstTimeLogin(): Boolean {
-        return getFirstTime()
-    }
-
-    fun checkIfUserSubscription(): String {
-        return getUserSubscription()
-    }
-
-//    fun writeTokenToSharedPref(auth: String) {
-//        saveAuthToken(auth)
-//    }
 
     fun saveAuthToken(auth_token: String, refresh_token: String): Boolean {
         val editor = sharedPreferences.edit()
@@ -2359,30 +1173,9 @@ class MainActivityViewModel @Inject constructor(
         return true
     }
 
-    fun updateFirstTime(statue: Boolean) {
-        val editor = sharedPreferences.edit()
-        editor.putBoolean("First_time", statue)
-        editor.apply()
-    }
-
     fun getAuthToken(): String {
         return sharedPreferences.getString(PREF_TOKEN, PREF_DEFAULT)!!
     }
-
-    fun getFirstTime(): Boolean {
-        return sharedPreferences.getBoolean("First_time", false)
-    }
-
-    fun saveUserSubscription(subscription: Boolean) {
-        val editor = sharedPreferences.edit()
-        editor.putString(PREF_ROLE_TYPE, if (subscription) MANAGER else PREF_DEFAULT)
-        editor.apply()
-    }
-
-    fun getUserSubscription(): String {
-        return sharedPreferences.getString(PREF_ROLE_TYPE, PREF_DEFAULT)!!
-    }
-
 
     fun saveUserEmployeeID(roleID: String) {
         val editor = sharedPreferences.edit()
@@ -2394,18 +1187,10 @@ class MainActivityViewModel @Inject constructor(
         return sharedPreferences.getString(PREF_EMP_ID, PREF_DEFAULT)!!
     }
 
-    fun clearSharedPrefrence(): Boolean {
+    fun clearSharedPreference(): Boolean {
         val editor = sharedPreferences.edit()
         editor.clear()
         editor.apply()
         return true
     }
-
-    sealed class MainEvent {
-        object FileSelected : MainEvent()
-        data class Error(val error: String) : MainEvent()
-        data class Uploading(val progress: Int) : MainEvent()
-        object UploadSuccess : MainEvent()
-    }
-
 }

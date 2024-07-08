@@ -18,7 +18,6 @@ import com.tekskills.er_tekskills.domain.TaskCategoryRepository
 import com.tekskills.er_tekskills.presentation.activities.LocationLiveData
 import com.tekskills.er_tekskills.presentation.activities.MainActivity
 import com.tekskills.er_tekskills.presentation.fragments.CheckINFragmentArgs
-import com.tekskills.er_tekskills.utils.AppUtil.filterMeetingsTodayTomorrow
 import com.tekskills.er_tekskills.utils.AppUtil.utlIsNetworkAvailable
 import com.tekskills.er_tekskills.utils.Common.Companion.PREF_DEFAULT
 import com.tekskills.er_tekskills.utils.Common.Companion.PREF_TOKEN
@@ -72,8 +71,7 @@ class LocationUpdateReceiver @Inject constructor() : BroadcastReceiver() {
                         mainRepository.getMeetingPurposeByStatus(
                             "Bearer ${checkIfUserLogin()}","Today"
                         ).let {
-                            it.body()?.let {
-                                filterMeetingsTodayTomorrow(it)?.let { listData ->
+                            it.body()?.let { listData ->
                                     listData.forEach { meetingData ->
                                         parseJsonToTaskInfo(meetingData).let {
                                             taskCategoryRepository.insertOrUpdateTaskInfo(it)
@@ -210,7 +208,7 @@ class LocationUpdateReceiver @Inject constructor() : BroadcastReceiver() {
 //                            }
                                         }
                                     }
-                                }
+//                                }
                             }
                         }
 

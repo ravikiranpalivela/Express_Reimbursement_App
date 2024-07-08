@@ -1,16 +1,11 @@
 package com.tekskills.er_tekskills.presentation.activities
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.snackbar.Snackbar
@@ -26,46 +21,31 @@ class LoginActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityLoginBinding
     private val viewModel: MainActivityViewModel by viewModels()
-    private val REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124
-    private val PERMISSION_REQUEST_CODE = 1
-//    @Inject
-//    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
-//        val editor: SharedPreferences.Editor = sharedPreferences.edit()
 
         setupListeners()
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-////            insertDummyContactWrapper()
-//        }
-
         if (viewModel.checkIfUserLogin() != Common.PREF_DEFAULT) {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
-
         viewModel.resLoginResponse.observe(this, androidx.lifecycle.Observer {
             when (it.status) {
                 RestApiStatus.SUCCESS -> {
-                    binding.progress.visibility = View.GONE
+                    binding.progress.visibility = View.VISIBLE
                     if (it.data != null)
                         it.data.let { res ->
-                            res.let { token ->
-                                token.let {
-                                    if (viewModel.saveAuthToken(
-                                            res.accessToken,
-                                            res.refreshToken
-                                        )
-                                    ) {
-                                        val intent = Intent(this, MainActivity::class.java)
-                                        startActivity(intent)
-                                        finish()
-                                    }
-                                }
+                            if (viewModel.saveAuthToken(
+                                    res.accessToken,
+                                    res.refreshToken
+                                )
+                            ) {
+                                val intent = Intent(this, MainActivity::class.java)
+                                startActivity(intent)
+                                finish()
                             }
                         }
                     else {
@@ -75,6 +55,7 @@ class LoginActivity : AppCompatActivity() {
                             Snackbar.LENGTH_SHORT
                         ).show()
                     }
+                    binding.progress.visibility = View.GONE
                 }
 
                 RestApiStatus.LOADING -> {
@@ -96,23 +77,23 @@ class LoginActivity : AppCompatActivity() {
 
         })
 
-
         binding.btnLogin.setOnClickListener {
-//            val intent = Intent(this, MainActivity::class.java)
-//            startActivity(intent)
-//            finish()
             if (isValidate()) {
+                binding.progress.visibility = View.VISIBLE
                 viewModel.userLogin(
                     binding.edtUsername.text.toString(),
                     binding.edtPassword.text.toString()
                 )
-//                Toast.makeText(this, "validated", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun isValidate(): Boolean =
-        validateUserName() && validatePassword()
+    private fun isValidate(): Boolean {
+        var isValid = true
+        if (!validateUserName()) isValid = false
+        if (!validatePassword()) isValid = false
+        return isValid
+    }
 
     private fun setupListeners() {
         binding.edtUsername.addTextChangedListener(TextFieldValidation(binding.edtUsername))
@@ -149,20 +130,6 @@ class LoginActivity : AppCompatActivity() {
             binding.edtLoginPassword.error = "password can't be less than 6"
             binding.edtPassword.requestFocus()
             return false
-//        }
-//        else if (!isStringContainNumber(binding.edtPassword.text.toString())) {
-//            binding.edtLoginPassword.error = "Required at least 1 digit"
-//            binding.edtPassword.requestFocus()
-//            return false
-//        } else if (!isStringLowerAndUpperCase(binding.edtPassword.text.toString())) {
-//            binding.edtLoginPassword.error =
-//                "Password must contain upper and lower case letters"
-//            binding.edtPassword.requestFocus()
-//            return false
-//        } else if (!isStringContainSpecialCharacter(binding.edtPassword.text.toString())) {
-//            binding.edtLoginPassword.error = "1 special character required"
-//            binding.edtPassword.requestFocus()
-//            return false
         } else {
             binding.edtLoginPassword.isErrorEnabled = false
         }
@@ -187,121 +154,5 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-
-    /**
-     * PERMISSIONS
-     */
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private fun insertDummyContactWrapper() {
-        val permissionsNeeded: MutableList<String> = ArrayList()
-        val permissionsList: MutableList<String> = ArrayList()
-        if (!addPermission(
-                permissionsList,
-                Manifest.permission.READ_PHONE_STATE
-            )
-        ) permissionsNeeded.add("READ_PHONE_STATE")
-        if (!addPermission(
-                permissionsList,
-                Manifest.permission.RECORD_AUDIO
-            )
-        ) permissionsNeeded.add("RECORD_AUDIO")
-        if (!addPermission(
-                permissionsList,
-                Manifest.permission.INTERNET
-            )
-        ) permissionsNeeded.add("INTERNET")
-        if (!addPermission(
-                permissionsList,
-                Manifest.permission.RECEIVE_BOOT_COMPLETED
-            )
-        ) permissionsNeeded.add("RECEIVE_BOOT_COMPLETED")
-        if (!addPermission(
-                permissionsList,
-                Manifest.permission.CALL_PHONE
-            )
-        ) permissionsNeeded.add("CALL_PHONE")
-        if (!addPermission(
-                permissionsList,
-                Manifest.permission.READ_CALENDAR
-            )
-        ) permissionsNeeded.add("READ_CALENDAR")
-        if (!addPermission(
-                permissionsList,
-                Manifest.permission.WRITE_CALENDAR
-            )
-        ) permissionsNeeded.add("WRITE_CALENDAR")
-        if (!addPermission(
-                permissionsList,
-                Manifest.permission.WAKE_LOCK
-            )
-        ) permissionsNeeded.add("WAKE_LOCK")
-        if (!addPermission(
-                permissionsList,
-                Manifest.permission.ACCESS_WIFI_STATE
-            )
-        ) permissionsNeeded.add("ACCESS_WIFI_STATE")
-        if (!addPermission(
-                permissionsList,
-                Manifest.permission.ACCESS_NETWORK_STATE
-            )
-        ) permissionsNeeded.add("ACCESS_NETWORK_STATE")
-        if (!addPermission(
-                permissionsList,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-        ) permissionsNeeded.add("WRITE_EXTERNAL_STORAGE")
-//        if (!addPermission(
-//                permissionsList,
-//                Manifest.permission.CAPTURE_VIDEO_OUTPUT
-//            )
-//        ) permissionsNeeded.add("CAPTURE_VIDEO_OUTPUT")
-        if (!addPermission(
-                permissionsList,
-                Manifest.permission.READ_CALL_LOG
-            )
-        ) permissionsNeeded.add("READ_CALL_LOG")
-        if (!addPermission(
-                permissionsList,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        ) permissionsNeeded.add("ACCESS_FINE_LOCATION")
-        if (!addPermission(
-                permissionsList,
-                Manifest.permission.READ_SMS
-            )
-        ) permissionsNeeded.add("READ_SMS")
-        if (!addPermission(
-                permissionsList,
-                Manifest.permission.READ_CONTACTS
-            )
-        ) permissionsNeeded.add("READ_CONTACTS")
-        if (permissionsList.size > 0) {
-            if (permissionsNeeded.size > 0) {
-                var message = "You need to grant access to " + permissionsNeeded[0]
-                for (i in 1 until permissionsNeeded.size) message =
-                    message + ", " + permissionsNeeded[i]
-                requestPermissions(
-                    permissionsList.toTypedArray(),
-                    REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS
-                )
-                return
-            }
-            requestPermissions(
-                permissionsList.toTypedArray(),
-                REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS
-            )
-            return
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private fun addPermission(permissionsList: MutableList<String>, permission: String): Boolean {
-        if (checkSelfPermission(permission) !== PackageManager.PERMISSION_GRANTED) {
-            permissionsList.add(permission)
-            if (!shouldShowRequestPermissionRationale(permission)) return false
-        }
-        return true
     }
 }

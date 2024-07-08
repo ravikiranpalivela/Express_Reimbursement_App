@@ -659,7 +659,7 @@ class PurposeMeetingDetailsFragment : ParentFragment() {
                         } else {
                             SmartDialogBuilder(requireContext())
                                 .setTitle("Note")
-                                .setSubTitle("Your in Not in Location Range")
+                                .setSubTitle("Your Not in Location Range")
                                 .setCancalable(false)
                                 .setCustomIcon(R.drawable.icon2)
                                 .setTitleColor(resources.getColor(R.color.black))

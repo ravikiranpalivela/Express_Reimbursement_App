@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable
 import android.location.Location
 import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,17 +43,16 @@ import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.PlacesClient
-import com.google.maps.android.clustering.ClusterManager
 import com.tekskills.er_tekskills.R
+import com.tekskills.er_tekskills.data.model.PlaceDetails
 import com.tekskills.er_tekskills.databinding.FragmentCustomerBookingBinding
 import com.tekskills.er_tekskills.presentation.activities.MainActivity
 import com.tekskills.er_tekskills.presentation.viewmodel.MainActivityViewModel
-import com.tekskills.er_tekskills.utils.GoogleMaps.MyClusterItem
 import com.tekskills.er_tekskills.utils.GoogleMaps.utilities.DirectionsJSONParser
 import com.tekskills.er_tekskills.utils.UtilsConstants
 import org.json.JSONObject
+import timber.log.Timber
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
@@ -61,8 +61,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.Objects
 
-class BookingFragment : Fragment(),
-    OnMapReadyCallback {
+class BookingFragment : Fragment(), OnMapReadyCallback {
     private var mViewModel: MainActivityViewModel? = null
     private lateinit var binding: FragmentCustomerBookingBinding
 
@@ -74,15 +73,13 @@ class BookingFragment : Fragment(),
     private var currentPickupLocationMarker: Marker? = null
     private var currentDropOffLocationMarker: Marker? = null
     private var currentUserLocationMarker: Marker? = null
-    private var currentDriverLocationMarker: Marker? = null
     private var currentUserLocation: Location? = null
     private val currentRoute: ArrayList<Polyline> = ArrayList<Polyline>()
     private var placesClient: PlacesClient? = null
 
-
     //Booking info
-    var customerDropOffPlace: Place? = null
-    var customerPickupPlace: Place? = null
+    var customerDropOffPlace: PlaceDetails? = null
+    var customerPickupPlace: PlaceDetails? = null
     var transportationType: String? = null
     var distanceInKm: Double? = null
     var distanceInKmString: String? = null
@@ -100,7 +97,7 @@ class BookingFragment : Fragment(),
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_customer_booking,
             container, false
@@ -121,7 +118,7 @@ class BookingFragment : Fragment(),
      * Set event listener for restart btn
      */
     private fun setRestartBtnHandler() {
-        binding.fragmentMapsBackBtn.setOnClickListener(View.OnClickListener { resetBookingFlow() })
+        binding.fragmentMapsBackBtn.setOnClickListener { resetBookingFlow() }
     }
 
     /**
@@ -135,7 +132,7 @@ class BookingFragment : Fragment(),
         //Go back to the picking drop-off place step
 //        loadPickupPlacePickerFragment()
         //Hide back btn
-        binding.fragmentMapsBackBtn.setVisibility(View.GONE)
+        binding.fragmentMapsBackBtn.visibility = View.GONE
     }
 
     /**
@@ -147,15 +144,10 @@ class BookingFragment : Fragment(),
             currentPickupLocationMarker!!.remove()
             currentPickupLocationMarker = null
         }
-
         //Clear drop-off markers if exists
         if (currentDropOffLocationMarker != null) {
             currentDropOffLocationMarker!!.remove()
             currentDropOffLocationMarker = null
-        }
-        if (currentDriverLocationMarker != null) {
-            currentDriverLocationMarker!!.remove()
-            currentDriverLocationMarker = null
         }
     }
 
@@ -174,7 +166,7 @@ class BookingFragment : Fragment(),
     private fun drawDropOffAndPickupMarkers() {
         currentPickupLocationMarker = mMap!!.addMarker(
             MarkerOptions()
-                .position(Objects.requireNonNull<LatLng>(customerPickupPlace!!.latLng))
+                .position(Objects.requireNonNull<LatLng>(LatLng(customerPickupPlace!!.lat,customerPickupPlace!!.long)))
                 .icon(
                     bitmapDescriptorFromVector(
                         activity,
@@ -185,22 +177,22 @@ class BookingFragment : Fragment(),
         )
         currentDropOffLocationMarker = mMap!!.addMarker(
             MarkerOptions()
-                .position(customerDropOffPlace!!.latLng)
+                .position(LatLng(customerDropOffPlace!!.lat,customerDropOffPlace!!.long))
                 .icon(
                     bitmapDescriptorFromVector(
                         activity,
                         R.drawable.ic_location_red, Color.RED
                     )
                 )
-                .title(customerDropOffPlace!!.getAddress())
+                .title(customerDropOffPlace!!.address)
         )
         currentPickupLocationMarker!!.showInfoWindow()
         currentDropOffLocationMarker!!.showInfoWindow()
 
         //Smoothly move camera to include 2 points in the map
         val latLngBounds: LatLngBounds.Builder = LatLngBounds.Builder()
-        customerDropOffPlace!!.latLng?.let { latLngBounds.include(it) }
-        customerPickupPlace!!.latLng?.let { latLngBounds.include(it) }
+        LatLng(customerDropOffPlace!!.lat,customerDropOffPlace!!.long)?.let { latLngBounds.include(it) }
+        LatLng(customerPickupPlace!!.lat,customerPickupPlace!!.long)?.let { latLngBounds.include(it) }
         mMap!!.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 200))
     }
 
@@ -210,13 +202,9 @@ class BookingFragment : Fragment(),
     private fun drawRouteFromPickupToDropOff() {
         // Checks, whether start and end locations are captured
         // Getting URL to the Google Directions API
-        val url = customerPickupPlace!!.latLng?.let {
-            customerDropOffPlace!!.latLng?.let { it1 ->
-                getRouteUrl(
-                    it,
-                    it1,
-                    "driving"
-                )
+        val url = LatLng(customerPickupPlace!!.lat,customerPickupPlace!!.long)?.let {
+            LatLng(customerDropOffPlace!!.lat,customerDropOffPlace!!.long)?.let { it1 ->
+                getRouteUrl(it, it1, "driving")
             }
         }
         val fetchRouteDataTask = FetchRouteDataTask()
@@ -227,10 +215,10 @@ class BookingFragment : Fragment(),
 
 
     /**
-     * //Find My location Button listener
+     * Find My location Button listener
      */
     private fun setGetMyLocationBtnHandler() {
-        binding.fragmentMapsFindMyLocationBtn.setOnClickListener(View.OnClickListener { onGetPositionClick() })
+        binding.fragmentMapsFindMyLocationBtn.setOnClickListener { onGetPositionClick() }
     }
 
     /**
@@ -253,7 +241,7 @@ class BookingFragment : Fragment(),
      */
     @SuppressLint("MissingPermission")
     fun onGetPositionClick() {
-        locationClient!!.getLastLocation()
+        locationClient!!.lastLocation
             .addOnSuccessListener(object : OnSuccessListener<Location?> {
                 override fun onSuccess(p0: Location?) {
                     if (p0 == null) {
@@ -321,12 +309,12 @@ class BookingFragment : Fragment(),
         vectorDrawable.setBounds(
             0,
             0,
-            vectorDrawable.getIntrinsicWidth(),
-            vectorDrawable.getIntrinsicHeight()
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight
         )
         val bitmap = Bitmap.createBitmap(
-            vectorDrawable.getIntrinsicWidth(),
-            vectorDrawable.getIntrinsicHeight(),
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight,
             Bitmap.Config.ARGB_8888
         )
         val canvas = Canvas(bitmap)
@@ -440,13 +428,10 @@ class BookingFragment : Fragment(),
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         //Action handler when customer's chosen drop off place is selected
-
-
-        //Action handler when customer's chosen drop off place is selected
-        mViewModel!!.getCustomerSelectedDropOffPlace()
+        mViewModel!!.customerSelectedDropOffPlace
             .observe(viewLifecycleOwner, Observer<Any?> { place ->
                 if (place == null) return@Observer
-                customerDropOffPlace = place as Place?
+                customerDropOffPlace = place as PlaceDetails?
 
                 if (currentUserLocation != null) {
                     smoothlyMoveCameraToPosition(
@@ -454,40 +439,26 @@ class BookingFragment : Fragment(),
                         UtilsConstants.GoogleMaps.CameraZoomLevel.betweenStreetsAndBuildings
                     )
                 }
-                //TODO Draw 2 pickup/drop-off markers
 
                 if (customerDropOffPlace != null && customerPickupPlace != null) {
-                    //TODO load checkout fragment
                     loadCheckoutFragment()
-
                     drawDropOffAndPickupMarkers()
-
-                    //TODO Draw route from pickup place to drop-off place
                     drawRouteFromPickupToDropOff()
                 }
             })
 
-        mViewModel!!.getCustomerSelectedPickupPlace()
+        mViewModel!!.customerSelectedPickupPlace
             .observe(viewLifecycleOwner, Observer<Any?> { place ->
                 if (place == null) return@Observer
-                customerPickupPlace = place as Place?
-
-//                binding.edtSource.text = (place?.toString() ?: "") as Editable?
-
-                //TODO Draw 2 pickup/drop-off markers
-
+                customerPickupPlace = place as PlaceDetails?
                 if (customerDropOffPlace != null && customerPickupPlace != null) {
-                    //TODO load checkout fragment
                     loadCheckoutFragment()
-
                     drawDropOffAndPickupMarkers()
-
-                    //TODO Draw route from pickup place to drop-off place
                     drawRouteFromPickupToDropOff()
                 }
             })
 
-        mViewModel!!.getTransportationType()!!
+        mViewModel!!.transportationType!!
             .observe(viewLifecycleOwner, Observer<String?> { s ->
                 if (s == null) return@Observer
                 transportationType = s
@@ -496,7 +467,7 @@ class BookingFragment : Fragment(),
         //*********************** For booking synchronization between user and driver flow *********************** //
 
         //Book btn pressed
-        mViewModel!!.getBookBtnPressed()!!
+        mViewModel!!.bookBtnPressed!!
             .observe(viewLifecycleOwner, Observer<Boolean?> { aBoolean ->
                 if (aBoolean == null) return@Observer
                 binding.fragmentMapsBackBtn.setVisibility(View.GONE)
@@ -507,7 +478,7 @@ class BookingFragment : Fragment(),
             })
 
         //Cancel booking btn pressed
-        mViewModel!!.getCancelBookingBtnPressed()
+        mViewModel!!.cancelBookingBtnPressed
             ?.observe(viewLifecycleOwner, Observer<Boolean?> { aBoolean ->
                 if (aBoolean == null) return@Observer
 //                resetBookingFlow()
@@ -532,14 +503,14 @@ class BookingFragment : Fragment(),
         val data: MutableMap<String, Any?> = HashMap()
         data[UtilsConstants.FSBooking.pickupPlaceAddress] = customerPickupPlace!!.address
         data[UtilsConstants.FSBooking.pickUpPlaceLatitude] =
-            customerPickupPlace!!.latLng.latitude
+            customerPickupPlace!!.lat
         data[UtilsConstants.FSBooking.pickUpPlaceLongitude] =
-            customerPickupPlace!!.latLng.longitude
+            customerPickupPlace!!.long
         data[UtilsConstants.FSBooking.dropOffPlaceAddress] = customerDropOffPlace!!.address
         data[UtilsConstants.FSBooking.dropOffPlaceLatitude] =
-            customerDropOffPlace!!.latLng.latitude
+            customerDropOffPlace!!.lat
         data[UtilsConstants.FSBooking.dropOffPlaceLongitude] =
-            customerDropOffPlace!!.latLng.longitude
+            customerDropOffPlace!!.long
         data[UtilsConstants.FSBooking.distanceInKm] = distanceInKmString
         data[UtilsConstants.FSBooking.priceInVND] = priceInVNDString
         data[UtilsConstants.FSBooking.transportationType] = transportationType
@@ -673,6 +644,7 @@ class BookingFragment : Fragment(),
             data = sb.toString()
             br.close()
         } catch (e: Exception) {
+            Timber.tag("TAG").e("Exception occur at fetchDataFromURL " + e.message)
         } finally {
             iStream!!.close()
             urlConnection!!.disconnect()

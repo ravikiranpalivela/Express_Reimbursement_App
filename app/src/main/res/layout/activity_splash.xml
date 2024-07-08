@@ -17,6 +17,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/widget_size_8"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:progress="100"
+        android:visibility="visible"
+        android:progressDrawable="@drawable/my_progress_bar"
+        app:layout_constraintEnd_toEndOf="@+id/appCompatImageView"
+        app:layout_constraintStart_toStartOf="@+id/appCompatImageView"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatImageView"
+        />
 
     <TextView
         android:id="@+id/tvToolbarTitle"
@@ -30,6 +44,6 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appCompatImageView" />
+        app:layout_constraintTop_toBottomOf="@+id/progress" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

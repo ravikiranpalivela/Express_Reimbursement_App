@@ -7,7 +7,6 @@ import com.tekskills.er_tekskills.utils.Common.Companion.PREF_ROLE_TYPE
 import com.tekskills.er_tekskills.utils.Common.Companion.PREF_TOKEN
 import com.tekskills.er_tekskills.utils.Common.Companion.PREF_TOKEN_DATA
 
-
 class SharedPrefManager private constructor(private val mCtx: Context) {
 
     val sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)

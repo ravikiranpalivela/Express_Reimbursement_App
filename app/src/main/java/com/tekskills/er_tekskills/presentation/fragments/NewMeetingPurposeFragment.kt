@@ -1,6 +1,7 @@
 package com.tekskills.er_tekskills.presentation.fragments
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -31,17 +32,23 @@ import com.tekskills.er_tekskills.R
 import com.tekskills.er_tekskills.data.model.AddMeetingRequest
 import com.tekskills.er_tekskills.data.model.ClientNamesResponseItem
 import com.tekskills.er_tekskills.data.model.LeadNamesResponseItem
+import com.tekskills.er_tekskills.data.model.PlaceDetails
 import com.tekskills.er_tekskills.data.model.UserCoordinates
 import com.tekskills.er_tekskills.data.util.Constants
 import com.tekskills.er_tekskills.data.util.DateToString
 import com.tekskills.er_tekskills.data.util.DateToString.Companion.convertDateTimeToString
 import com.tekskills.er_tekskills.data.util.DateToString.Companion.convertDateToString
 import com.tekskills.er_tekskills.databinding.FragmentPurposeMeetingBinding
+import com.tekskills.er_tekskills.presentation.activities.LocationPickerActivity
 import com.tekskills.er_tekskills.presentation.activities.MainActivity
 import com.tekskills.er_tekskills.presentation.view.spinner.SearchableSpinner
 import com.tekskills.er_tekskills.presentation.viewmodel.MainActivityViewModel
+import com.tekskills.er_tekskills.utils.AppUtil.getPlaceDetails
+import com.tekskills.er_tekskills.utils.MapUtility
 import com.tekskills.er_tekskills.utils.RestApiStatus
+import com.tekskills.er_tekskills.utils.SuccessResource
 import com.tekskills.er_tekskills.utils.UtilsConstants
+import timber.log.Timber
 import java.util.Calendar
 import java.util.Date
 
@@ -51,19 +58,16 @@ class NewMeetingPurposeFragment : Fragment()
     private lateinit var binding: FragmentPurposeMeetingBinding
     private lateinit var navController: NavController
     private val args: NewMeetingPurposeFragmentArgs by navArgs()
-
     private lateinit var viewModel: MainActivityViewModel
     var meetingDate: Date = Date(Constants.MAX_TIMESTAMP)
-
     private var mClientNames = ArrayList<ClientNamesResponseItem>()
     private var selectClientPos: Int = 0
-
     private var mLeadNames = ArrayList<LeadNamesResponseItem>()
     private var selectLeadPos: Int = 0
 
     //Booking info
-    var customerDropOffPlace: Place? = null
-    var customerPickupPlace: Place? = null
+    var customerDropOffPlace: PlaceDetails? = null
+    var customerPickupPlace: PlaceDetails? = null
     var transportationType: String? = null
     var distanceInKm: Double? = null
 
@@ -80,14 +84,18 @@ class NewMeetingPurposeFragment : Fragment()
     private var mModeType: ArrayList<String> = arrayListOf(
         "Bike", "Car", "Bus", "Train", "Flight"
     )
+    private var validated: Boolean = false
+
+    val SOURCE_ADDRESS_PICKER_REQUEST: Int = 1020
+    val DESC_ADDRESS_PICKER_REQUEST: Int = 2020
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_purpose_meeting,
+            inflater, R.layout.fragment_purpose_meeting,
             container,
             false
         )
@@ -99,7 +107,7 @@ class NewMeetingPurposeFragment : Fragment()
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
         navController = findNavController()
-
+        viewModel._resNewMeetingPurpose.postValue(SuccessResource.loading(null))
         viewModel.getClientNameList()
         viewModel.getEmployeeAllowences()
 
@@ -119,7 +127,10 @@ class NewMeetingPurposeFragment : Fragment()
                     binding.progress.visibility = GONE
                     if (it.data != null)
                         it.data.let { res ->
-                            requireActivity().onBackPressed()
+                            if (validated) {
+                                validated = false
+                                requireActivity().onBackPressed()
+                            }
                         }
                     else {
                         Snackbar.make(
@@ -411,18 +422,16 @@ class NewMeetingPurposeFragment : Fragment()
                 customerPhone = if (selectLeadPos > 0) "" else binding.edtContactNo.text.toString(),
                 customerEmail = if (selectLeadPos > 0) "" else binding.edtEmailId.text.toString(),
                 customerContactName = if (selectClientPos > 0) "" else binding.edtContactName.text.toString(),
-
                 opportunity = binding.edtOpportunity.text.toString(),
                 employeeId = viewModel.getUserEmployeeID().toInt(),
                 userCoordinates = userCoordinationData!!
             )
 
             Log.d("TAG", "saveMeeting: request ${visitData.toString()}")
-
+            validated = true
             viewModel.addMeetingPurpose(visitData)
         } catch (e: Exception) {
             Log.d("TAG", "saveMeeting: request ${e.message.toString()}")
-
         }
     }
 
@@ -453,6 +462,33 @@ class NewMeetingPurposeFragment : Fragment()
             )
         )
         sourceAutocompleteFragment!!.setHint("Add source location")
+
+
+        binding.addSourceLocationMap.setOnClickListener {
+            val intent = Intent(requireActivity(), LocationPickerActivity::class.java)
+            startActivityForResult(
+                intent, SOURCE_ADDRESS_PICKER_REQUEST
+            )
+        }
+        binding.addSourceLocation.setOnClickListener {
+            val intent = Intent(requireActivity(), LocationPickerActivity::class.java)
+            startActivityForResult(
+                intent, SOURCE_ADDRESS_PICKER_REQUEST
+            )
+        }
+
+        binding.addDestinationLocation.setOnClickListener {
+            val intent = Intent(requireActivity(), LocationPickerActivity::class.java)
+            startActivityForResult(
+                intent, DESC_ADDRESS_PICKER_REQUEST
+            )
+        }
+        binding.addDestinationLocationMap.setOnClickListener {
+            val intent = Intent(requireActivity(), LocationPickerActivity::class.java)
+            startActivityForResult(
+                intent, DESC_ADDRESS_PICKER_REQUEST
+            )
+        }
     }
 
     private fun setPlaceSourceSelectedActionHandler() {
@@ -461,7 +497,7 @@ class NewMeetingPurposeFragment : Fragment()
 
                 if (place == null) return
 
-                viewModel.setCustomerSelectedPickupPlace(place)
+//                viewModel.setCustomerSelectedPickupPlace(place)
             }
 
             override fun onError(status: Status) {
@@ -508,7 +544,7 @@ class NewMeetingPurposeFragment : Fragment()
             PlaceSelectionListener {
             override fun onPlaceSelected(place: Place) {
                 if (place == null) return
-                viewModel.setCustomerSelectedDropOffPlace(place)
+//                viewModel.setCustomerSelectedDropOffPlace(place)
             }
 
             override fun onError(status: Status) {
@@ -531,7 +567,7 @@ class NewMeetingPurposeFragment : Fragment()
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         try {
-            viewModel.getDistanceInKmString()!!
+            viewModel.distanceInKmString!!
                 .observe(viewLifecycleOwner, Observer<Double?> { s ->
                     if (s == null) return@Observer
                     binding.distanceLocation.text = "${s}Km"
@@ -539,24 +575,24 @@ class NewMeetingPurposeFragment : Fragment()
                     addingUserCoordinates()
 //                setCheckoutInfo()
                 })
-            viewModel.getDropOffPlaceString()!!.observe(
+            viewModel.dropOffPlaceAddress!!.observe(
                 viewLifecycleOwner
             ) { s -> binding.addDestinationLocation!!.text = s }
 
-            viewModel.getPickupPlaceString()!!.observe(
+            viewModel.pickupPlaceAddress!!.observe(
                 viewLifecycleOwner
             ) { s -> binding.addSourceLocation!!.text = s }
 
-            viewModel.getCustomerSelectedDropOffPlace()
+            viewModel.customerSelectedDropOffPlace
                 .observe(viewLifecycleOwner, Observer<Any?> { place ->
                     if (place == null) return@Observer
-                    customerDropOffPlace = place as Place?
+                    customerDropOffPlace = place as PlaceDetails?
                 })
 
-            viewModel!!.getCustomerSelectedPickupPlace()
+            viewModel!!.customerSelectedPickupPlace
                 .observe(viewLifecycleOwner, Observer<Any?> { place ->
                     if (place == null) return@Observer
-                    customerPickupPlace = place as Place?
+                    customerPickupPlace = place as PlaceDetails?
 
                     if (customerDropOffPlace != null && customerPickupPlace != null) {
 //                        addingUserCoordinates()
@@ -564,20 +600,101 @@ class NewMeetingPurposeFragment : Fragment()
                 })
 
         } catch (e: NullPointerException) {
-            Log.e("TAG", "onActivityCreated: ${e.message}", e)
+            Timber.tag("TAG").e(e, "onActivityCreated: " + e.message)
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SOURCE_ADDRESS_PICKER_REQUEST) {
+            try {
+                if (data?.getStringExtra(MapUtility.ADDRESS) != null) {
+                    val address = data.getStringExtra(MapUtility.ADDRESS);
+                    val currentLatitude = data.getDoubleExtra(MapUtility.LATITUDE, 0.0)
+                    val currentLongitude = data.getDoubleExtra(MapUtility.LONGITUDE, 0.0)
+                    val name = data.getStringExtra(MapUtility.NAME)
+//                    if(placeID!!.trim().isNotEmpty())
+//                    {
+                    binding.addSourceLocation.text = name
+
+                    getPlaceDetails(
+                        name?:"",
+                        currentLatitude,
+                        currentLongitude,
+                        address!!
+                    ) { place ->
+                        if (place != null) {
+                            viewModel.setCustomerSelectedPickupPlace(place)
+                            Timber.tag("Place Details")
+                                .i("Name: " + place.lat + ", Address: " + place.address)
+                        } else {
+                            viewModel.setCustomerSelectedPickupPlace(null)
+                            // Handle the case where no place was found
+                            Timber.tag("Place Details").e("No place found for the given location")
+                        }
+                    }
+//                    }
+                }
+                else
+                {
+                    binding.addSourceLocation.text = ""
+                }
+            } catch (ex: Exception) {
+                binding.addSourceLocation.text = ""
+                Timber.tag("TAG").e("exception at activity Result $ex")
+            }
+        }
+
+        if (requestCode == DESC_ADDRESS_PICKER_REQUEST) {
+            try {
+                if (data?.getStringExtra(MapUtility.ADDRESS) != null) {
+                    var address = data.getStringExtra(MapUtility.ADDRESS);
+                    val currentLatitude = data.getDoubleExtra(MapUtility.LATITUDE, 0.0)
+                    val currentLongitude = data.getDoubleExtra(MapUtility.LONGITUDE, 0.0)
+                    val name = data.getStringExtra(MapUtility.NAME)
+//                    if(placeID!!.trim().isNotEmpty())
+//                    {
+                    binding.addDestinationLocation.text = name
+                    getPlaceDetails(
+                        name?:"",
+                        currentLatitude,
+                        currentLongitude,
+                        address!!
+                    ) { place ->
+                        if (place != null) {
+                            viewModel.setCustomerSelectedDropOffPlace(place)
+//                                Log.i("Place Details", "Name: ${place.name}, Address: ${place.address}")
+                        } else {
+                            viewModel.setCustomerSelectedDropOffPlace(null)
+                            // Handle the case where no place was found
+//                                Log.e("Place Details", "No place found for the given location")
+                        }
+                    }
+//                    }
+
+                }
+                else
+                {
+                    binding.addDestinationLocation.text = ""
+                }
+            } catch (ex: Exception) {
+                binding.addDestinationLocation.text = ""
+                Timber.tag("TAG").e("exception at activity Result " + ex)
+            }
+        }
+    }
+
 
     /**
      * Adding User Coordinates
      */
     private fun addingUserCoordinates() {
         userCoordinationData = UserCoordinates(
-            sourceLatitude = customerPickupPlace!!.latLng!!.latitude.toString(),
-            sourceLongitude = customerPickupPlace!!.latLng!!.longitude.toString(),
+            sourceLatitude = customerPickupPlace!!.lat.toString(),
+            sourceLongitude = customerPickupPlace!!.long.toString(),
             source = "${customerPickupPlace!!.name!!}\n${customerPickupPlace!!.address!!}",
-            destinationLatitude = customerDropOffPlace!!.latLng!!.latitude.toString(),
-            destinationLongitude = customerDropOffPlace!!.latLng!!.longitude.toString(),
+            destinationLatitude = customerDropOffPlace!!.lat.toString(),
+            destinationLongitude = customerDropOffPlace!!.long.toString(),
             destination = "${customerDropOffPlace!!.name!!}\n${customerDropOffPlace!!.address!!}",
             totalDistance = distanceInKm!!,
             checkInTime = "",

@@ -31,6 +31,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <ProgressBar
+                    android:id="@+id/progress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/widget_size_8"
+                    android:layout_centerInParent="true"
+                    android:indeterminate="true"
+                    android:progress="100"
+                    android:visibility="gone"
+                    android:layout_marginHorizontal="@dimen/widget_size_10"
+                    android:progressDrawable="@drawable/my_progress_bar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/relativeLayout"
                     android:layout_width="match_parent"
@@ -39,7 +55,7 @@
                     android:padding="@dimen/_4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/progress">
 
                     <com.google.android.material.checkbox.MaterialCheckBox
                         android:id="@+id/isCompleted"
@@ -609,7 +625,7 @@
                             android:layout_margin="@dimen/_4dp"
                             android:background="@drawable/ic_edit_item"
                             android:backgroundTint="@color/black"
-                            android:visibility="visible"
+                            android:visibility="invisible"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/ll_status" />
 
@@ -1359,19 +1375,6 @@
                     <!--                    app:lottie_rawRes="@raw/noresultanim" />-->
 
                 </LinearLayout>
-
-                <ProgressBar
-                    android:id="@+id/progress"
-                    style="?android:attr/progressBarStyleSmallTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:visibility="visible" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 

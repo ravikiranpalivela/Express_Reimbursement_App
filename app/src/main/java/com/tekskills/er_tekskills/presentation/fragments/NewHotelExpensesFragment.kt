@@ -8,20 +8,16 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.DatePicker
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -37,6 +33,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.tekskills.er_tekskills.R
 import com.tekskills.er_tekskills.data.model.AddHotelExpenceRequest
+import com.tekskills.er_tekskills.data.model.MeetingPurposeResponseData
 import com.tekskills.er_tekskills.data.util.Constants
 import com.tekskills.er_tekskills.data.util.DateToString
 import com.tekskills.er_tekskills.data.util.DateToString.Companion.calculateDaysBetweenDates
@@ -48,10 +45,8 @@ import com.tekskills.er_tekskills.presentation.viewmodel.MainActivityViewModel
 import com.tekskills.er_tekskills.utils.AppUtil.showSnackBar
 import com.tekskills.er_tekskills.utils.FileCompressor
 import com.tekskills.er_tekskills.utils.RestApiStatus
-import com.tekskills.er_tekskills.utils.SmartDialog
-import com.tekskills.er_tekskills.utils.SmartDialogBuilder
-import com.tekskills.er_tekskills.utils.SmartDialogClickListener
 import com.tekskills.er_tekskills.utils.SuccessResource
+import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -65,7 +60,6 @@ class NewHotelExpensesFragment : Fragment() {
 
     private lateinit var binding: FragmentNewHotelExpensesBinding
     private lateinit var viewModel: MainActivityViewModel
-
     private lateinit var addImageAdapter: AddImageAdapter
     private lateinit var fileCompressor: FileCompressor
     private lateinit var fileImage: File
@@ -74,10 +68,10 @@ class NewHotelExpensesFragment : Fragment() {
     private var selectedSelectImage: Int = 0
     private val listSelectImage = arrayOf("Take Photo", "Choose from Gallery")
     private var validated: Boolean = false
-
     private var purposeID: String = ""
     private val args: NewHotelExpensesFragmentArgs by navArgs()
     var hotelDate: Date = Date(Constants.MAX_TIMESTAMP)
+    var meetingDetails: MeetingPurposeResponseData? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -100,6 +94,7 @@ class NewHotelExpensesFragment : Fragment() {
         purposeID = args.opportunityID
         showSnackBar(binding.root)
         viewModel._resAddHotelExpence.postValue(SuccessResource.loading(null))
+        viewModel._resMeetingPurposeIDItems.postValue(SuccessResource.loading(null))
         viewModel.resMeetingPurposeIDItems.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer {
@@ -109,6 +104,7 @@ class NewHotelExpensesFragment : Fragment() {
                         if (it.data != null) {
                             it.data.let { list ->
                                 binding.taskCategoryInfo = list
+                                meetingDetails = list
 
                                 binding.priority.text = if (list.status == "Active")
                                     "Active" else "InActive"
@@ -157,7 +153,10 @@ class NewHotelExpensesFragment : Fragment() {
                     binding.progress.visibility = View.GONE
                     if (it.data != null)
                         it.data.let { res ->
-                            requireActivity().onBackPressed()
+                            if(validated) {
+                                validated = false
+                                requireActivity().onBackPressed()
+                            }
 //                            val intent = Intent(requireActivity(), MainActivity::class.java)
 //                            startActivity(intent)
 //                            requireActivity().finish()
@@ -188,6 +187,7 @@ class NewHotelExpensesFragment : Fragment() {
                 }
             }
         })
+
         initAdapter()
 
         binding.apply {
@@ -215,6 +215,8 @@ class NewHotelExpensesFragment : Fragment() {
             if (isChecked) {
                 binding.llRoundTripDetails.visibility = View.VISIBLE
             } else {
+                hotelDate = Date(Constants.MAX_TIMESTAMP)
+                binding.tvReturnHotelDate.setText("")
                 binding.llRoundTripDetails.visibility = View.GONE
             }
         })
@@ -222,7 +224,7 @@ class NewHotelExpensesFragment : Fragment() {
         binding.btnSave.setOnClickListener {
             if (isValidate()) {
 
-                Log.d("TAG", "onViewCreated: validated successfully")
+                Timber.d("onViewCreated: validated successfully")
 
 //                if (binding.edtHotelExpenses.text.toString().toDouble() >
 //                    binding.taskCategoryInfo!!.allowncesLimit.hotelLimit.toString()
@@ -277,7 +279,6 @@ class NewHotelExpensesFragment : Fragment() {
 //                    viewModel.addHotelExpense(hotelExpense, listImage)
 //                }
 
-
 //                viewModel.addProject(
 //                    binding.edtFromLoc.text.toString(),
 //                    selectMOTPos.toString(),
@@ -289,62 +290,47 @@ class NewHotelExpensesFragment : Fragment() {
             }
         }
 
-        binding.ivAddFile.setOnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-//                    putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*", "video/*"))
-                type = "*/*"
-            }
-            pdfLauncher.launch(intent)
-//            documentPick.launch(
-//                arrayOf(
-//                    "application/pdf",
-//                    "application/msword",
-//                    "application/ms-doc",
-//                    "application/doc",
-//                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-//                    "text/plain"
-//                )
-//            )
-        }
     }
 
     fun addHotelExpenseDetails() {
 
         try {
-            val hotelFromDate = DateToString.convertDateStringToNormalFormat(
-                binding.bookDate.text.toString()
-            )
+            meetingDetails?.let {meeting->
+                val hotelFromDate = DateToString.convertDateStringToNormalFormat(
+                    meeting.visitDate
+                )
 
-            val returnDate: String = if (binding.chkRoundTrip.isChecked) {
-                DateToString.convertDateToString(hotelDate)
-            } else {
-                ""
-            }
-
-            val noOfDays: String = if (binding.chkRoundTrip.isChecked) {
-                calculateDaysBetweenDates(
-                    hotelFromDate,
+                val returnDate: String = if (binding.chkRoundTrip.isChecked) {
                     DateToString.convertDateToString(hotelDate)
-                ).toString()
-            } else
-                "1"
+                } else {
+                    ""
+                }
 
+                val noOfDays: String = if (binding.chkRoundTrip.isChecked) {
+                    calculateDaysBetweenDates(
+                        hotelFromDate,
+                        DateToString.convertDateToString(hotelDate)
+                    ).toString()
+                } else
+                    "1"
 
-            val hotelExpense = AddHotelExpenceRequest(
-                purposeId = purposeID.toInt(),
-                location = binding.hotelLoc.text.toString(),
-                hotelFromDate = hotelFromDate,
-                hotelToDate = returnDate,
-                noOfDays = noOfDays,
-                hotelAmount = binding.edtHotelExpenses.text.toString()
-                    .toDouble(),
+                val hotelExpense = AddHotelExpenceRequest(
+                    purposeId = purposeID.toInt(),
+                    location = binding.hotelLoc.text.toString(),
+                    hotelFromDate = hotelFromDate,
+                    hotelToDate = returnDate,
+                    noOfDays = noOfDays,
+                    hotelAmount = binding.edtHotelExpenses.text.toString()
+                        .toDouble(),
 //                    noOfDays = binding.edtNoOfDays.text.toString(),
-                expensesUser = "Hotel",
-            )
-            validated = true
-            viewModel.addHotelExpense(hotelExpense, listImage)
+                    expensesUser = "Hotel",
+                )
+                validated = true
+                viewModel.addHotelExpense(hotelExpense, listImage)
+
+            }
         } catch (e: Exception) {
-            Log.d("TAG", "addHotelExpenseDetails: ${e.message}")
+            Timber.d("addHotelExpenseDetails: " + e.message)
         }
     }
 
@@ -559,7 +545,7 @@ class NewHotelExpensesFragment : Fragment() {
 
     private fun showDateTimePicker() {
 
-        val date = binding.taskCategoryInfo!!.visitDate
+        val date = meetingDetails!!.visitDate
 //        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
 //        val dateString = convertStringToDateformat(date)
         val myCal: Calendar = GregorianCalendar()
@@ -593,7 +579,7 @@ class NewHotelExpensesFragment : Fragment() {
 
 
     private fun showToDatePicker() {
-        val date = binding.taskCategoryInfo!!.visitDate
+        val date = meetingDetails!!.visitDate
 //        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
 //        val dateString = convertStringToDateformat(date)
         val myCal: Calendar = GregorianCalendar()
@@ -806,28 +792,6 @@ class NewHotelExpensesFragment : Fragment() {
         }
         return true
     }
-
-
-    private val pdfLauncher: ActivityResultLauncher<Intent> =
-        if (activity != null) {
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK && result?.data?.data != null) {
-                    result.data?.data?.let {
-                        viewModel.file =
-                            requireContext().contentResolver.openInputStream(it)?.readBytes()
-                    }
-                }
-            }
-        } else {
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK && result?.data?.data != null) {
-                    result.data?.data?.let {
-                        viewModel.file =
-                            requireContext().contentResolver.openInputStream(it)?.readBytes()
-                    }
-                }
-            }
-        }
 
     companion object {
         private const val REQUEST_TAKE_PHOTO = 1

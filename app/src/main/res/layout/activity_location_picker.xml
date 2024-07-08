@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--    <androidx.core.widget.NestedScrollView-->
+    <!--        android:id="@+id/cl_login_main"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:gravity="center"-->
+    <!--        android:orientation="vertical"-->
+    <!--        android:background="#EBFAFE"-->
+    <!--        tools:context=".activities.LoginActivity">-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+
+        <TextView
+            android:id="@+id/imgSearch"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/app_bar_height"
+            android:layout_margin="@dimen/widget_size_4"
+            android:background="@drawable/white_rounded_corner"
+            android:drawableStart="@drawable/ic_pointer"
+            android:drawableEnd="@drawable/ic_search_black_24dp"
+            android:drawablePadding="5dp"
+            android:gravity="start|center_vertical"
+            android:hint="Search Location"
+            android:maxLines="1"
+            android:padding="@dimen/widget_size_4"
+            android:textColorHint="@color/colorPrimary"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/font_size_18" />
+
+        <ImageView
+            android:id="@+id/imgCurrentloc"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/imgSearch"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/white_rounded_corner"
+            android:contentDescription="Search Location"
+            android:padding="4dp"
+            app:srcCompat="@drawable/ic_my_location_black_24dp" />
+
+
+        <LinearLayout
+            android:id="@+id/input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="6dp"
+            android:background="@drawable/white_rounded_corner"
+            android:orientation="vertical"
+            android:padding="@dimen/widget_size_4">
+
+            <TextView
+                android:id="@+id/addressline1"
+                style="@style/stlTxtHeading"
+                android:layout_width="wrap_content"
+                android:layout_gravity="left"
+                android:hint="@string/addressline1_hint"
+                android:textSize="@dimen/font_size_14" />
+
+            <TextView
+                android:id="@+id/addressline2"
+                style="@style/stlTxtSubHeading"
+                android:layout_gravity="left"
+                android:layout_margin="@dimen/widget_size_4"
+                android:paddingHorizontal="@dimen/widget_size_4"
+                android:paddingVertical="@dimen/widget_size_2"
+                android:hint="location"
+                android:lines="3"
+                android:minLines="1"
+                android:textSize="@dimen/font_size_16" />
+
+            <TextView
+                android:id="@+id/citydetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/widget_size_4"
+                android:text="city pincode state"
+                android:textColor="@color/quantum_grey600"
+                android:textSize="@dimen/font_size_16"
+                android:visibility="gone" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/fab_select_location"
+                android:layout_width="@dimen/widget_size_100"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/widget_size_2"
+                android:background="@drawable/btn_background"
+                android:drawableEnd="@drawable/ic_arrow_right"
+                android:padding="@dimen/widget_size_2"
+                android:text="Submit"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/direction_tool"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_above="@+id/input_layout"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="4dp"
+            android:layout_toLeftOf="@+id/google_maps_tool"
+            android:background="#9FFFFFFF"
+            android:contentDescription="directions"
+            android:padding="8dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_directions_blue_24dp" />
+
+        <ImageView
+            android:id="@+id/google_maps_tool"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_above="@+id/input_layout"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="4dp"
+            android:background="#9FFFFFFF"
+            android:contentDescription="google_map"
+            android:padding="8dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_google_maps" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="38dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_done_white_24dp" />
+
+    </RelativeLayout>
+</layout>

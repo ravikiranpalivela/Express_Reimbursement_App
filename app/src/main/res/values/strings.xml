@@ -28,7 +28,8 @@
     <string name="edt_opportunity_desc">Opportunity Description</string>
     <string name="status">Status</string>
     <string name="submit">Submit</string>
-
+    <string name="addressline1_hint">Address:</string>
+    <string name="edittext_hint">"Click here to edit address location"</string>
 
     <!--Login and Registration-->
     <string name="username">Username</string>
@@ -234,6 +235,9 @@
     <string name="dialog_rationale_coarse_location">We need GPS Location in background so that we can guide you when you are at that locations</string>
     <string name="button_allow">Allow</string>
     <string name="button_reject">Reject</string>
+    <string name="notification_check_in">Check-IN</string>
+    <string name="show_location_picker">Show Location Picker</string>
+    <string name="comming_soon">Coming Soon...</string>
 
     <string-array name="mode_of_travel_options">
         <item>Train</item>

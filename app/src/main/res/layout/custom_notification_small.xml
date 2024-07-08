@@ -53,8 +53,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:text="Check-IN"
+            android:text="@string/notification_check_in"
             android:textSize="@dimen/font_size_16"
+            android:background="@drawable/spinner_edit_bg"
             app:drawableEndCompat="@drawable/ic_arrow_right"
             app:drawableTint="@color/black" />
 

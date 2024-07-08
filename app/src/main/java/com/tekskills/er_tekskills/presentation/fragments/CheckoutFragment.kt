@@ -76,24 +76,24 @@ class CheckoutFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         //Get customer currently chosen transportation type
-        mViewModel!!.getTransportationType()!!.observe(viewLifecycleOwner, Observer<String?> { s ->
+        mViewModel!!.transportationType!!.observe(viewLifecycleOwner, Observer<String?> { s ->
             if (s == null) return@Observer
             transportationType = s
         })
-        mViewModel!!.getDistanceInKmString()!!.observe(viewLifecycleOwner, Observer<Double?> { s ->
+        mViewModel!!.distanceInKmString!!.observe(viewLifecycleOwner, Observer<Double?> { s ->
             if (s == null) return@Observer
             distanceInKmString = s.toString()
             setCheckoutInfo()
         })
-        mViewModel!!.getPriceInVNDString()!!.observe(viewLifecycleOwner, Observer<String?> { s ->
+        mViewModel!!.priceInVNDString!!.observe(viewLifecycleOwner, Observer<String?> { s ->
             if (s == null) return@Observer
             priceInVNDString = s
         })
-        mViewModel!!.getCustomerSelectedDropOffPlace().observe(
+        mViewModel!!.customerSelectedDropOffPlace.observe(
             viewLifecycleOwner
         ) { s -> destinationTextView!!.text = s!!.address?.toString() ?: "" }
 
-        mViewModel!!.getCustomerSelectedPickupPlace().observe(
+        mViewModel!!.customerSelectedPickupPlace.observe(
             viewLifecycleOwner
         ) { s -> originTextView!!.text = s!!.address?.toString() ?: "" }
     }

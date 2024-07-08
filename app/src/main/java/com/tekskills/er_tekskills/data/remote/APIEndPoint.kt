@@ -52,7 +52,5 @@ class APIEndPoint {
         const val PUT_CHECK_IN = "api/purpose/check-in"
         const val PUT_CHECK_OUT = "api/purpose/check-out"
         const val POST_ADD_COMMENT = "api/crm/save-comment"
-
-
     }
 }

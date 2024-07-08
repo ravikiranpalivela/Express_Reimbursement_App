@@ -5,9 +5,15 @@ import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -26,6 +32,7 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER
 import com.google.android.gms.location.LocationResult
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.tekskills.er_tekskills.R
 import com.tekskills.er_tekskills.data.model.AddLocationCoordinates
@@ -53,6 +60,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     val viewModel: MainActivityViewModel by viewModels()
+    private var hasNotificationPermissionGranted = false
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
@@ -61,22 +70,42 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         navViewInit()
-        Geofencer(this)
-            .removeAll(){
-
-            }
+        Geofencer(this).removeAll() {}
         viewModel.getEmployeeMe()
         observerData()
         updateWorkManager()
+        setupPermissions()
     }
 
     private fun updateWorkManager() {
-        executeUnderLocationPermission(
-            this,
-        ) {
+        executeUnderLocationPermission(this) {
             createWorkManager(context = this)
         }
     }
+
+    private fun setupPermissions() {
+        // Sets up permissions request launcher.
+        requestPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+                if (!it) {
+                    Snackbar.make(
+                        findViewById<View>(android.R.id.content).rootView,
+                        "Please grant Notification permission from App Settings",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+//                    showSettingDialog()
+                }
+            }
+        //        if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+        //            showNotification()
+        //        }
+        if (Build.VERSION.SDK_INT >= 33) {
+            notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            hasNotificationPermissionGranted = true
+        }
+    }
+
 
     private fun observerData() {
         LocationLiveData.locationData.observe(this, Observer { locationResult ->
@@ -100,31 +129,31 @@ class MainActivity : AppCompatActivity() {
                     if (it.data != null)
                         it.data.let { res ->
                             viewModel.saveUserEmployeeID(res.securityUser.employeeMaster.roleId.toString())
-                            var geofence = Geofence()
-
-                            geofence.title = "Reached Home"
-//                            geofence.message = res.userAddress.lineOne
-                            res.userAddress?.let { address->
-                                geofence.message = with(address) {
-                                    "$lineOne, $lineTwo, $city, $state, $country, $zpiCode"
-                                }
-                                val coordinates = address.coOrdinates.split(",")
-                                geofence.latitude = coordinates[0].toDouble()
-                                geofence.longitude = coordinates[1].toDouble()
-                                geofence.radius = 30.0
-                                geofence.transitionType =
-                                    GEOFENCE_TRANSITION_ENTER
-                                geofence.locType = "User"
-//                                requestLocationPermission {
-//                                    if (it.granted) {
-                                        Geofencer(this)
-                                            .addGeofenceWorker(geofence, NotificationWorker::class.java) {
-//                                            binding?.container?.isGone = true
-//                                            showGeofences()
-                                            }
-//                                    }
+//                            var geofence = Geofence()
+//
+//                            geofence.title = "Reached Home"
+////                            geofence.message = res.userAddress.lineOne
+//                            res.userAddress?.let { address ->
+//                                geofence.message = with(address) {
+//                                    "$lineOne, $lineTwo, $city, $state, $country, $zpiCode"
 //                                }
-                            }
+//                                val coordinates = address.coOrdinates.split(",")
+//                                geofence.latitude = coordinates[0].toDouble()
+//                                geofence.longitude = coordinates[1].toDouble()
+//                                geofence.radius = 30.0
+//                                geofence.transitionType =
+//                                    GEOFENCE_TRANSITION_ENTER
+//                                geofence.locType = "User"
+////                                requestLocationPermission {
+////                                    if (it.granted) {
+//                                Geofencer(this)
+//                                    .addGeofenceWorker(geofence, NotificationWorker::class.java) {
+////                                            binding?.container?.isGone = true
+////                                            showGeofences()
+//                                    }
+////                                    }
+////                                }
+//                            }
                         }
                     else {
                         Snackbar.make(
@@ -152,7 +181,7 @@ class MainActivity : AppCompatActivity() {
                         .useNeutralButton(true)
                         .setPositiveButton("Okay", object : SmartDialogClickListener {
                             override fun onClick(smartDialog: SmartDialog?) {
-                                if (viewModel.clearSharedPrefrence()) {
+                                if (viewModel.clearSharedPreference()) {
                                     val intent =
                                         Intent(this@MainActivity, SplashActivity::class.java)
                                     startActivity(intent)
@@ -163,7 +192,7 @@ class MainActivity : AppCompatActivity() {
                         })
                         .setNegativeButton("Cancel", object : SmartDialogClickListener {
                             override fun onClick(smartDialog: SmartDialog?) {
-                                if (viewModel.clearSharedPrefrence()) {
+                                if (viewModel.clearSharedPreference()) {
                                     val intent =
                                         Intent(this@MainActivity, SplashActivity::class.java)
                                     startActivity(intent)
@@ -174,7 +203,7 @@ class MainActivity : AppCompatActivity() {
                         })
                         .setNeutralButton("Cancel", object : SmartDialogClickListener {
                             override fun onClick(smartDialog: SmartDialog?) {
-                                if (viewModel.clearSharedPrefrence()) {
+                                if (viewModel.clearSharedPreference()) {
                                     val intent =
                                         Intent(this@MainActivity, SplashActivity::class.java)
                                     startActivity(intent)
@@ -226,7 +255,7 @@ class MainActivity : AppCompatActivity() {
         binding.navView.menu.apply {
             findItem(R.id.logout)
                 .setOnMenuItemClickListener { menuItem: MenuItem? ->
-                    if (viewModel.clearSharedPrefrence()) {
+                    if (viewModel.clearSharedPreference()) {
                         val intent = Intent(this@MainActivity, SplashActivity::class.java)
                         startActivity(intent)
                         finish()
@@ -326,6 +355,59 @@ class MainActivity : AppCompatActivity() {
             locationRequest
         )
     }
+
+    private val notificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            hasNotificationPermissionGranted = isGranted
+            if (!isGranted) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (Build.VERSION.SDK_INT >= 33) {
+                        if (shouldShowRequestPermissionRationale(android.Manifest.permission.POST_NOTIFICATIONS)) {
+                            showNotificationPermissionRationale()
+                        } else {
+                            showSettingDialog()
+                        }
+                    }
+                }
+            } else {
+                Log.d("TAG", "notification permission granted")
+//                Toast.makeText(applicationContext, "notification permission granted", Toast.LENGTH_SHORT)
+//                    .show()
+            }
+        }
+
+    private fun showSettingDialog() {
+        MaterialAlertDialogBuilder(
+            this,
+            com.google.android.material.R.style.MaterialAlertDialog_Material3
+        )
+            .setTitle("Notification Permission")
+            .setMessage("Notification permission is required, Please allow notification permission from setting")
+            .setPositiveButton("Ok") { _, _ ->
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.parse("package:$packageName")
+                startActivity(intent)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showNotificationPermissionRationale() {
+        MaterialAlertDialogBuilder(
+            this,
+            com.google.android.material.R.style.MaterialAlertDialog_Material3
+        )
+            .setTitle("Alert")
+            .setMessage("Notification permission is required, to show notification")
+            .setPositiveButton("Ok") { _, _ ->
+                if (Build.VERSION.SDK_INT >= 33) {
+                    notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
 }
 
 object LocationLiveData {

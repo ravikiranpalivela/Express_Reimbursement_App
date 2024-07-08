@@ -116,7 +116,9 @@
                 android:layout_marginStart="10dp"
                 android:text="@string/general"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"
+                />
 
             <com.google.android.material.card.MaterialCardView
                 style="@style/Widget.App.CardView"
@@ -124,6 +126,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_4dp"
                 android:elevation="8dp"
+                android:visibility="gone"
                 app:strokeColor="@color/light_grey"
                 app:strokeWidth="1dp">
 
@@ -142,6 +145,58 @@
                     app:trackTint="@drawable/switch_track_selector" />
 
             </com.google.android.material.card.MaterialCardView>
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <Button
+                    android:id="@+id/btnAddressPicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="70dp"
+                    android:background="@color/colorPrimary"
+                    android:padding="10dp"
+                    android:visibility="gone"
+                    android:text="@string/show_location_picker"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/txtLatLong"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/btnAddressPicker"
+                    android:layout_marginEnd="11dp"
+                    android:layout_marginRight="11dp"
+                    android:layout_marginTop="52dp"
+                    android:padding="10dp"
+                    android:text="" />
+
+                <TextView
+                    android:id="@+id/txtAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+
+                    android:layout_below="@+id/txtLatLong"
+                    android:layout_marginTop="28dp"
+                    android:text="" />
+            </RelativeLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/comming_soon"
+                android:textSize="@dimen/font_size_24"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                />
 
         </LinearLayout>
 

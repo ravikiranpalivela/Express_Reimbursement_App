@@ -1,5 +1,6 @@
 package com.tekskills.er_tekskills.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
 import android.net.ConnectivityManager
@@ -7,6 +8,8 @@ import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import com.tekskills.er_tekskills.data.model.MeetingPurposeResponse
 import com.tekskills.er_tekskills.data.model.MeetingPurposeResponseData
+import com.tekskills.er_tekskills.data.model.PlaceDetails
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -16,7 +19,6 @@ import java.util.Locale
 object AppUtil {
 
     fun utlIsNetworkAvailable(): Boolean {
-
         val connectivityManager = ConfigProvider.getConfiguration().appContext.getSystemService(
             Context.CONNECTIVITY_SERVICE
         ) as ConnectivityManager?
@@ -25,19 +27,35 @@ object AppUtil {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected
     }
 
-    fun showSnackBar(view: View)
-    {
+    fun showSnackBar(view: View) {
         Snackbar.make(
             view,
-            "Manager Approval Mandatory",
-            Snackbar.LENGTH_SHORT
-        )
-            .show()
+            "Manager Approval Mandatory", Snackbar.LENGTH_SHORT
+        ).show()
     }
 
+    @SuppressLint("MissingPermission")
+    fun getPlaceDetails(
+        name: String, latitude: Double, longitude: Double,
+        address: String, callback: (PlaceDetails?) -> Unit
+    ) {
+        try {
+            callback(PlaceDetails(name, address, latitude, longitude))
+        }
+        catch (e:Exception)
+        {
+            callback(null)
+            Timber.tag("TAG").e(e, "Exception in getPlaceDetails")
+        }
+    }
 
-
-    fun isWithinRange(targetLat: Double, targetLon: Double, latA: Double, lonA: Double, rangeInMeters: Float): Boolean {
+    fun isWithinRange(
+        targetLat: Double,
+        targetLon: Double,
+        latA: Double,
+        lonA: Double,
+        rangeInMeters: Float
+    ): Boolean {
         // Create Location objects for the points
         val locationA = Location("point A")
         locationA.latitude = latA
@@ -54,7 +72,13 @@ object AppUtil {
         return distanceToA <= rangeInMeters
     }
 
-    fun isWithinOutsideRange(targetLat: Double, targetLon: Double, latA: Double, lonA: Double, rangeInMeters: Float): Boolean {
+    fun isWithinOutsideRange(
+        targetLat: Double,
+        targetLon: Double,
+        latA: Double,
+        lonA: Double,
+        rangeInMeters: Float
+    ): Boolean {
         // Create Location objects for the points
         val locationA = Location("point A")
         locationA.latitude = latA
@@ -87,7 +111,6 @@ object AppUtil {
         }.sortedBy { LocalDate.parse(it.visitDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")) }
             .toCollection(ArrayList())
     }
-
 
 //    fun hideStatusBar() {
 //        getDecorView()

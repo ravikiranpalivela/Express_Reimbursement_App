@@ -5,11 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/widget_size_2">
-
         <ImageView
             android:id="@+id/image_app"
             android:layout_width="@dimen/app_bar_height"
@@ -51,13 +46,11 @@
             style="@style/stlTxtHeading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/widget_size_1"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:text="Check_IN"
             android:textSize="@dimen/font_size_16"
             app:drawableEndCompat="@drawable/ic_arrow_right"
             app:drawableTint="@color/black" />
-
-    </RelativeLayout>
-
 </RelativeLayout>
